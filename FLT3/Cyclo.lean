@@ -35,15 +35,13 @@ local notation3 "η" => hζ.toInteger
 
 local notation3 "λ" => hζ.toInteger - 1
 
-local notation3 "f" => algebraMap (𝓞 K) (𝓞 K ⧸ Ideal.span {λ})
-
 /-- Given a unit `u : (𝓞 K)ˣ`, where `K` is a number field such that
 `IsCyclotomicExtension {3} ℚ K`, then `u ∈ ({1, -1, ζ, -ζ, ζ^2, -ζ^2}`, where `ζ` is any
 primitive `3`-rd root of unity in `K`. -/
 theorem Units.mem : ↑u ∈({1, -1, η, -η, η ^ 2, -η ^ 2} : Set (𝓞 K)) := by
   have hrank : rank K = 0 := by
     dsimp [rank]
-    rw [card_eq_NrRealPlaces_add_NrComplexPlaces, nrRealPlaces_eq_zero (n := 3) K (by decide),
+    rw [card_eq_nrRealPlaces_add_nrComplexPlaces, nrRealPlaces_eq_zero (n := 3) K (by decide),
       zero_add, nrComplexPlaces_eq_totient_div_two (n := 3)]
     rfl
   obtain ⟨x, ⟨_, hxu, -⟩, -⟩ := exist_unique_eq_mul_prod _ u
