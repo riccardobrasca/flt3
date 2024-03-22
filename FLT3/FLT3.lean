@@ -488,36 +488,43 @@ lemma y_eq_unit_mul_cube : ∃ (u₂ : (𝓞 K)ˣ) (Y : 𝓞 K), S.y = u₂ * Y 
 lemma z_eq_unit_mul_cube : ∃ (u₃ : (𝓞 K)ˣ) (Z : 𝓞 K), S.z = u₃ * Z ^ 3 := by
   sorry
 
--- We now introduce units `S.u₁`, `S.u₂` and `S.u₃` and elements of `(S.X S.Y S.Z : 𝓞 K)` such that
--- `S.x = u₁ * S.X ^ 3`,
--- `S.y = u₂ * S.Y ^ 3` and
--- `S.z = u₃ * Z ^ 3`.
-
+/-- Given `S : Solution`, we let `S.u₁` and `S.X` be the elements such that
+`S.x = S.u₁ * S.X ^ 3` -/
 noncomputable
 def Solution.u₁ := (x_eq_unit_mul_cube S).choose
 
-noncomputable
-def Solution.u₂ := (y_eq_unit_mul_cube S).choose
-
-noncomputable
-def Solution.u₃ := (z_eq_unit_mul_cube S).choose
-
+/-- Given `S : Solution`, we let `S.u₁` and `S.X` be the elements such that
+`S.x = S.u₁ * S.X ^ 3` -/
 noncomputable
 def Solution.X := (x_eq_unit_mul_cube S).choose.2
 
+lemma u₁_X_spec : S.x = S.u₁ * S.X ^ 3 := by
+  sorry
+
+/-- Given `S : Solution`, we let `S.u₂` and `S.Y` be the elements such that
+`S.y = S.u₂ * S.Y ^ 3` -/
+noncomputable
+def Solution.u₂ := (y_eq_unit_mul_cube S).choose
+
+/-- Given `S : Solution`, we let `S.u₂` and `S.Y` be the elements such that
+`S.y = S.u₂ * S.Y ^ 3` -/
 noncomputable
 def Solution.Y := (y_eq_unit_mul_cube S).choose.2
 
+lemma u₂_Y_spec : S.y = S.u₂ * S.Y ^ 3 := by
+  sorry
+
+/-- Given `S : Solution`, we let `S.u₃` and `S.Z` be the elements such that
+`S.z = S.u₃ * S.Z ^ 3` -/
+noncomputable
+def Solution.u₃ := (z_eq_unit_mul_cube S).choose
+
+/-- Given `S : Solution`, we let `S.u₃` and `S.Z` be the elements such that
+`S.z = S.u₃ * S.Z ^ 3` -/
 noncomputable
 def Solution.Z := (z_eq_unit_mul_cube S).choose.2
 
-lemma X_spec : S.x = S.u₁ * S.X ^ 3 := by
-  sorry
-
-lemma Y_spec : S.y = S.u₂ * S.Y ^ 3 := by
-  sorry
-
-lemma Z_spec : S.z = S.u₃ * S.Z ^ 3 := by
+lemma u₃_Z_spec : S.z = S.u₃ * S.Z ^ 3 := by
   sorry
 
 lemma X_ne_zero : S.X ≠ 0 := by
@@ -552,8 +559,6 @@ lemma formula2 : S.Y ^ 3 + S.u₄ * S.Z ^ 3 = S.u₅ * (λ ^ (S.multiplicity - 1
 
 lemma by_kummer : S.u₄ ∈ ({1, -1} : Finset (𝓞 K)) := by
   sorry
-
-
 
 lemma final : S.Y ^ 3 + (S.u₄ * S.Z) ^ 3 = S.u₅ * (λ ^ (S.multiplicity - 1) * S.X) ^ 3 := by
   sorry
