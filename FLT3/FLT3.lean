@@ -395,49 +395,62 @@ lemma lambda_dvd_a_add_eta_sq_mul_b : λ ∣ (S.a + η ^ 2 * S.b) := by
   exact dvd_add (dvd_add (dvd_trans (dvd_pow_self _ (by decide)) S.hab) ⟨λ * S.b, by ring⟩)
     ⟨2 * S.b, by ring⟩
 
+/-- Given `(S : Solution)`, we have that `λ ^ 2` does not divide `S.a + η * S.b`. -/
 lemma lambda_sq_not_a_add_eta_mul_b : ¬ λ ^ 2 ∣ (S.a + η * S.b) := by
   sorry
 
+/-- Given `(S : Solution)`, we have that `λ ^ 2` does not divide `S.a + η ^ 2 * S.b`. -/
 lemma lambda_sq_not_dvd_a_add_eta_sq_mul_b : ¬ λ ^ 2 ∣ (S.a + η ^ 2 * S.b) := by
   sorry
 
+/-- If `p : 𝓞 K` is a prime that divides both `S.a + S.b` and `S.a + η * S.b`, then `p`
+is associated with `λ`. -/
 lemma associated_of_dvd_a_add_b_of_dvd_a_add_eta_mul_b {p : 𝓞 K} (hp : Prime p)
     (hpab : p ∣ (S.a + S.b)) (hpaetab : p ∣ (S.a + η * S.b)) : Associated p λ := by
   sorry
 
+/-- If `p : 𝓞 K` is a prime that divides both `S.a + S.b` and `S.a + η ^ 2 * S.b`, then `p`
+is associated with `λ`. -/
 lemma associated_of_dvd_a_add_b_of_dvd_a_add_eta_sq__mul_b {p : 𝓞 K} (hp : Prime p)
     (hpab : p ∣ (S.a + S.b)) (hpaetasqb : p ∣ (S.a + η ^ 2 * S.b)) : Associated p λ := by
   sorry
 
+/-- If `p : 𝓞 K` is a prime that divides both `S.a + η * S.b` and `S.a + η ^ 2 * S.b`, then `p`
+is associated with `λ`. -/
 lemma associated_of_dvd_a_add_eta_mul_b_of_dvd_a_add_eta_sq__mul_b {p : 𝓞 K} (hp : Prime p)
     (hpaetab : p ∣ (S.a + η * S.b)) (hpaetasqb : p ∣ (S.a + η ^ 2 * S.b)) : Associated p λ := by
   sorry
 
+/-- We have that `λ ^ (3*S.multiplicity-2)` divides `S.a + S.b`. -/
 lemma lambda_pow_dvd_a_add_b : λ ^ (3*S.multiplicity-2) ∣ S.a + S.b := by
   sorry
 
--- We now introduce `S.x`, `S.y` and `S.z` such that `S.a + S.b = λ ^ (3*t-2) * S.x`,
--- `S.a + η * S.b = λ * S.x` and
--- `S.a + η ^ 2 * S.b = λ * S.z`, where `t = S.multiplicity`. We also set `S.c = λ ^ t * S.w`.
-
+/-- Given `S : Solution`, we let `S.x` be the element such that
+`S.a + S.b = λ ^ (3*S.multiplicity-2) * S.x` -/
 noncomputable
 def Solution.x := (lambda_pow_dvd_a_add_b S).choose
 
 lemma x_spec : S.a + S.b = λ ^ (3*S.multiplicity-2) * S.x := by
   sorry
 
+/-- Given `S : Solution`, we let `S.y` be the element such that
+`S.a + η * S.b = λ ^ (3*S.multiplicity-2) * S.y` -/
 noncomputable
 def Solution.y := (lambda_dvd_a_add_eta_mul_b S).choose
 
 lemma y_spec : S.a + η * S.b = λ ^ (3*S.multiplicity-2) * S.y := by
   sorry
 
+/-- Given `S : Solution`, we let `S.z` be the element such that
+`S.a + η ^ 2 * S.b = λ ^ (3*S.multiplicity-2) * S.z` -/
 noncomputable
 def Solution.z := (lambda_dvd_a_add_eta_sq_mul_b S).choose
 
 lemma z_spec : S.a + η ^ 2 * S.b = λ * S.z := by
   sorry
 
+/-- Given `S : Solution`, we let `S.w` be the element such that
+`S.c = λ ^ S.multiplicity * S.w` -/
 noncomputable
 def Solution.w :=
   (multiplicity.pow_multiplicity_dvd S.toSolution'.multiplicity_lambda_c_finite).choose
