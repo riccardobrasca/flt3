@@ -19,7 +19,7 @@ def weakLeanArgs : Array String :=
   else
     #[]
 
-package «flt3» where
+package «FLT3» where
   moreServerArgs := moreServerArgs
   -- add any package configuration options here
 
@@ -27,7 +27,7 @@ require mathlib from git
   "https://github.com/leanprover-community/mathlib4.git" @ "RB/CIRM"
 
 @[default_target]
-lean_lib «Flt3» where
+lean_lib «FLT3» where
   moreLeanArgs := moreLeanArgs
   weakLeanArgs := weakLeanArgs
   -- add any library configuration options here
