@@ -164,7 +164,7 @@ lemma lambda_dvd_three : λ ∣ 3 := by
   rw [norm_lambda hζ]
   exact Int.prime_three
 
-lemma lambda_prime : Prime λ := hζ.zeta_sub_one_prime'
+lemma _root_.IsPrimitiveRoot.lambda_prime : Prime λ := hζ.zeta_sub_one_prime'
 
 lemma lambda_not_unit : ¬ IsUnit λ := by
   intro h
