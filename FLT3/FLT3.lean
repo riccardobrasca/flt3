@@ -172,7 +172,7 @@ instance : NormalizedGCDMonoid (𝓞 K) :=
 `IsCyclotomicExtension.zeta`. We also set `λ = η - 1` -/
 def hζ := IsCyclotomicExtension.zeta_spec 3 ℚ K
 local notation3 "η" => hζ.toInteger
-local notation3 "λ" => hζ.toInteger - 1
+local notation3 "λ" => η - 1
 
 /-- `FermatLastTheoremForThreeGen` is the statement that `a ^ 3 + b ^ 3 = u * c ^ 3` has no
 nontrivial solutions in `𝓞 K` for all `u : (𝓞 K)ˣ` such that `¬ λ ∣ a`, `¬ λ ∣ b` and `λ ∣ c`.
@@ -301,9 +301,9 @@ lemma lambda_pow_two_dvd_c : λ ^ 2 ∣ S.c := by
       simp [this]
   have := lambda_pow_four_dvd_c_cube S
   have hm1 :(multiplicity (hζ.toInteger - 1) (S.c ^ 3)).get
-    (multiplicity.finite_pow hζ.zeta_sub_one_prime' hm) =
+    (multiplicity.finite_pow hζ.lambda_prime hm) =
     multiplicity (hζ.toInteger - 1) (S.c ^ 3) := by simp
-  rw [multiplicity.pow_dvd_iff_le_multiplicity, ← hm1, multiplicity.pow' hζ.zeta_sub_one_prime' hm,
+  rw [multiplicity.pow_dvd_iff_le_multiplicity, ← hm1, multiplicity.pow' hζ.lambda_prime hm,
     Nat.cast_ofNat, Nat.ofNat_le_cast] at this
   linarith
 
