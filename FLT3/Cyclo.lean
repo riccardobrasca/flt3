@@ -164,6 +164,8 @@ lemma lambda_dvd_three : λ ∣ 3 := by
   rw [norm_lambda hζ]
   exact Int.prime_three
 
+lemma lambda_prime : Prime λ := hζ.zeta_sub_one_prime'
+
 lemma lambda_not_unit : ¬ IsUnit λ := by
   intro h
   rw [isUnit_iff_dvd_one, show (1 : 𝓞 K) = ((1 : ℤ) : 𝓞 K) by simp, show η - ((1 : ℤ) : 𝓞 K) = λ
