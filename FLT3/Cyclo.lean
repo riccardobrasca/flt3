@@ -104,7 +104,7 @@ lemma lambda_sq : λ ^ 2 = -3 * η :=
 `u = -1`.
 
 This is a special case of the so-called *Kummer's lemma*. -/
-theorem eq_one_or_neg_one_of_unit_of_congruent (hcong : ∃ n : ℤ, λ ^ 2 ∣ (↑u - n : 𝓞 K)) :
+theorem eq_one_or_neg_one_of_unit_of_congruent (hcong : ∃ n : ℤ, λ ^ 2 ∣ (u - n : 𝓞 K)) :
     u = 1 ∨ u = -1 := by
   replace hcong : ∃ n : ℤ, (3 : 𝓞 K) ∣ (↑u - n : 𝓞 K) := by
     obtain ⟨n, x, hx⟩ := hcong
