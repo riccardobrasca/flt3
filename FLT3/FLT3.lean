@@ -539,7 +539,13 @@ noncomputable
 def Solution.u₄ := η * S.u₃ * S.u₂⁻¹
 
 noncomputable
-def Solution.u₅ := -η ^ 2 * S.u₁ * S.u₂
+def Solution.u₅' := -η ^ 2 * S.u₁ * S.u₂
+
+lemma u₅'_isUnit : IsUnit S.u₅' := by
+  sorry
+
+noncomputable
+def Solution.u₅ := (u₅'_isUnit S).unit
 
 lemma formula2 : S.Y ^ 3 + S.u₄ * S.Z ^ 3 = S.u₅ * (λ ^ (S.multiplicity - 1) * S.X) ^ 3 := by
   sorry
@@ -547,19 +553,17 @@ lemma formula2 : S.Y ^ 3 + S.u₄ * S.Z ^ 3 = S.u₅ * (λ ^ (S.multiplicity - 1
 lemma by_kummer : S.u₄ ∈ ({1, -1} : Finset (𝓞 K)) := by
   sorry
 
-lemma u₅_isUnit : IsUnit S.u₅ := by
-  sorry
 
-lemma final : S.Y ^ 3 + ((η * S.u₃ * S.u₂⁻¹) * S.Z) ^ 3 =
-    (u₅_isUnit S).unit * (λ ^ (S.multiplicity - 1) * S.X) ^ 3 := by
+
+lemma final : S.Y ^ 3 + (S.u₄ * S.Z) ^ 3 = S.u₅ * (λ ^ (S.multiplicity - 1) * S.X) ^ 3 := by
   sorry
 
 noncomputable
 def Solution'_final : Solution' where
   a := S.Y
-  b := (η * S.u₃ * S.u₂⁻¹) * S.Z
+  b := S.u₄ * S.Z
   c := λ ^ (S.multiplicity - 1) * S.X
-  u := (u₅_isUnit S).unit
+  u := S.u₅
   ha := lambda_not_dvd_Y S
   hb := sorry
   hc := fun h ↦ X_ne_zero S <| by
