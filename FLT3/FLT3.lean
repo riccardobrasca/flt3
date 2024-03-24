@@ -308,12 +308,13 @@ lemma lambda_pow_two_dvd_c : λ ^ 2 ∣ S.c := by
   linarith
 
 /-- Given `S : Solution'`, we have that `2 ≤ S.multiplicity`. -/
-lemma two_le_multiplicity_lambda_c : 2 ≤ S.multiplicity := by
-  sorry
+lemma Solution'.two_le_multiplicity : 2 ≤ S.multiplicity := by
+  simpa [← PartENat.coe_le_coe, Solution'.multiplicity] using
+    multiplicity.le_multiplicity_of_pow_dvd (lambda_pow_two_dvd_c S)
 
 /-- Given `S : Solution`, we have that `2 ≤ S.multiplicity`. -/
 lemma Solution.two_le_multiplicity (S : Solution) : 2 ≤ S.multiplicity := by
-  exact two_le_multiplicity_lambda_c S.toSolution'
+  exact S.toSolution'.two_le_multiplicity
 
 /-- Given `S : Solution'`, the key factorization of `S.a ^ 3 + S.b ^ 3`. -/
 lemma cube_add_cube_eq_mul :
@@ -551,6 +552,9 @@ lemma u₃_Z_spec : S.z = S.u₃ * S.Z ^ 3 := by
 lemma X_ne_zero : S.X ≠ 0 := by
   sorry
 
+lemma lambda_not_dvd_X : ¬ λ ∣ S.X := by
+  sorry
+
 lemma lambda_not_dvd_Y : ¬ λ ∣ S.Y := by
   sorry
 
@@ -598,21 +602,34 @@ def _root_.Solution'_final : Solution' where
   u := S.u₅
   ha := lambda_not_dvd_Y S
   hb := fun h ↦ S.lambda_not_dvd_Z <| Units.dvd_mul_left.1 h
-  hc := fun h ↦ S.X_ne_zero <| by
-    sorry
-  coprime := sorry
-  hcdvd := sorry
+  hc := fun h ↦ S.X_ne_zero <| by simpa [hζ.lambda_prime.ne_zero] using h
+  coprime := (isCoprime_mul_unit_left_right S.u₄.isUnit _ _).2 S.coprime_Y_Z
+  hcdvd := by
+    refine dvd_mul_of_dvd_left (dvd_pow_self _ (fun h ↦ ?_)) _
+    rw [Nat.sub_eq_iff_eq_add (le_trans (by norm_num) S.two_le_multiplicity), zero_add] at h
+    simpa [h] using S.two_le_multiplicity
   H := final S
 
-lemma _root_.Solution'_final_multiplicity : (Solution'_final S).multiplicity < S.multiplicity := by
-  sorry
+lemma _root_.Solution'_final_multiplicity :
+    (Solution'_final S).multiplicity = S.multiplicity - 1 := by
+  refine (multiplicity.unique' (by simp [Solution'_final]) (fun h ↦ S.lambda_not_dvd_X ?_)).symm
+  obtain ⟨k, hk : λ ^ (S.multiplicity - 1) * S.X = λ ^ (S.multiplicity - 1 + 1) * k⟩ := h
+  rw [pow_succ', mul_assoc] at hk
+  simp only [mul_eq_mul_left_iff, pow_eq_zero_iff', hζ.lambda_prime.ne_zero, ne_eq, false_and,
+    or_false] at hk
+  simp [hk]
+
+lemma _root_.Solution'_final_multiplicity_lt :
+    (Solution'_final S).multiplicity < S.multiplicity := by
+  rw [Solution'_final_multiplicity S, Nat.sub_one]
+  exact Nat.pred_lt <| by linarith [S.two_le_multiplicity]
 
 theorem exists_Solution_multiplicity_lt :
     ∃ (S' : Solution), S'.multiplicity < S.multiplicity := by
   obtain ⟨S', hS'⟩ := exists_Solution_of_Solution' (Solution'_final S)
   refine ⟨S', ?_⟩
   rw [hS']
-  exact Solution'_final_multiplicity S
+  exact Solution'_final_multiplicity_lt S
 
 end Solution
 
