@@ -36,14 +36,13 @@ theorem fermatLastTheoremThree_of_three_dvd_c
     · rw [Odd.neg_pow (by decide), Odd.neg_pow (by decide), add_comm, ← sub_eq_add_neg,
         sub_eq_iff_eq_add, add_comm, ← sub_eq_add_neg, eq_sub_iff_add_eq, add_comm]
       exact_mod_cast habc
-  · refine H a (-(c : ℤ)) ((-(b : ℤ))) (by simp [ha]) (by simp [hc]) (by simp [hb]) ?_ ?_
-    · exact ⟨-k, by simp [hk]⟩
-    · rw [Odd.neg_pow (by decide), Odd.neg_pow (by decide), ← sub_eq_add_neg, sub_eq_iff_eq_add,
+  · refine H a (-(c : ℤ)) ((-(b : ℤ))) (by simp [ha]) (by simp [hc]) (by simp [hb])
+      ⟨-k, by simp [hk]⟩ ?_
+    rw [Odd.neg_pow (by decide), Odd.neg_pow (by decide), ← sub_eq_add_neg, sub_eq_iff_eq_add,
         add_comm, ← sub_eq_add_neg, eq_sub_iff_add_eq]
-      exact_mod_cast habc
-  · refine H a b c (by simp [ha]) (by simp [hb]) (by simp [hc]) ?_ ?_
-    · exact ⟨k, by simp [hk]⟩
-    · exact_mod_cast habc
+    exact_mod_cast habc
+  · exact H a b c (by simp [ha]) (by simp [hb]) (by simp [hc]) ⟨k, by simp [hk]⟩
+      (by exact_mod_cast habc)
 
 lemma three_dvd_gcd_of_dvd_a_of_dvd_c {a b c : ℕ} (ha : 3 ∣ a) (hc : 3 ∣ c)
     (hF : a ^ 3 + b ^ 3 = c ^ 3) : 3 ∣ ({a, b, c} : Finset ℕ).gcd id := by
@@ -600,7 +599,7 @@ def _root_.Solution'_final : Solution' where
   b := S.u₄ * S.Z
   c := λ ^ (S.multiplicity - 1) * S.X
   u := S.u₅
-  ha := lambda_not_dvd_Y S
+  ha := S.lambda_not_dvd_Y
   hb := fun h ↦ S.lambda_not_dvd_Z <| Units.dvd_mul_left.1 h
   hc := fun h ↦ S.X_ne_zero <| by simpa [hζ.lambda_prime.ne_zero] using h
   coprime := (isCoprime_mul_unit_left_right S.u₄.isUnit _ _).2 S.coprime_Y_Z
@@ -627,9 +626,7 @@ lemma _root_.Solution'_final_multiplicity_lt :
 theorem exists_Solution_multiplicity_lt :
     ∃ (S' : Solution), S'.multiplicity < S.multiplicity := by
   obtain ⟨S', hS'⟩ := exists_Solution_of_Solution' (Solution'_final S)
-  refine ⟨S', ?_⟩
-  rw [hS']
-  exact Solution'_final_multiplicity_lt S
+  exact ⟨S', hS' ▸ Solution'_final_multiplicity_lt S⟩
 
 end Solution
 
