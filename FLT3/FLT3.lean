@@ -307,6 +307,14 @@ lemma lambda_pow_two_dvd_c : λ ^ 2 ∣ S.c := by
     Nat.cast_ofNat, Nat.ofNat_le_cast] at this
   linarith
 
+/-- Given `S : Solution'`, we have that `2 ≤ S.multiplicity`. -/
+lemma two_le_multiplicity_lambda_c : 2 ≤ S.multiplicity := by
+  sorry
+
+/-- Given `S : Solution`, we have that `2 ≤ S.multiplicity`. -/
+lemma Solution.two_le_multiplicity (S : Solution) : 2 ≤ S.multiplicity := by
+  exact two_le_multiplicity_lambda_c S.toSolution'
+
 /-- Given `S : Solution'`, the key factorization of `S.a ^ 3 + S.b ^ 3`. -/
 lemma cube_add_cube_eq_mul :
     S.a ^ 3 + S.b ^ 3 = (S.a + S.b) * (S.a + η * S.b) * (S.a + η ^ 2 * S.b) := by
@@ -380,7 +388,7 @@ lemma exists_Solution_of_Solution' : ∃ (S₁ : Solution), S₁.multiplicity = 
 
 end Solution'
 
-section Solution
+namespace Solution
 
 variable (S : Solution)
 
@@ -428,7 +436,7 @@ lemma lambda_pow_dvd_a_add_b : λ ^ (3*S.multiplicity-2) ∣ S.a + S.b := by
 /-- Given `S : Solution`, we let `S.x` be the element such that
 `S.a + S.b = λ ^ (3*S.multiplicity-2) * S.x` -/
 noncomputable
-def Solution.x := (lambda_pow_dvd_a_add_b S).choose
+def x := (lambda_pow_dvd_a_add_b S).choose
 
 lemma x_spec : S.a + S.b = λ ^ (3*S.multiplicity-2) * S.x := by
   sorry
@@ -436,7 +444,7 @@ lemma x_spec : S.a + S.b = λ ^ (3*S.multiplicity-2) * S.x := by
 /-- Given `S : Solution`, we let `S.y` be the element such that
 `S.a + η * S.b = λ ^ (3*S.multiplicity-2) * S.y` -/
 noncomputable
-def Solution.y := (lambda_dvd_a_add_eta_mul_b S).choose
+def y := (lambda_dvd_a_add_eta_mul_b S).choose
 
 lemma y_spec : S.a + η * S.b = λ ^ (3*S.multiplicity-2) * S.y := by
   sorry
@@ -444,7 +452,7 @@ lemma y_spec : S.a + η * S.b = λ ^ (3*S.multiplicity-2) * S.y := by
 /-- Given `S : Solution`, we let `S.z` be the element such that
 `S.a + η ^ 2 * S.b = λ ^ (3*S.multiplicity-2) * S.z` -/
 noncomputable
-def Solution.z := (lambda_dvd_a_add_eta_sq_mul_b S).choose
+def z := (lambda_dvd_a_add_eta_sq_mul_b S).choose
 
 lemma z_spec : S.a + η ^ 2 * S.b = λ * S.z := by
   sorry
@@ -452,11 +460,24 @@ lemma z_spec : S.a + η ^ 2 * S.b = λ * S.z := by
 /-- Given `S : Solution`, we let `S.w` be the element such that
 `S.c = λ ^ S.multiplicity * S.w` -/
 noncomputable
-def Solution.w :=
+def w :=
   (multiplicity.pow_multiplicity_dvd S.toSolution'.multiplicity_lambda_c_finite).choose
 
 lemma w_spec : S.c = λ ^ S.multiplicity * S.w := by
   sorry
+
+lemma lambda_not_dvd_x : ¬ λ ∣ S.x := by
+  sorry
+
+lemma lambda_not_dvd_y : ¬ λ ∣ S.y := by
+  sorry
+
+lemma lambda_not_dvd_z : ¬ λ ∣ S.z := by
+  sorry
+
+lemma lambda_not_dvd_w : ¬ λ ∣ S.w := by
+  sorry
+
 
 lemma coprime_x_y : IsCoprime S.x S.y := by
   sorry
@@ -491,12 +512,12 @@ lemma z_eq_unit_mul_cube : ∃ (u₃ : (𝓞 K)ˣ) (Z : 𝓞 K), S.z = u₃ * Z 
 /-- Given `S : Solution`, we let `S.u₁` and `S.X` be the elements such that
 `S.x = S.u₁ * S.X ^ 3` -/
 noncomputable
-def Solution.u₁ := (x_eq_unit_mul_cube S).choose
+def u₁ := (x_eq_unit_mul_cube S).choose
 
 /-- Given `S : Solution`, we let `S.u₁` and `S.X` be the elements such that
 `S.x = S.u₁ * S.X ^ 3` -/
 noncomputable
-def Solution.X := (x_eq_unit_mul_cube S).choose.2
+def X := (x_eq_unit_mul_cube S).choose.2
 
 lemma u₁_X_spec : S.x = S.u₁ * S.X ^ 3 := by
   sorry
@@ -504,12 +525,12 @@ lemma u₁_X_spec : S.x = S.u₁ * S.X ^ 3 := by
 /-- Given `S : Solution`, we let `S.u₂` and `S.Y` be the elements such that
 `S.y = S.u₂ * S.Y ^ 3` -/
 noncomputable
-def Solution.u₂ := (y_eq_unit_mul_cube S).choose
+def u₂ := (y_eq_unit_mul_cube S).choose
 
 /-- Given `S : Solution`, we let `S.u₂` and `S.Y` be the elements such that
 `S.y = S.u₂ * S.Y ^ 3` -/
 noncomputable
-def Solution.Y := (y_eq_unit_mul_cube S).choose.2
+def Y := (y_eq_unit_mul_cube S).choose.2
 
 lemma u₂_Y_spec : S.y = S.u₂ * S.Y ^ 3 := by
   sorry
@@ -517,12 +538,12 @@ lemma u₂_Y_spec : S.y = S.u₂ * S.Y ^ 3 := by
 /-- Given `S : Solution`, we let `S.u₃` and `S.Z` be the elements such that
 `S.z = S.u₃ * S.Z ^ 3` -/
 noncomputable
-def Solution.u₃ := (z_eq_unit_mul_cube S).choose
+def u₃ := (z_eq_unit_mul_cube S).choose
 
 /-- Given `S : Solution`, we let `S.u₃` and `S.Z` be the elements such that
 `S.z = S.u₃ * S.Z ^ 3` -/
 noncomputable
-def Solution.Z := (z_eq_unit_mul_cube S).choose.2
+def Z := (z_eq_unit_mul_cube S).choose.2
 
 lemma u₃_Z_spec : S.z = S.u₃ * S.Z ^ 3 := by
   sorry
@@ -543,41 +564,47 @@ lemma formula1 : S.u₁*S.X^3*λ^(3*S.multiplicity-2)+S.u₂*η*S.Y^3+S.u₃*η^
   sorry
 
 noncomputable
-def Solution.u₄ := η * S.u₃ * S.u₂⁻¹
+def u₄' := η * S.u₃ * S.u₂⁻¹
+
+lemma u₄'_isUnit : IsUnit S.u₄' := by
+  sorry
 
 noncomputable
-def Solution.u₅' := -η ^ 2 * S.u₁ * S.u₂
+def u₄ := (u₄'_isUnit S).unit
+
+noncomputable
+def u₅' := -η ^ 2 * S.u₁ * S.u₂
 
 lemma u₅'_isUnit : IsUnit S.u₅' := by
   sorry
 
 noncomputable
-def Solution.u₅ := (u₅'_isUnit S).unit
+def u₅ := (u₅'_isUnit S).unit
 
 lemma formula2 : S.Y ^ 3 + S.u₄ * S.Z ^ 3 = S.u₅ * (λ ^ (S.multiplicity - 1) * S.X) ^ 3 := by
   sorry
 
-lemma by_kummer : S.u₄ ∈ ({1, -1} : Finset (𝓞 K)) := by
+lemma by_kummer : ↑S.u₄ ∈ ({1, -1} : Finset (𝓞 K)) := by
   sorry
 
 lemma final : S.Y ^ 3 + (S.u₄ * S.Z) ^ 3 = S.u₅ * (λ ^ (S.multiplicity - 1) * S.X) ^ 3 := by
   sorry
 
 noncomputable
-def Solution'_final : Solution' where
+def _root_.Solution'_final : Solution' where
   a := S.Y
   b := S.u₄ * S.Z
   c := λ ^ (S.multiplicity - 1) * S.X
   u := S.u₅
   ha := lambda_not_dvd_Y S
-  hb := sorry
-  hc := fun h ↦ X_ne_zero S <| by
+  hb := fun h ↦ S.lambda_not_dvd_Z <| Units.dvd_mul_left.1 h
+  hc := fun h ↦ S.X_ne_zero <| by
     sorry
   coprime := sorry
   hcdvd := sorry
   H := final S
 
-lemma Solution'_final_multiplicity : (Solution'_final S).multiplicity < S.multiplicity := by
+lemma _root_.Solution'_final_multiplicity : (Solution'_final S).multiplicity < S.multiplicity := by
   sorry
 
 theorem exists_Solution_multiplicity_lt :
@@ -611,5 +638,5 @@ theorem fermatLastTheoremThree : FermatLastTheoremFor 3 := by
     H := H }
   obtain ⟨S, -⟩ := exists_Solution_of_Solution' S'
   obtain ⟨Smin, hSmin⟩ := S.exists_minimal
-  obtain ⟨Sfin, hSfin⟩ := exists_Solution_multiplicity_lt Smin
+  obtain ⟨Sfin, hSfin⟩ := Smin.exists_Solution_multiplicity_lt
   linarith [hSmin Sfin]
