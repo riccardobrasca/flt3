@@ -517,7 +517,7 @@ def u₁ := (x_eq_unit_mul_cube S).choose
 /-- Given `S : Solution`, we let `S.u₁` and `S.X` be the elements such that
 `S.x = S.u₁ * S.X ^ 3` -/
 noncomputable
-def X := (x_eq_unit_mul_cube S).choose.2
+def X := (x_eq_unit_mul_cube S).choose_spec.choose
 
 lemma u₁_X_spec : S.x = S.u₁ * S.X ^ 3 := by
   sorry
@@ -530,7 +530,7 @@ def u₂ := (y_eq_unit_mul_cube S).choose
 /-- Given `S : Solution`, we let `S.u₂` and `S.Y` be the elements such that
 `S.y = S.u₂ * S.Y ^ 3` -/
 noncomputable
-def Y := (y_eq_unit_mul_cube S).choose.2
+def Y := (y_eq_unit_mul_cube S).choose_spec.choose
 
 lemma u₂_Y_spec : S.y = S.u₂ * S.Y ^ 3 := by
   sorry
@@ -543,7 +543,7 @@ def u₃ := (z_eq_unit_mul_cube S).choose
 /-- Given `S : Solution`, we let `S.u₃` and `S.Z` be the elements such that
 `S.z = S.u₃ * S.Z ^ 3` -/
 noncomputable
-def Z := (z_eq_unit_mul_cube S).choose.2
+def Z := (z_eq_unit_mul_cube S).choose_spec.choose
 
 lemma u₃_Z_spec : S.z = S.u₃ * S.Z ^ 3 := by
   sorry
