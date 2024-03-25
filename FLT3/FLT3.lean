@@ -391,6 +391,8 @@ end Solution'
 namespace Solution
 
 variable (S : Solution)
+#print Solution'
+#check S.a
 
 /-- Given `(S : Solution)`, we have that `λ ∣ (S.a + η * S.b)`. -/
 lemma lambda_dvd_a_add_eta_mul_b : λ ∣ (S.a + η * S.b) := by
@@ -407,9 +409,28 @@ lemma lambda_dvd_a_add_eta_sq_mul_b : λ ∣ (S.a + η ^ 2 * S.b) := by
 lemma lambda_sq_not_a_add_eta_mul_b : ¬ λ ^ 2 ∣ (S.a + η * S.b) := by
   sorry
 
+
+
 /-- Given `(S : Solution)`, we have that `λ ^ 2` does not divide `S.a + η ^ 2 * S.b`. -/
 lemma lambda_sq_not_dvd_a_add_eta_sq_mul_b : ¬ λ ^ 2 ∣ (S.a + η ^ 2 * S.b) := by
-  sorry
+  intro h
+  apply S.hb
+  -- simp [dvd_def]
+  rcases h with ⟨k, hk⟩
+  have aux : S.a + S.b - S.b + η ^ 2 * S.b = S.a + η ^ 2 * S.b := by simp
+  rw [← aux] at hk
+  have aux1 := S.hab
+  rcases aux1 with ⟨k', hk'⟩
+  use (k - k') * (η)
+  have aux2 : λ ^ 2 * (k - k') = (η - 1) * (η + 1) * S.b := by sorry
+  have aux6 : Prime λ := hζ.lambda_prime
+  unfold Prime at aux6
+  have aux3 : λ * (k - k') = (η + 1) * S.b := by sorry -- divide aux2 by λ
+  rw [← mul_assoc]
+  rw [aux3]
+  rw [mul_comm, ← mul_assoc]
+  have aux7 : η * (η + 1) = 1 := sorry
+  rw [aux7, one_mul]
 
 /-- If `p : 𝓞 K` is a prime that divides both `S.a + S.b` and `S.a + η * S.b`, then `p`
 is associated with `λ`. -/
