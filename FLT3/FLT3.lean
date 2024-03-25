@@ -612,7 +612,7 @@ def _root_.Solution'_final : Solution' where
   u := S.u₅
   ha := S.lambda_not_dvd_Y
   hb := fun h ↦ S.lambda_not_dvd_Z <| Units.dvd_mul_left.1 h
-  hc := fun h ↦ S.X_ne_zero <| by simpa [hζ.lambda_prime.ne_zero] using h
+  hc := fun h ↦ S.X_ne_zero <| by simpa [lambda_ne_zero] using h
   coprime := (isCoprime_mul_unit_left_right S.u₄.isUnit _ _).2 S.coprime_Y_Z
   hcdvd := by
     refine dvd_mul_of_dvd_left (dvd_pow_self _ (fun h ↦ ?_)) _
@@ -625,7 +625,7 @@ lemma _root_.Solution'_final_multiplicity :
   refine (multiplicity.unique' (by simp [Solution'_final]) (fun h ↦ S.lambda_not_dvd_X ?_)).symm
   obtain ⟨k, hk : λ ^ (S.multiplicity - 1) * S.X = λ ^ (S.multiplicity - 1 + 1) * k⟩ := h
   rw [pow_succ', mul_assoc] at hk
-  simp only [mul_eq_mul_left_iff, pow_eq_zero_iff', hζ.lambda_prime.ne_zero, ne_eq, false_and,
+  simp only [mul_eq_mul_left_iff, pow_eq_zero_iff', lambda_ne_zero, ne_eq, false_and,
     or_false] at hk
   simp [hk]
 
