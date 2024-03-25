@@ -442,15 +442,15 @@ lemma x_spec : S.a + S.b = λ ^ (3*S.multiplicity-2) * S.x := by
   sorry
 
 /-- Given `S : Solution`, we let `S.y` be the element such that
-`S.a + η * S.b = λ ^ (3*S.multiplicity-2) * S.y` -/
+`S.a + η * S.b = λ * S.y` -/
 noncomputable
 def y := (lambda_dvd_a_add_eta_mul_b S).choose
 
-lemma y_spec : S.a + η * S.b = λ ^ (3*S.multiplicity-2) * S.y := by
+lemma y_spec : S.a + η * S.b = λ * S.y := by
   sorry
 
 /-- Given `S : Solution`, we let `S.z` be the element such that
-`S.a + η ^ 2 * S.b = λ ^ (3*S.multiplicity-2) * S.z` -/
+`S.a + η ^ 2 * S.b = λ * S.z` -/
 noncomputable
 def z := (lambda_dvd_a_add_eta_sq_mul_b S).choose
 
