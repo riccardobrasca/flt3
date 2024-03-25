@@ -394,6 +394,9 @@ variable (S : Solution)
 #print Solution'
 #check S.a
 
+/-- This should be moved to Cyclo.lean. -/
+lemma lambda_ne_zero : λ ≠ 0 := hζ.lambda_prime.ne_zero
+
 /-- Given `(S : Solution)`, we have that `λ ∣ (S.a + η * S.b)`. -/
 lemma lambda_dvd_a_add_eta_mul_b : λ ∣ (S.a + η * S.b) := by
   rw [show S.a + η * S.b = (S.a + S.b) + λ * S.b by ring]
@@ -407,7 +410,15 @@ lemma lambda_dvd_a_add_eta_sq_mul_b : λ ∣ (S.a + η ^ 2 * S.b) := by
 
 /-- Given `(S : Solution)`, we have that `λ ^ 2` does not divide `S.a + η * S.b`. -/
 lemma lambda_sq_not_a_add_eta_mul_b : ¬ λ ^ 2 ∣ (S.a + η * S.b) := by
-  sorry
+  rw [show S.a + η * S.b = S.a + S.b + λ * S.b by ring]
+  intro ⟨x,hx⟩
+  apply S.hb
+  rcases S.hab with ⟨β,hβ⟩
+  use x - β
+  rw [hβ, pow_two, mul_assoc, ← mul_add, mul_assoc] at hx
+  simp [lambda_ne_zero] at hx
+  rw [mul_sub, ← hx]
+  ring
 
 
 
@@ -622,7 +633,7 @@ def _root_.Solution'_final : Solution' where
   u := S.u₅
   ha := S.lambda_not_dvd_Y
   hb := fun h ↦ S.lambda_not_dvd_Z <| Units.dvd_mul_left.1 h
-  hc := fun h ↦ S.X_ne_zero <| by simpa [hζ.lambda_prime.ne_zero] using h
+  hc := fun h ↦ S.X_ne_zero <| by simpa [lambda_ne_zero] using h
   coprime := (isCoprime_mul_unit_left_right S.u₄.isUnit _ _).2 S.coprime_Y_Z
   hcdvd := by
     refine dvd_mul_of_dvd_left (dvd_pow_self _ (fun h ↦ ?_)) _
@@ -635,7 +646,7 @@ lemma _root_.Solution'_final_multiplicity :
   refine (multiplicity.unique' (by simp [Solution'_final]) (fun h ↦ S.lambda_not_dvd_X ?_)).symm
   obtain ⟨k, hk : λ ^ (S.multiplicity - 1) * S.X = λ ^ (S.multiplicity - 1 + 1) * k⟩ := h
   rw [pow_succ', mul_assoc] at hk
-  simp only [mul_eq_mul_left_iff, pow_eq_zero_iff', hζ.lambda_prime.ne_zero, ne_eq, false_and,
+  simp only [mul_eq_mul_left_iff, pow_eq_zero_iff', lambda_ne_zero, ne_eq, false_and,
     or_false] at hk
   simp [hk]
 
