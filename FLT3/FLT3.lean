@@ -21,6 +21,13 @@ open scoped Classical
 
 section misc
 
+/-- NOTE: Open PR to Mathlib -/
+lemma dvd_of_mul_dvd_mul_left {R : Type*} [CancelMonoidWithZero R] (a b c : R) (hc : c ≠ 0)
+    (H : c * a ∣ c * b) : a ∣ b := by
+  rcases H with ⟨d, hd⟩
+  exact ⟨d, by simpa [mul_assoc, hc] using hd⟩
+
+
 /-- To prove `FermatLastTheoremFor 3`, we may assume that `3 ∣ c`. -/
 theorem fermatLastTheoremThree_of_three_dvd_c
     (H : ∀ a b c : ℤ, a ≠ 0 → b ≠ 0 → c ≠ 0 → 3 ∣ c → a ^ 3 + b ^ 3 ≠ c ^ 3) :
