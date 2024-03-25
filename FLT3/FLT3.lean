@@ -392,6 +392,9 @@ namespace Solution
 
 variable (S : Solution)
 
+/-- This should be moved to Cyclo.lean. -/
+lemma lambda_ne_zero : λ ≠ 0 := hζ.lambda_prime.ne_zero
+
 /-- Given `(S : Solution)`, we have that `λ ∣ (S.a + η * S.b)`. -/
 lemma lambda_dvd_a_add_eta_mul_b : λ ∣ (S.a + η * S.b) := by
   rw [show S.a + η * S.b = (S.a + S.b) + λ * S.b by ring]
@@ -405,7 +408,15 @@ lemma lambda_dvd_a_add_eta_sq_mul_b : λ ∣ (S.a + η ^ 2 * S.b) := by
 
 /-- Given `(S : Solution)`, we have that `λ ^ 2` does not divide `S.a + η * S.b`. -/
 lemma lambda_sq_not_a_add_eta_mul_b : ¬ λ ^ 2 ∣ (S.a + η * S.b) := by
-  sorry
+  rw [show S.a + η * S.b = S.a + S.b + λ * S.b by ring]
+  intro ⟨x,hx⟩
+  apply S.hb
+  rcases S.hab with ⟨β,hβ⟩
+  use x - β
+  rw [hβ, pow_two, mul_assoc, ← mul_add, mul_assoc] at hx
+  simp [lambda_ne_zero] at hx
+  rw [mul_sub, ← hx]
+  ring
 
 /-- Given `(S : Solution)`, we have that `λ ^ 2` does not divide `S.a + η ^ 2 * S.b`. -/
 lemma lambda_sq_not_dvd_a_add_eta_sq_mul_b : ¬ λ ^ 2 ∣ (S.a + η ^ 2 * S.b) := by
