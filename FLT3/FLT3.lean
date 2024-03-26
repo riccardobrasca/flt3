@@ -619,7 +619,26 @@ lemma coprime_x_z : IsCoprime S.x S.z := by
     exact aux4
 
 lemma coprime_y_z : IsCoprime S.y S.z := by
-  sorry
+  apply isCoprime_of_prime_dvd
+  . simp only [not_and]
+    intro _ hz
+    apply lambda_not_dvd_z S
+    simp [hz]
+  . intro p hp p_dvd_y p_dvd_z
+    have aux1 := dvd_mul_of_dvd_right p_dvd_y (η - 1)
+    rw [← y_spec] at aux1
+    have aux2 := dvd_mul_of_dvd_right p_dvd_z (η - 1)
+    rw [← z_spec] at aux2
+    have aux3 : Associated p (η -1) := by
+      apply associated_of_dvd_a_add_eta_mul_b_of_dvd_a_add_eta_sq__mul_b
+      exact hp
+      exact aux1
+      exact aux2
+    have aux4 : λ ∣ S.y := by
+      rw [← Associated.dvd_iff_dvd_left aux3]
+      exact p_dvd_y
+    apply lambda_not_dvd_y
+    exact aux4
 
 lemma x_mul_y_mul_z : S.x * S.y * S.z = S.u * S.w ^ 3 := by
   sorry
