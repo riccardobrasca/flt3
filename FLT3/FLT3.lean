@@ -21,7 +21,6 @@ open scoped Classical
 
 section misc
 
--- TODO: generalize `mul_dvd_mul_left` to Monoid in Mathlib
 
 /-- To prove `FermatLastTheoremFor 3`, we may assume that `3 ∣ c`. -/
 theorem fermatLastTheoremThree_of_three_dvd_c
@@ -394,6 +393,7 @@ namespace Solution
 
 variable (S : Solution)
 
+
 /-- This should be moved to Cyclo.lean. -/
 lemma lambda_ne_zero : λ ≠ 0 := hζ.lambda_prime.ne_zero
 
@@ -559,8 +559,29 @@ def w :=
 lemma w_spec : S.c = λ ^ S.multiplicity * S.w :=
 (multiplicity.pow_multiplicity_dvd S.toSolution'.multiplicity_lambda_c_finite).choose_spec
 
+lemma lambda_not_dvd_w : ¬ λ ∣ S.w := by
+  intro h
+  replace h := mul_dvd_mul_left (λ ^ S.multiplicity) h
+  rw [← w_spec] at h
+  have hh : _ := multiplicity.is_greatest' S.toSolution'.multiplicity_lambda_c_finite (lt_add_one S.multiplicity)
+  rw [pow_succ, mul_comm] at hh
+  exact hh h
+
 lemma lambda_not_dvd_x : ¬ λ ∣ S.x := by
-  sorry
+  intro h
+  replace h := mul_dvd_mul_left (λ ^ (3 * S.multiplicity - 2)) h
+  rw [mul_comm, ← x_spec] at h
+  replace h := mul_dvd_mul (mul_dvd_mul h S.lambda_dvd_a_add_eta_mul_b) S.lambda_dvd_a_add_eta_sq_mul_b
+  rw [← cube_add_cube_eq_mul, S.H, w_spec] at h
+  simp only [Units.isUnit, IsUnit.dvd_mul_left] at h
+  rw [← pow_succ, mul_comm, ← mul_assoc, ← pow_succ] at h
+  have hh : 3 * multiplicity S - 2 + 1 + 1 = 3 * multiplicity S := by
+    zify [show 2 ≤ 3*S.multiplicity by linarith [S.two_le_multiplicity]]
+    ring
+  rw [hh, mul_pow, ← pow_mul, mul_comm _ 3, mul_dvd_mul_iff_left _] at h
+  replace h := Prime.dvd_of_dvd_pow hζ.lambda_prime h
+  exact lambda_not_dvd_w _ h
+  simp [lambda_ne_zero]
 
 lemma lambda_not_dvd_y : ¬ λ ∣ S.y := by
   sorry
