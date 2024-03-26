@@ -726,7 +726,31 @@ lemma ideals_coprime : ∀ i ∈ ({S.x, S.y, S.z} : Finset (𝓞 K)),
         · aesop
 
 lemma span_x_mul_span_y_mul_span_z : span {S.x} * span {S.y} * span {S.z} = span {S.w} ^ 3 := by
-  sorry
+  have h : S.x * S.y * S.z = S.u * S.w ^ 3 := by
+    suffices hh : λ ^ (3 * S.multiplicity - 2) * S.x * λ * S.y * λ * S.z = S.u * λ ^ (3 * S.multiplicity) * S.w ^ 3 by
+      rw [show λ ^ (3 * multiplicity S - 2) * x S * λ * y S * λ * z S = λ ^ (3 * multiplicity S - 2) * λ * λ * x S * y S * z S by ring] at hh
+      rw [mul_comm _ (λ ^ (3 * multiplicity S))] at hh
+      simp only [← pow_succ'] at hh
+      have := S.two_le_multiplicity
+      have hhh : 3 * multiplicity S - 2 + 1 + 1 = 3 * multiplicity S := by
+        omega
+      rw [hhh] at hh
+      rw [mul_assoc, mul_assoc, mul_assoc] at hh
+      simp [lambda_ne_zero] at hh
+      convert hh using 1
+      ring
+    simp only [← x_spec, mul_assoc, ← y_spec, ← z_spec]
+    simp only [mul_comm 3, pow_mul, ← mul_pow, ← w_spec]
+    rw [← S.H, cube_add_cube_eq_mul]
+    ring
+  calc span {S.x} * span {S.y} * span {S.z} = span {S.x * S.y} * span {S.z} := by
+        rw [← Ideal.span_singleton_mul_span_singleton S.x S.y]
+      _ = span {S.x * S.y * S.z} := by
+        rw [← Ideal.span_singleton_mul_span_singleton (S.x * S.y) S.z]
+      _ = span {S.u * S.w ^ 3} := by rw [h]
+      _ = span {S.w ^ 3} := by
+        rw [Ideal.span_singleton_mul_left_unit S.u.isUnit]
+      _ = _ := by rw [Ideal.span_singleton_pow]
 
 
 lemma x_eq_unit_mul_cube : ∃ (u₁ : (𝓞 K)ˣ) (X : 𝓞 K), S.x = u₁ * X ^ 3 := by
