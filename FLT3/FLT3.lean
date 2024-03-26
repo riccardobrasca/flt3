@@ -475,8 +475,27 @@ lemma associated_of_dvd_a_add_b_of_dvd_a_add_eta_mul_b {p : 𝓞 K} (hp : Prime 
 /-- If `p : 𝓞 K` is a prime that divides both `S.a + S.b` and `S.a + η ^ 2 * S.b`, then `p`
 is associated with `λ`. -/
 lemma associated_of_dvd_a_add_b_of_dvd_a_add_eta_sq__mul_b {p : 𝓞 K} (hp : Prime p)
-    (hpab : p ∣ (S.a + S.b)) (hpaetasqb : p ∣ (S.a + η ^ 2 * S.b)) : Associated p λ := by
-  sorry
+  (hpab : p ∣ (S.a + S.b)) (hpaetasqb : p ∣ (S.a + η ^ 2 * S.b)) : Associated p λ := by
+  by_cases H : Associated p (η - 1)
+  · exact H
+  · apply Prime.associated_of_dvd hp hζ.lambda_prime
+    have aux := dvd_sub hpab hpaetasqb
+    rw [show S.a + S.b - (S.a + η ^ 2 * S.b) = (-λ * S.b) * (η + 1) by ring] at aux
+    replace aux := dvd_mul_of_dvd_left aux (-η)
+    rw [mul_assoc, eta_add_one_inv, mul_one, ← dvd_neg, neg_mul, neg_neg] at aux
+    have aux1 : p ∣ λ * S.a := sorry
+    exfalso
+    apply hp.not_unit
+    have aux2 := S.coprime
+    have aux3 : IsBezout (𝓞 K) := IsBezout.of_isPrincipalIdealRing _
+    rw [← gcd_isUnit_iff] at aux2
+    suffices hdvd : p ∣ gcd S.a S.b by
+      apply isUnit_of_dvd_unit hdvd
+      exact aux2
+    have p_div_Sa : p ∣ S.a := sorry
+    have p_div_Sb : p ∣ S.b := sorry
+    rw [dvd_gcd_iff]
+    exact ⟨p_div_Sa, p_div_Sb⟩
 
 /-- If `p : 𝓞 K` is a prime that divides both `S.a + η * S.b` and `S.a + η ^ 2 * S.b`, then `p`
 is associated with `λ`. -/
