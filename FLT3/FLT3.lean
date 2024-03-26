@@ -21,21 +21,7 @@ open scoped Classical
 
 section misc
 
-/-- NOTE: Merged in Mathlib (together with its _right version) -/
-lemma dvd_of_mul_dvd_mul_left {R : Type*} [CancelMonoidWithZero R] {a b c : R} (hc : c ≠ 0)
-    (H : c * a ∣ c * b) : a ∣ b := by
-  rcases H with ⟨d, hd⟩
-  exact ⟨d, by simpa [mul_assoc, hc] using hd⟩
-
--- todo: generalize `mul_dvd_mul_left` to Monoid
-lemma mul_dvd_mul_left_iff {R : Type*} [CancelMonoidWithZero R] {a b c : R} (hc : c ≠ 0) :
-    c * a ∣ c * b ↔ a ∣ b :=
-  ⟨dvd_of_mul_dvd_mul_left hc, by
-    intro h
-    obtain ⟨b, rfl⟩ := h
-    exact ⟨b, by rw [mul_assoc]⟩⟩
-
-
+-- todo: generalize `mul_dvd_mul_left` to Monoid in Mathlib
 
 /-- To prove `FermatLastTheoremFor 3`, we may assume that `3 ∣ c`. -/
 theorem fermatLastTheoremThree_of_three_dvd_c
@@ -428,7 +414,7 @@ lemma lambda_dvd_a_add_eta_sq_mul_b : λ ∣ (S.a + η ^ 2 * S.b) := by
 
 /-- Given `(S : Solution)`, we have that `λ ^ 2` does not divide `S.a + η * S.b`. -/
 lemma lambda_sq_not_a_add_eta_mul_b : ¬ λ ^ 2 ∣ (S.a + η * S.b) := by
-  simp_rw [a_add_eta_b, dvd_add_right S.hab, pow_two, mul_dvd_mul_left_iff lambda_ne_zero, S.hb,
+  simp_rw [a_add_eta_b, dvd_add_right S.hab, pow_two, mul_dvd_mul_iff_left lambda_ne_zero, S.hb,
     not_false_eq_true]
 
 /-- Given `(S : Solution)`, we have that `λ ^ 2` does not divide `S.a + η ^ 2 * S.b`. -/
