@@ -483,15 +483,19 @@ lemma associated_of_dvd_a_add_b_of_dvd_a_add_eta_sq__mul_b {p : 𝓞 K} (hp : Pr
     rw [show S.a + S.b - (S.a + η ^ 2 * S.b) = (-λ * S.b) * (η + 1) by ring] at aux
     replace aux := dvd_mul_of_dvd_left aux (-η)
     rw [mul_assoc, eta_add_one_inv, mul_one, ← dvd_neg, neg_mul, neg_neg] at aux
-    have aux1 : p ∣ λ * S.a := sorry
+    have aux1 := dvd_mul_of_dvd_left hpaetasqb η
+    rw [show (S.a + η ^ 2 * S.b) * η = η * S.a + η^3 * S.b by ring] at aux1
+    rw [hζ.toInteger_cube_eq_one, one_mul] at aux1
+    replace aux1 := dvd_sub aux1 hpab
+    rw [show (η * S.a + S.b) - (S.a + S.b) = λ * S.a by ring] at aux1
     exfalso
     apply hp.not_unit
-    have aux2 := S.coprime
+    have aux1 := S.coprime
     have aux3 : IsBezout (𝓞 K) := IsBezout.of_isPrincipalIdealRing _
-    rw [← gcd_isUnit_iff] at aux2
+    rw [← gcd_isUnit_iff] at aux1
     suffices hdvd : p ∣ gcd S.a S.b by
       apply isUnit_of_dvd_unit hdvd
-      exact aux2
+      exact aux1
     have p_div_Sa : p ∣ S.a := sorry
     have p_div_Sb : p ∣ S.b := sorry
     rw [dvd_gcd_iff]
