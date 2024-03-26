@@ -584,13 +584,18 @@ lemma lambda_not_dvd_x : ¬ λ ∣ S.x := by
   simp [lambda_ne_zero]
 
 lemma lambda_not_dvd_y : ¬ λ ∣ S.y := by
-  sorry
+  intro h
+  replace h := mul_dvd_mul_left (η - 1) h
+  rw [← y_spec] at h
+  rw [← pow_two] at h
+  exact lambda_sq_not_a_add_eta_mul_b _ h
 
 lemma lambda_not_dvd_z : ¬ λ ∣ S.z := by
-  sorry
-
-lemma lambda_not_dvd_w : ¬ λ ∣ S.w := by
-  sorry
+  intro h
+  replace h := mul_dvd_mul_left (η - 1) h
+  rw [← z_spec] at h
+  rw [← pow_two] at h
+  exact lambda_sq_not_dvd_a_add_eta_sq_mul_b _ h
 
 set_option synthInstance.maxHeartbeats 60000 in
 lemma coprime_x_y : IsCoprime S.x S.y := by
