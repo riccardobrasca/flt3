@@ -427,28 +427,25 @@ lemma lambda_sq_not_a_add_eta_mul_b : ¬ λ ^ 2 ∣ (S.a + η * S.b) := by
   rw [mul_sub, ← hx]
   ring
 
-
-
 /-- Given `(S : Solution)`, we have that `λ ^ 2` does not divide `S.a + η ^ 2 * S.b`. -/
 lemma lambda_sq_not_dvd_a_add_eta_sq_mul_b : ¬ λ ^ 2 ∣ (S.a + η ^ 2 * S.b) := by
   intro h
   apply S.hb
-  -- simp [dvd_def]
   rcases h with ⟨k, hk⟩
-  have aux : S.a + S.b - S.b + η ^ 2 * S.b = S.a + η ^ 2 * S.b := by simp
-  rw [← aux] at hk
-  have aux1 := S.hab
-  rcases aux1 with ⟨k', hk'⟩
-  use (k - k') * (η)
-  have aux2 : λ ^ 2 * (k - k') = (η - 1) * (η + 1) * S.b := by sorry
-  have aux6 : Prime λ := hζ.lambda_prime
-  unfold Prime at aux6
-  have aux3 : λ * (k - k') = (η + 1) * S.b := by sorry -- divide aux2 by λ
-  rw [← mul_assoc]
-  rw [aux3]
-  rw [mul_comm, ← mul_assoc]
-  have aux7 : η * (η + 1) = 1 := sorry
-  rw [aux7, one_mul]
+  rw [show S.a + η ^ 2 * S.b = S.a + S.b - S.b + η ^ 2 * S.b by ring] at hk
+  rcases S.hab with ⟨k', hk'⟩
+  use (k - k') * (-η)
+  rw [hk'] at hk
+  rw [show λ ^ 2 * k' - S.b + η ^ 2 * S.b = λ * (S.b * (η +1) + λ * k') by ring, pow_two, mul_assoc] at hk
+  simp only [mul_eq_mul_left_iff, lambda_ne_zero, or_false] at hk
+  replace hk := congr_arg (fun x => x * (-η)) hk
+  simp only at hk
+  rw [show (S.b * (η + 1) + λ * k') * -η = (- S.b) * (η ^ 2 + η + 1 - 1) - η * λ * k' by ring] at hk
+  rw [hζ.toInteger_eval_cyclo] at hk
+  simp only [zero_sub, mul_neg, mul_one, neg_neg] at hk
+  rw [sub_eq_iff_eq_add] at hk
+  rw [hk]
+  ring
 
 /-- If `p : 𝓞 K` is a prime that divides both `S.a + S.b` and `S.a + η * S.b`, then `p`
 is associated with `λ`. -/
