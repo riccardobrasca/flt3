@@ -417,17 +417,12 @@ lemma lambda_dvd_a_add_eta_sq_mul_b : λ ∣ (S.a + η ^ 2 * S.b) := by
 
 /-- Given `(S : Solution)`, we have that `λ ^ 2` does not divide `S.a + η * S.b`. -/
 lemma lambda_sq_not_a_add_eta_mul_b : ¬ λ ^ 2 ∣ (S.a + η * S.b) := by
-  rw [show S.a + η * S.b = S.a + S.b + λ * S.b by ring]
-  intro ⟨x,hx⟩
+  rw [show S.a + η * S.b = (S.a + S.b) + λ * S.b by ring]
+  intro h
+  replace h : _ := (dvd_add_right S.hab).mp h
   apply S.hb
-  rcases S.hab with ⟨β,hβ⟩
-  use x - β
-  rw [hβ, pow_two, mul_assoc, ← mul_add, mul_assoc] at hx
-  simp [lambda_ne_zero] at hx
-  rw [mul_sub, ← hx]
-  ring
-
-
+  rw [pow_two] at h
+  exact dvd_of_mul_dvd_mul_left lambda_ne_zero h
 
 /-- Given `(S : Solution)`, we have that `λ ^ 2` does not divide `S.a + η ^ 2 * S.b`. -/
 lemma lambda_sq_not_dvd_a_add_eta_sq_mul_b : ¬ λ ^ 2 ∣ (S.a + η ^ 2 * S.b) := by
