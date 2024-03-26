@@ -601,6 +601,7 @@ lemma coprime_x_z : IsCoprime S.x S.z := by
   . simp only [not_and]
     intro _ hz
     apply lambda_not_dvd_z S
+    simp [hz]
   . intro p hp p_dvd_x p_dvd_z
     have aux1 := dvd_mul_of_dvd_right p_dvd_x (λ ^ (3 * S.multiplicity - 2))
     rw [← x_spec] at aux1
