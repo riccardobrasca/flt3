@@ -444,7 +444,6 @@ lemma lambda_sq_not_dvd_a_add_eta_sq_mul_b : ¬ λ ^ 2 ∣ (S.a + η ^ 2 * S.b) 
   rw [mul_comm, ← mul_assoc]
   have aux7 : η * (η + 1) = 1 := sorry
   rw [aux7, one_mul]
-#check S.coprime
 
 /-- If `p : 𝓞 K` is a prime that divides both `S.a + S.b` and `S.a + η * S.b`, then `p`
 is associated with `λ`. -/
