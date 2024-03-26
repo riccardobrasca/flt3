@@ -8,6 +8,7 @@ import Mathlib.NumberTheory.FLT.Basic
 import Mathlib.NumberTheory.FLT.Three
 import FLT3.Cyclo
 
+
 /-!
 # Fermat Last Theorem in the case `n = 3`
 The goal of this file is to prove Fermat Last theorem in the case `n = 3`.
@@ -522,9 +523,20 @@ lemma associated_of_dvd_a_add_eta_mul_b_of_dvd_a_add_eta_sq__mul_b {p : 𝓞 K} 
   exact hp.not_unit punit |>.elim
 
 /-- We have that `λ ^ (3*S.multiplicity-2)` divides `S.a + S.b`. -/
-lemma lambda_pow_dvd_a_add_b : λ ^ (3*S.multiplicity-2) ∣ S.a + S.b := by
+lemma lambda_pow_dvd_a_add_b : λ ^ (3 * S.multiplicity-2) ∣ S.a + S.b := by
+  have h : λ ^ S.multiplicity ∣ S.c  := by sorry
+  replace h := pow_dvd_pow_of_dvd h 3
+  replace h : (λ ^ multiplicity S) ^ 3 ∣ S.u * S.c ^ 3 := by simp [h]
+  rw [← S.H, cube_add_cube_eq_mul, ← pow_mul, mul_comm] at h
   sorry
 
+
+
+--lambda_sq_not_dvd_a_add_eta_sq_mul_b
+--lambda_sq_not_a_add_eta_mul_b
+--lambda_dvd_a_add_eta_sq_mul_b
+--lambda_dvd_a_add_eta_mul_b
+--pow_dvd_pow_of_dvd
 /-- Given `S : Solution`, we let `S.x` be the element such that
 `S.a + S.b = λ ^ (3*S.multiplicity-2) * S.x` -/
 noncomputable
