@@ -508,8 +508,8 @@ lemma lambda_pow_dvd_a_add_b : λ ^ (3*S.multiplicity-2) ∣ S.a + S.b := by
 noncomputable
 def x := (lambda_pow_dvd_a_add_b S).choose
 
-lemma x_spec : S.a + S.b = λ ^ (3*S.multiplicity-2) * S.x := by
-  exact (lambda_pow_dvd_a_add_b S).choose_spec
+lemma x_spec : S.a + S.b = λ ^ (3*S.multiplicity-2) * S.x :=
+  (lambda_pow_dvd_a_add_b S).choose_spec
 
 
 /-- Given `S : Solution`, we let `S.y` be the element such that
@@ -517,8 +517,8 @@ lemma x_spec : S.a + S.b = λ ^ (3*S.multiplicity-2) * S.x := by
 noncomputable
 def y := (lambda_dvd_a_add_eta_mul_b S).choose
 
-lemma y_spec : S.a + η * S.b = λ * S.y := by
-  sorry
+lemma y_spec : S.a + η * S.b = λ * S.y :=
+  (lambda_dvd_a_add_eta_mul_b S).choose_spec
 
 /-- Given `S : Solution`, we let `S.z` be the element such that
 `S.a + η ^ 2 * S.b = λ * S.z` -/
