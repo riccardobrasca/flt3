@@ -490,7 +490,8 @@ lemma associated_of_dvd_a_add_b_of_dvd_a_add_eta_sq__mul_b {p : 𝓞 K} (hp : Pr
       apply isUnit_of_dvd_unit hdvd
       exact aux2
     have p_not_div_lambda : ¬ p ∣ λ := by
-      sorry
+      rw [Prime.dvd_prime_iff_associated hp hζ.lambda_prime]
+      exact H
     have p_div_Sb : p ∣ S.b := by
       rcases Prime.dvd_or_dvd hp aux with (h | h)
       · tauto
