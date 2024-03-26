@@ -702,10 +702,32 @@ open Ideal
 
 lemma ideals_coprime : ∀ i ∈ ({S.x, S.y, S.z} : Finset (𝓞 K)),
     ∀ j ∈ ({S.x, S.y, S.z} : Finset (𝓞 K)), i ≠ j → IsCoprime (span {i}) (span {j}) := by
-  sorry
+  intros i hi j hj hij
+  rw [Ideal.isCoprime_span_singleton_iff]
+  rcases Finset.mem_insert.mp hi with (hhi | hhi)
+  · rcases Finset.mem_insert.mp hj with (hhj | hhj)
+    · aesop
+    . rcases Finset.mem_insert.mp hhj with (hhj | hhj)
+      · simp only [hhi, hhj, coprime_x_y S]
+      · simp at hhj
+        simp only [hhi, hhj, coprime_x_z S]
+  · rcases Finset.mem_insert.mp hhi with (hhi | hhi)
+    · rcases Finset.mem_insert.mp hj with (hhj | hhj)
+      · simp only [hhi, hhj, coprime_x_y S, IsCoprime.symm]
+      · rcases Finset.mem_insert.mp hhj with (hhj | hhj)
+        · aesop
+        · simp at hhj
+          simp only [hhi, hhj, coprime_y_z S]
+    · simp at hhi
+      rcases Finset.mem_insert.mp hj with (hhj | hhj)
+      · simp only [hhi, hhj, coprime_x_z S, IsCoprime.symm]
+      · rcases Finset.mem_insert.mp hhj with (hhj | hhj)
+        · simp only [hhi, hhj, coprime_y_z S, IsCoprime.symm]
+        · aesop
 
 lemma span_x_mul_span_y_mul_span_z : span {S.x} * span {S.y} * span {S.z} = span {S.w} ^ 3 := by
   sorry
+
 
 lemma x_eq_unit_mul_cube : ∃ (u₁ : (𝓞 K)ˣ) (X : 𝓞 K), S.x = u₁ * X ^ 3 := by
   sorry
