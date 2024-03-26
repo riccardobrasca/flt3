@@ -522,30 +522,6 @@ lemma associated_of_dvd_a_add_eta_mul_b_of_dvd_a_add_eta_sq__mul_b {p : 𝓞 K} 
   have punit := S.coprime.isUnit_of_dvd' pdiva pdivb
   exact hp.not_unit punit |>.elim
 
-/-- We have that `λ ^ (3*S.multiplicity-2)` divides `S.a + S.b`. -/
-lemma lambda_pow_dvd_a_add_b : λ ^ (3 * S.multiplicity-2) ∣ S.a + S.b := by
-  have h : λ ^ S.multiplicity ∣ S.c  := by sorry
-  replace h := pow_dvd_pow_of_dvd h 3
-  replace h : (λ ^ multiplicity S) ^ 3 ∣ S.u * S.c ^ 3 := by simp [h]
-  rw [← S.H, cube_add_cube_eq_mul, ← pow_mul, mul_comm] at h
-  sorry
-
-
-
---lambda_sq_not_dvd_a_add_eta_sq_mul_b
---lambda_sq_not_a_add_eta_mul_b
---lambda_dvd_a_add_eta_sq_mul_b
---lambda_dvd_a_add_eta_mul_b
---pow_dvd_pow_of_dvd
-/-- Given `S : Solution`, we let `S.x` be the element such that
-`S.a + S.b = λ ^ (3*S.multiplicity-2) * S.x` -/
-noncomputable
-def x := (lambda_pow_dvd_a_add_b S).choose
-
-lemma x_spec : S.a + S.b = λ ^ (3*S.multiplicity-2) * S.x :=
-  (lambda_pow_dvd_a_add_b S).choose_spec
-
-
 /-- Given `S : Solution`, we let `S.y` be the element such that
 `S.a + η * S.b = λ * S.y` -/
 noncomputable
@@ -561,6 +537,46 @@ def z := (lambda_dvd_a_add_eta_sq_mul_b S).choose
 
 lemma z_spec : S.a + η ^ 2 * S.b = λ * S.z :=
   (lambda_dvd_a_add_eta_sq_mul_b S).choose_spec
+
+lemma lambda_not_dvd_y : ¬ λ ∣ S.y := by
+  intro h
+  replace h := mul_dvd_mul_left (η - 1) h
+  rw [← y_spec] at h
+  rw [← pow_two] at h
+  exact lambda_sq_not_a_add_eta_mul_b _ h
+
+lemma lambda_not_dvd_z : ¬ λ ∣ S.z := by
+  intro h
+  replace h := mul_dvd_mul_left (η - 1) h
+  rw [← z_spec] at h
+  rw [← pow_two] at h
+  exact lambda_sq_not_dvd_a_add_eta_sq_mul_b _ h
+
+/-- We have that `λ ^ (3*S.multiplicity-2)` divides `S.a + S.b`. -/
+lemma lambda_pow_dvd_a_add_b : λ ^ (3 * S.multiplicity - 2) ∣ S.a + S.b := by
+  have h : λ ^ S.multiplicity ∣ S.c  := multiplicity.pow_multiplicity_dvd _
+  replace h := pow_dvd_pow_of_dvd h 3
+  replace h : (λ ^ multiplicity S) ^ 3 ∣ S.u * S.c ^ 3 := by simp [h]
+  rw [← S.H, cube_add_cube_eq_mul, ← pow_mul, mul_comm] at h
+  apply hζ.lambda_prime.pow_dvd_of_dvd_mul_left _ S.lambda_not_dvd_z
+  apply hζ.lambda_prime.pow_dvd_of_dvd_mul_left _ S.lambda_not_dvd_y
+  rw [y_spec, z_spec] at h
+  have := S.two_le_multiplicity
+  have hh : 3 * multiplicity S - 2 + 1 + 1 = 3 * multiplicity S := by
+    omega
+  rw [← hh, pow_succ', pow_succ'] at h
+  rw [show (S.a + S.b) * (λ * y S) * (λ * z S) = (S.a + S.b) * y S * z S * λ * λ by ring] at h
+  simp only [mul_dvd_mul_iff_right lambda_ne_zero] at h
+  rwa [show (S.a + S.b) * y S * z S = y S * (z S * (S.a + S.b)) by ring] at h
+
+/-- Given `S : Solution`, we let `S.x` be the element such that
+`S.a + S.b = λ ^ (3*S.multiplicity-2) * S.x` -/
+noncomputable
+def x := (lambda_pow_dvd_a_add_b S).choose
+
+lemma x_spec : S.a + S.b = λ ^ (3*S.multiplicity-2) * S.x :=
+  (lambda_pow_dvd_a_add_b S).choose_spec
+
 
 /-- Given `S : Solution`, we let `S.w` be the element such that
 `S.c = λ ^ S.multiplicity * S.w` -/
@@ -587,27 +603,13 @@ lemma lambda_not_dvd_x : ¬ λ ∣ S.x := by
   rw [← cube_add_cube_eq_mul, S.H, w_spec] at h
   simp only [Units.isUnit, IsUnit.dvd_mul_left] at h
   rw [← pow_succ, mul_comm, ← mul_assoc, ← pow_succ] at h
+  have := S.two_le_multiplicity
   have hh : 3 * multiplicity S - 2 + 1 + 1 = 3 * multiplicity S := by
-    zify [show 2 ≤ 3*S.multiplicity by linarith [S.two_le_multiplicity]]
-    ring
+    omega
   rw [hh, mul_pow, ← pow_mul, mul_comm _ 3, mul_dvd_mul_iff_left _] at h
   replace h := Prime.dvd_of_dvd_pow hζ.lambda_prime h
   exact lambda_not_dvd_w _ h
   simp [lambda_ne_zero]
-
-lemma lambda_not_dvd_y : ¬ λ ∣ S.y := by
-  intro h
-  replace h := mul_dvd_mul_left (η - 1) h
-  rw [← y_spec] at h
-  rw [← pow_two] at h
-  exact lambda_sq_not_a_add_eta_mul_b _ h
-
-lemma lambda_not_dvd_z : ¬ λ ∣ S.z := by
-  intro h
-  replace h := mul_dvd_mul_left (η - 1) h
-  rw [← z_spec] at h
-  rw [← pow_two] at h
-  exact lambda_sq_not_dvd_a_add_eta_sq_mul_b _ h
 
 set_option synthInstance.maxHeartbeats 60000 in
 lemma coprime_x_y : IsCoprime S.x S.y := by
