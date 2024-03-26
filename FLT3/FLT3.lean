@@ -509,7 +509,8 @@ noncomputable
 def x := (lambda_pow_dvd_a_add_b S).choose
 
 lemma x_spec : S.a + S.b = λ ^ (3*S.multiplicity-2) * S.x := by
-  sorry
+  exact (lambda_pow_dvd_a_add_b S).choose_spec
+
 
 /-- Given `S : Solution`, we let `S.y` be the element such that
 `S.a + η * S.b = λ * S.y` -/
