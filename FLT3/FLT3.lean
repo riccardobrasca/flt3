@@ -21,7 +21,7 @@ open scoped Classical
 
 section misc
 
--- todo: generalize `mul_dvd_mul_left` to Monoid in Mathlib
+-- TODO: generalize `mul_dvd_mul_left` to Monoid in Mathlib
 
 /-- To prove `FermatLastTheoremFor 3`, we may assume that `3 ∣ c`. -/
 theorem fermatLastTheoremThree_of_three_dvd_c
