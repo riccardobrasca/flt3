@@ -200,6 +200,12 @@ lemma lambda_not_dvd_two : ¬ λ ∣ 2 := by
 
 instance : Nontrivial (𝓞 K ⧸ Ideal.span {λ}) := nontrivial_of_ne 2 0 <| two_ne_zero hζ
 
+-- dirty hacks to speed up the next proof
+instance : AddMonoidWithOne (↥(𝓞 K) ⧸ Ideal.span {λ}) := inferInstance
+attribute [instance 10000] Ring.toNeg
+attribute [instance 10000] Ring.toAddCommGroup
+attribute [instance 10000] NeZero.one
+
 open Classical Finset in
 lemma univ_quot : (univ : Finset ((𝓞 K ⧸ Ideal.span {λ}))) = {0, 1, -1} := by
   refine (eq_of_subset_of_card_le (fun _ _ ↦ mem_univ _) ?_).symm
