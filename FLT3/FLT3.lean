@@ -21,12 +21,7 @@ open scoped Classical
 
 section misc
 
-/-- NOTE: Merged in Mathlib (together with its _right version) -/
-lemma dvd_of_mul_dvd_mul_left {R : Type*} [CancelMonoidWithZero R] {a b c : R} (hc : c ≠ 0)
-    (H : c * a ∣ c * b) : a ∣ b := by
-  rcases H with ⟨d, hd⟩
-  exact ⟨d, by simpa [mul_assoc, hc] using hd⟩
-
+-- TODO: generalize `mul_dvd_mul_left` to Monoid in Mathlib
 
 /-- To prove `FermatLastTheoremFor 3`, we may assume that `3 ∣ c`. -/
 theorem fermatLastTheoremThree_of_three_dvd_c
@@ -404,9 +399,11 @@ variable (S : Solution)
 /-- This should be moved to Cyclo.lean. -/
 lemma lambda_ne_zero : λ ≠ 0 := hζ.lambda_prime.ne_zero
 
+lemma a_add_eta_b : S.a + η * S.b = (S.a + S.b) + λ * S.b := by ring
+
 /-- Given `(S : Solution)`, we have that `λ ∣ (S.a + η * S.b)`. -/
 lemma lambda_dvd_a_add_eta_mul_b : λ ∣ (S.a + η * S.b) := by
-  rw [show S.a + η * S.b = (S.a + S.b) + λ * S.b by ring]
+  rw [a_add_eta_b]
   exact dvd_add (dvd_trans (dvd_pow_self _ (by decide)) S.hab) ⟨S.b, by rw [mul_comm]⟩
 
 /-- Given `(S : Solution)`, we have that `λ ∣ (S.a + η ^ 2 * S.b)`. -/
@@ -417,12 +414,8 @@ lemma lambda_dvd_a_add_eta_sq_mul_b : λ ∣ (S.a + η ^ 2 * S.b) := by
 
 /-- Given `(S : Solution)`, we have that `λ ^ 2` does not divide `S.a + η * S.b`. -/
 lemma lambda_sq_not_a_add_eta_mul_b : ¬ λ ^ 2 ∣ (S.a + η * S.b) := by
-  rw [show S.a + η * S.b = (S.a + S.b) + λ * S.b by ring]
-  intro h
-  replace h : _ := (dvd_add_right S.hab).mp h
-  apply S.hb
-  rw [pow_two] at h
-  exact dvd_of_mul_dvd_mul_left lambda_ne_zero h
+  simp_rw [a_add_eta_b, dvd_add_right S.hab, pow_two, mul_dvd_mul_iff_left lambda_ne_zero, S.hb,
+    not_false_eq_true]
 
 /-- Given `(S : Solution)`, we have that `λ ^ 2` does not divide `S.a + η ^ 2 * S.b`. -/
 lemma lambda_sq_not_dvd_a_add_eta_sq_mul_b : ¬ λ ^ 2 ∣ (S.a + η ^ 2 * S.b) := by
@@ -451,9 +444,9 @@ lemma eta_add_one_inv : (η + 1) * (-η) = 1 := by
 /-- If `p : 𝓞 K` is a prime that divides both `S.a + S.b` and `S.a + η * S.b`, then `p`
 is associated with `λ`. -/
 lemma associated_of_dvd_a_add_b_of_dvd_a_add_eta_mul_b {p : 𝓞 K} (hp : Prime p)
-    (hpab : p ∣ (S.a + S.b)) (hpaetab : p ∣ (S.a + η * S.b)) : Associated p λ := by
+    (hpab : p ∣ S.a + S.b) (hpaetab : p ∣ S.a + η * S.b) : Associated p λ := by
   by_cases p_lam : (p ∣ λ)
-  · exact Prime.associated_of_dvd hp hζ.lambda_prime p_lam
+  · exact hp.associated_of_dvd hζ.lambda_prime p_lam
   have pdivb : p ∣ S.b := by
     have fgh : p ∣ (λ * S.b) := by
       rw [show λ * S.b = (S.a + η * S.b) - (S.a + S.b) by ring]
@@ -504,27 +497,22 @@ lemma associated_of_dvd_a_add_b_of_dvd_a_add_eta_sq__mul_b {p : 𝓞 K} (hp : Pr
 /-- If `p : 𝓞 K` is a prime that divides both `S.a + η * S.b` and `S.a + η ^ 2 * S.b`, then `p`
 is associated with `λ`. -/
 lemma associated_of_dvd_a_add_eta_mul_b_of_dvd_a_add_eta_sq__mul_b {p : 𝓞 K} (hp : Prime p)
-    (hpaetab : p ∣ (S.a + η * S.b)) (hpaetasqb : p ∣ (S.a + η ^ 2 * S.b)) : Associated p λ := by
+    (hpaetab : p ∣ S.a + η * S.b) (hpaetasqb : p ∣ S.a + η ^ 2 * S.b) : Associated p λ := by
   by_cases p_lam : (p ∣ λ)
-  · exact Prime.associated_of_dvd hp hζ.lambda_prime p_lam
+  · exact hp.associated_of_dvd hζ.lambda_prime p_lam
   have pdivb : p ∣ S.b := by
-    have fgh : p ∣ (η * λ * S.b) := by
-      rw [show η * λ * S.b = (S.a + η ^ 2 * S.b) - (S.a + η * S.b) by ring]
-      exact dvd_sub hpaetasqb  hpaetab
-    rcases Prime.dvd_or_dvd hp fgh with (h | h)
-    · exfalso
-      exact p_lam ((IsUnit.dvd_mul_left hζ.eta_isUnit).mp h)
-    · exact h
+    have fgh : p ∣ η * (λ * S.b) := by
+      rw [show η * (λ * S.b) = (S.a + η ^ 2 * S.b) - (S.a + η * S.b) by ring]
+      exact hpaetasqb.sub hpaetab
+    rw [hζ.eta_isUnit.dvd_mul_left] at fgh
+    exact hp.dvd_or_dvd fgh |>.resolve_left p_lam
   have pdiva : p ∣ S.a := by
-    have fgh : p ∣ (λ * S.a) := by
+    have fgh : p ∣ λ * S.a := by
       rw [show λ * S.a = η * (S.a + η * S.b) - (S.a + η ^ 2 * S.b) by ring]
-      exact dvd_sub (dvd_mul_of_dvd_right hpaetab _) hpaetasqb
-    rcases Prime.dvd_or_dvd hp fgh with (h | h)
-    · tauto
-    · exact h
-  have punit := IsCoprime.isUnit_of_dvd' S.coprime pdiva pdivb
-  exfalso
-  exact hp.not_unit punit
+      exact dvd_mul_of_dvd_right hpaetab _ |>.sub hpaetasqb
+    exact hp.dvd_or_dvd fgh |>.resolve_left p_lam
+  have punit := S.coprime.isUnit_of_dvd' pdiva pdivb
+  exact hp.not_unit punit |>.elim
 
 /-- We have that `λ ^ (3*S.multiplicity-2)` divides `S.a + S.b`. -/
 lemma lambda_pow_dvd_a_add_b : λ ^ (3*S.multiplicity-2) ∣ S.a + S.b := by
