@@ -444,6 +444,10 @@ lemma lambda_sq_not_dvd_a_add_eta_sq_mul_b : ¬ λ ^ 2 ∣ (S.a + η ^ 2 * S.b) 
   rw [hk]
   ring
 
+lemma eta_add_one_inv : (η + 1) * (-η) = 1 := by
+  calc (η + 1) * -η = -(η ^ 2 + η + 1) + 1  := by ring
+  _ = 1 := by rw [hζ.toInteger_eval_cyclo]; simp
+
 /-- If `p : 𝓞 K` is a prime that divides both `S.a + S.b` and `S.a + η * S.b`, then `p`
 is associated with `λ`. -/
 lemma associated_of_dvd_a_add_b_of_dvd_a_add_eta_mul_b {p : 𝓞 K} (hp : Prime p)
