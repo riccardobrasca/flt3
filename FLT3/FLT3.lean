@@ -483,14 +483,22 @@ lemma associated_of_dvd_a_add_b_of_dvd_a_add_eta_sq__mul_b {p : 𝓞 K} (hp : Pr
     rw [show (η * S.a + S.b) - (S.a + S.b) = λ * S.a by ring] at aux1
     exfalso
     apply hp.not_unit
-    have aux1 := S.coprime
+    have aux2 := S.coprime
     have aux3 : IsBezout (𝓞 K) := IsBezout.of_isPrincipalIdealRing _
-    rw [← gcd_isUnit_iff] at aux1
+    rw [← gcd_isUnit_iff] at aux2
     suffices hdvd : p ∣ gcd S.a S.b by
       apply isUnit_of_dvd_unit hdvd
-      exact aux1
-    have p_div_Sa : p ∣ S.a := sorry
-    have p_div_Sb : p ∣ S.b := sorry
+      exact aux2
+    have p_not_div_lambda : ¬ p ∣ λ := by
+      sorry
+    have p_div_Sb : p ∣ S.b := by
+      rcases Prime.dvd_or_dvd hp aux with (h | h)
+      · tauto
+      · exact h
+    have p_div_Sa : p ∣ S.a := by
+      rcases Prime.dvd_or_dvd hp aux1 with (h | h)
+      · tauto
+      · exact h
     rw [dvd_gcd_iff]
     exact ⟨p_div_Sa, p_div_Sb⟩
 
