@@ -478,7 +478,26 @@ lemma associated_of_dvd_a_add_b_of_dvd_a_add_eta_sq__mul_b {p : 𝓞 K} (hp : Pr
 is associated with `λ`. -/
 lemma associated_of_dvd_a_add_eta_mul_b_of_dvd_a_add_eta_sq__mul_b {p : 𝓞 K} (hp : Prime p)
     (hpaetab : p ∣ (S.a + η * S.b)) (hpaetasqb : p ∣ (S.a + η ^ 2 * S.b)) : Associated p λ := by
-  sorry
+  by_cases p_lam : (p ∣ λ)
+  · exact Prime.associated_of_dvd hp hζ.lambda_prime p_lam
+  have pdivb : p ∣ S.b := by
+    have fgh : p ∣ (η * λ * S.b) := by
+      rw [show η * λ * S.b = (S.a + η ^ 2 * S.b) - (S.a + η * S.b) by ring]
+      exact dvd_sub hpaetasqb  hpaetab
+    rcases Prime.dvd_or_dvd hp fgh with (h | h)
+    · exfalso
+      exact p_lam ((IsUnit.dvd_mul_left hζ.eta_isUnit).mp h)
+    · exact h
+  have pdiva : p ∣ S.a := by
+    have fgh : p ∣ (λ * S.a) := by
+      rw [show λ * S.a = η * (S.a + η * S.b) - (S.a + η ^ 2 * S.b) by ring]
+      exact dvd_sub (dvd_mul_of_dvd_right hpaetab _) hpaetasqb
+    rcases Prime.dvd_or_dvd hp fgh with (h | h)
+    · tauto
+    · exact h
+  have punit := IsCoprime.isUnit_of_dvd' S.coprime pdiva pdivb
+  exfalso
+  exact hp.not_unit punit
 
 /-- We have that `λ ^ (3*S.multiplicity-2)` divides `S.a + S.b`. -/
 lemma lambda_pow_dvd_a_add_b : λ ^ (3*S.multiplicity-2) ∣ S.a + S.b := by
