@@ -47,8 +47,10 @@ theorem Units.mem : ↑u ∈({1, -1, η, -η, η ^ 2, -η ^ 2} : Set (𝓞 K)) :
   obtain ⟨x, ⟨_, hxu, -⟩, -⟩ := exist_unique_eq_mul_prod _ u
   replace hxu : u = x := by
     rw [← mul_one x.1]
-    convert hxu
-    convert Finset.prod_empty.symm
+    rw [hxu]
+    apply congr_arg
+    rw [← Finset.prod_empty]
+    congr
     rw [Finset.univ_eq_empty_iff, hrank]
     infer_instance
   obtain ⟨n, hnpos, hn⟩ := isOfFinOrder_iff_pow_eq_one.1 <| (CommGroup.mem_torsion _ _).1 x.2
@@ -64,8 +66,16 @@ theorem Units.mem : ↑u ∈({1, -1, η, -η, η ^ 2, -η ^ 2} : Set (𝓞 K)) :
     · left; ext; exact h
     · right; ext; exact h
   fin_cases hr
-  · rcases hru with (h | h) <;> simp [h]
-  · rcases hru with (h | h) <;> simp [h]
+  · rcases hru with (h | h)
+    · simp only [h, pow_zero, Set.mem_insert_iff, eq_neg_self_iff, one_ne_zero,
+      Set.mem_singleton_iff, false_or, true_or]
+    · simp only [h, pow_zero, Set.mem_insert_iff, neg_eq_self_iff, one_ne_zero, neg_inj,
+      Set.mem_singleton_iff, true_or, or_true]
+  · rcases hru with (h | h)
+    · simp only [h, zero_add, pow_one, Set.mem_insert_iff, eq_neg_self_iff, Set.mem_singleton_iff,
+      true_or, or_true]
+    · simp only [h, zero_add, pow_one, Set.mem_insert_iff, neg_inj, neg_eq_self_iff,
+      Set.mem_singleton_iff, true_or, or_true]
   · rcases hru with (h | h)
     · apply Set.mem_insert_of_mem; apply Set.mem_insert_of_mem; simp [h]
     · apply Set.mem_insert_of_mem; apply Set.mem_insert_of_mem; simp [h]
