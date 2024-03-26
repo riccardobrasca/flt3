@@ -393,8 +393,6 @@ end Solution'
 namespace Solution
 
 variable (S : Solution)
-#print Solution'
-#check S.a
 
 /-- This should be moved to Cyclo.lean. -/
 lemma lambda_ne_zero : λ ≠ 0 := hζ.lambda_prime.ne_zero
