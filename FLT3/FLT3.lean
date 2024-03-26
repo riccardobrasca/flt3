@@ -444,12 +444,31 @@ lemma lambda_sq_not_dvd_a_add_eta_sq_mul_b : ¬ λ ^ 2 ∣ (S.a + η ^ 2 * S.b) 
   rw [mul_comm, ← mul_assoc]
   have aux7 : η * (η + 1) = 1 := sorry
   rw [aux7, one_mul]
+#check S.coprime
 
 /-- If `p : 𝓞 K` is a prime that divides both `S.a + S.b` and `S.a + η * S.b`, then `p`
 is associated with `λ`. -/
 lemma associated_of_dvd_a_add_b_of_dvd_a_add_eta_mul_b {p : 𝓞 K} (hp : Prime p)
     (hpab : p ∣ (S.a + S.b)) (hpaetab : p ∣ (S.a + η * S.b)) : Associated p λ := by
-  sorry
+  by_cases p_lam : (p ∣ λ)
+  · exact Prime.associated_of_dvd hp hζ.lambda_prime p_lam
+  have pdivb : p ∣ S.b := by
+    have fgh : p ∣ (λ * S.b) := by
+      rw [show λ * S.b = (S.a + η * S.b) - (S.a + S.b) by ring]
+      exact dvd_sub hpaetab hpab
+    rcases Prime.dvd_or_dvd hp fgh with (h | h)
+    · tauto
+    · exact h
+  have pdiva : p ∣ S.a := by
+    have fgh : p ∣ (λ * S.a) := by
+      rw [show λ * S.a = η * (S.a + S.b) - (S.a + η * S.b) by ring]
+      exact dvd_sub (dvd_mul_of_dvd_right hpab _) hpaetab
+    rcases Prime.dvd_or_dvd hp fgh with (h | h)
+    · tauto
+    · exact h
+  have punit := IsCoprime.isUnit_of_dvd' S.coprime pdiva pdivb
+  exfalso
+  exact hp.not_unit punit
 
 /-- If `p : 𝓞 K` is a prime that divides both `S.a + S.b` and `S.a + η ^ 2 * S.b`, then `p`
 is associated with `λ`. -/
