@@ -776,16 +776,30 @@ lemma span_z_cube : ∃ I : Ideal (𝓞 K), span {S.z} = I^3 := by
 -- exists_eq_pow_of_mul_eq_pow_of_coprime
 set_option synthInstance.maxHeartbeats 40000 in
 lemma x_eq_unit_mul_cube : ∃ (u₁ : (𝓞 K)ˣ) (X : 𝓞 K), S.x = u₁ * X ^ 3 := by
-  obtain ⟨I,hI⟩ := span_x_cube S
-  obtain ⟨X,hX⟩ := Submodule.IsPrincipal.principal I
-  rw [hX] at hI
-  change _ = Ideal.span _ ^ 3 at hI
-  rw [Ideal.span_singleton_pow] at hI
-  rw [Ideal.span_singleton_eq_span_singleton] at hI
-  obtain ⟨u,hu⟩ := hI
-  use u⁻¹; use X
-  symm
-  rw [Units.inv_mul_eq_iff_eq_mul, mul_comm, hu]
+  have h1 : S.x * (S.y * S.z * S.u⁻¹) = S.w ^ 3 := by
+    --simp only [x_mul_y_mul_z_eq_u_w_pow_three, mul_comm] --this produces a timeout error
+    simp only [← mul_assoc, x_mul_y_mul_z_eq_u_w_pow_three]
+    simp only [mul_comm _ (S.w ^ 3), mul_assoc,mul_right_inv, Units.mul_inv, mul_one]
+  have h2 : IsCoprime S.x (S.y * S.z * S.u⁻¹) := by
+    apply (isCoprime_mul_unit_right_right _ S.x _).mpr
+    apply IsCoprime.mul_right S.coprime_x_y S.coprime_x_z
+    simp only [Units.isUnit]
+  have h3 : _ := exists_associated_pow_of_mul_eq_pow' h2 h1
+  rcases h3 with ⟨X, ⟨u₁, hX⟩⟩
+  use u₁; use X
+  simp [← hX, mul_comm]
+
+-- old proof
+  -- obtain ⟨I,hI⟩ := span_x_cube S
+  -- obtain ⟨X,hX⟩ := Submodule.IsPrincipal.principal I
+  -- rw [hX] at hI
+  -- change _ = Ideal.span _ ^ 3 at hI
+  -- rw [Ideal.span_singleton_pow] at hI
+  -- rw [Ideal.span_singleton_eq_span_singleton] at hI
+  -- obtain ⟨u,hu⟩ := hI
+  -- use u⁻¹; use X
+  -- symm
+  -- rw [Units.inv_mul_eq_iff_eq_mul, mul_comm, hu]
 
 set_option synthInstance.maxHeartbeats 40000 in
 lemma y_eq_unit_mul_cube : ∃ (u₂ : (𝓞 K)ˣ) (Y : 𝓞 K), S.y = u₂ * Y ^ 3 := by
