@@ -803,7 +803,13 @@ lemma u₃_Z_spec : S.z = S.u₃ * S.Z ^ 3 := by
   exact (z_eq_unit_mul_cube S).choose_spec.choose_spec
 
 lemma X_ne_zero : S.X ≠ 0 := by
-  sorry
+  intro h
+  have aux1 : S.x = 0 := by
+    rw [u₁_X_spec, h]
+    ring
+  have aux2 : λ ∣ S.x := by simp [aux1]
+  apply lambda_not_dvd_x S
+  exact aux2
 
 lemma lambda_not_dvd_X : ¬ λ ∣ S.X := by
   intro h
