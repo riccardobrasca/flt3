@@ -753,8 +753,25 @@ lemma span_x_mul_span_y_mul_span_z : span {S.x} * span {S.y} * span {S.z} = span
         rw [Ideal.span_singleton_mul_left_unit S.u.isUnit]
       _ = _ := by rw [Ideal.span_singleton_pow]
 
+lemma span_x_cube : ∃ I : Ideal (𝓞 K), span {S.x} = I^3 := by sorry
 
+lemma span_y_cube : ∃ I : Ideal (𝓞 K), span {S.y} = I^3 := by sorry
+
+lemma span_z_cube : ∃ I : Ideal (𝓞 K), span {S.z} = I^3 := by sorry
+
+-- exists_eq_pow_of_mul_eq_pow_of_coprime
+
+set_option synthInstance.maxHeartbeats 40000 in
 lemma x_eq_unit_mul_cube : ∃ (u₁ : (𝓞 K)ˣ) (X : 𝓞 K), S.x = u₁ * X ^ 3 := by
+  obtain ⟨I,hI⟩ := span_x_cube S
+  obtain ⟨X,hX⟩ := Submodule.IsPrincipal.principal I
+  rw [hX] at hI
+  change _ = Ideal.span _ ^ 3 at hI
+  rw [Ideal.span_singleton_pow] at hI
+  rw [Ideal.span_singleton_eq_span_singleton] at hI
+  obtain ⟨u,hu⟩ := hI
+  use u⁻¹; use X
+
   sorry
 
 lemma y_eq_unit_mul_cube : ∃ (u₂ : (𝓞 K)ˣ) (Y : 𝓞 K), S.y = u₂ * Y ^ 3 := by
@@ -762,6 +779,14 @@ lemma y_eq_unit_mul_cube : ∃ (u₂ : (𝓞 K)ˣ) (Y : 𝓞 K), S.y = u₂ * Y 
 
 lemma z_eq_unit_mul_cube : ∃ (u₃ : (𝓞 K)ˣ) (Z : 𝓞 K), S.z = u₃ * Z ^ 3 := by
   sorry
+
+-- x_mul_y_mul_z_eq_u_w_pow_three
+-- coprime_x_y
+-- coprime_x_z
+-- coprime_y_z
+-- IsCoprime.mul_right
+-- exists_associated_pow_of_mul_eq_pow'
+
 
 /-- Given `S : Solution`, we let `S.u₁` and `S.X` be the elements such that
 `S.x = S.u₁ * S.X ^ 3` -/
