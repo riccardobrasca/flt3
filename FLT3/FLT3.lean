@@ -771,14 +771,34 @@ lemma x_eq_unit_mul_cube : ∃ (u₁ : (𝓞 K)ˣ) (X : 𝓞 K), S.x = u₁ * X 
   rw [Ideal.span_singleton_eq_span_singleton] at hI
   obtain ⟨u,hu⟩ := hI
   use u⁻¹; use X
+  symm
+  rw [Units.inv_mul_eq_iff_eq_mul, mul_comm, hu]
 
-  sorry
-
+set_option synthInstance.maxHeartbeats 40000 in
 lemma y_eq_unit_mul_cube : ∃ (u₂ : (𝓞 K)ˣ) (Y : 𝓞 K), S.y = u₂ * Y ^ 3 := by
-  sorry
+  obtain ⟨I,hI⟩ := span_y_cube S
+  obtain ⟨Y,hY⟩ := Submodule.IsPrincipal.principal I
+  rw [hY] at hI
+  change _ = Ideal.span _ ^ 3 at hI
+  rw [Ideal.span_singleton_pow] at hI
+  rw [Ideal.span_singleton_eq_span_singleton] at hI
+  obtain ⟨u,hu⟩ := hI
+  use u⁻¹; use Y
+  symm
+  rw [Units.inv_mul_eq_iff_eq_mul, mul_comm, hu]
 
+set_option synthInstance.maxHeartbeats 40000 in
 lemma z_eq_unit_mul_cube : ∃ (u₃ : (𝓞 K)ˣ) (Z : 𝓞 K), S.z = u₃ * Z ^ 3 := by
-  sorry
+  obtain ⟨I,hI⟩ := span_z_cube S
+  obtain ⟨Z,hZ⟩ := Submodule.IsPrincipal.principal I
+  rw [hZ] at hI
+  change _ = Ideal.span _ ^ 3 at hI
+  rw [Ideal.span_singleton_pow] at hI
+  rw [Ideal.span_singleton_eq_span_singleton] at hI
+  obtain ⟨u,hu⟩ := hI
+  use u⁻¹; use Z
+  symm
+  rw [Units.inv_mul_eq_iff_eq_mul, mul_comm, hu]
 
 -- x_mul_y_mul_z_eq_u_w_pow_three
 -- coprime_x_y
