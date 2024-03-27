@@ -828,7 +828,13 @@ lemma u₃_Z_spec : S.z = S.u₃ * S.Z ^ 3 := by
   exact (z_eq_unit_mul_cube S).choose_spec.choose_spec
 
 lemma X_ne_zero : S.X ≠ 0 := by
-  sorry
+  intro h
+  have aux1 : S.x = 0 := by
+    rw [u₁_X_spec, h]
+    ring
+  have aux2 : λ ∣ S.x := by simp [aux1]
+  apply lambda_not_dvd_x S
+  exact aux2
 
 lemma lambda_not_dvd_X : ¬ λ ∣ S.X := by
   intro h
@@ -854,8 +860,27 @@ lemma lambda_not_dvd_Z : ¬ λ ∣ S.Z := by
   apply lambda_not_dvd_z S
   simp [hyp]
 
+set_option synthInstance.maxHeartbeats 60000 in
 lemma coprime_Y_Z : IsCoprime S.Y S.Z := by
-  sorry
+  apply isCoprime_of_prime_dvd
+  · simp only [not_and]
+    intro _ hy_Z_zero
+    apply lambda_not_dvd_Z S
+    simp only [hy_Z_zero, dvd_zero]
+  · intro p hp p_dvd_Y p_dvd_Z
+    have auxY := dvd_mul_of_dvd_right p_dvd_Y (S.u₂ * S.Y^2)
+    rw [show S.u₂ * S.Y^2 * S.Y = S.u₂ * S.Y^3 by ring] at auxY
+    rw [← u₂_Y_spec] at auxY
+    have auxZ := dvd_mul_of_dvd_right p_dvd_Z (S.u₃ * S.Z^2)
+    rw [show S.u₃ * S.Z^2 * S.Z = S.u₃ * S.Z^3 by ring] at auxZ
+    rw [← u₃_Z_spec] at auxZ
+    have gcd_isUnit : IsUnit (gcd S.y S.z) := by
+      rw [gcd_isUnit_iff S.y S.z]
+      simp only [coprime_y_z]
+    apply hp.not_unit
+    refine isUnit_of_dvd_unit ?_ gcd_isUnit
+    rw [dvd_gcd_iff]
+    simp [auxY, auxZ]
 
 lemma formula1 : S.u₁*S.X^3*λ^(3*S.multiplicity-2)+S.u₂*η*S.Y^3+S.u₃*η^2*S.Z^3*λ = 0 := by
   sorry
