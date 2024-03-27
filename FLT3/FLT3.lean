@@ -907,8 +907,12 @@ lemma formula1 : S.u₁*S.X^3*λ^(3*S.multiplicity-2)+S.u₂*η*S.Y^3+S.u₃*η^
 noncomputable
 def u₄' := η * S.u₃ * S.u₂⁻¹
 
+
 lemma u₄'_isUnit : IsUnit S.u₄' := by
-  sorry
+  unfold u₄'
+  simp only [Units.isUnit_mul_units]
+  exact hζ.eta_isUnit
+
 
 noncomputable
 def u₄ := (u₄'_isUnit S).unit
