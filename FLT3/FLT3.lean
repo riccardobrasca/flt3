@@ -758,20 +758,20 @@ lemma span_x_mul_span_y_mul_span_z : span {S.x} * span {S.y} * span {S.z} = span
       _ = _ := by rw [Ideal.span_singleton_pow]
 
 -- TODO: adopt correct Mathlib naming conventions
-lemma H : (Finset.prod {x S, y S, z S} fun i ↦ span {i}) = span {w S} ^ 3 := by
+lemma HH : (Finset.prod {x S, y S, z S} fun i ↦ span {i}) = span {w S} ^ 3 := by
     convert S.span_x_mul_span_y_mul_span_z
     rw [mul_assoc]
     rw [Finset.prod_insert (by simp [x_ne_y, x_ne_z]), Finset.prod_insert (by simp [y_ne_z])]
     simp
 
 lemma span_x_cube : ∃ I : Ideal (𝓞 K), span {S.x} = I^3 := by
-  exact Finset.exists_eq_pow_of_mul_eq_pow_of_coprime S.ideals_coprime H S.x (by simp)
+  exact Finset.exists_eq_pow_of_mul_eq_pow_of_coprime S.ideals_coprime S.HH S.x (by simp)
 
 lemma span_y_cube : ∃ I : Ideal (𝓞 K), span {S.y} = I^3 := by
-  exact Finset.exists_eq_pow_of_mul_eq_pow_of_coprime S.ideals_coprime H S.y (by simp)
+  exact Finset.exists_eq_pow_of_mul_eq_pow_of_coprime S.ideals_coprime S.HH S.y (by simp)
 
 lemma span_z_cube : ∃ I : Ideal (𝓞 K), span {S.z} = I^3 := by
-  exact Finset.exists_eq_pow_of_mul_eq_pow_of_coprime S.ideals_coprime H S.z (by simp)
+  exact Finset.exists_eq_pow_of_mul_eq_pow_of_coprime S.ideals_coprime S.HH S.z (by simp)
 
 -- exists_eq_pow_of_mul_eq_pow_of_coprime
 set_option synthInstance.maxHeartbeats 40000 in
