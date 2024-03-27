@@ -760,7 +760,6 @@ lemma span_y_cube : ∃ I : Ideal (𝓞 K), span {S.y} = I^3 := by sorry
 lemma span_z_cube : ∃ I : Ideal (𝓞 K), span {S.z} = I^3 := by sorry
 
 -- exists_eq_pow_of_mul_eq_pow_of_coprime
-
 set_option synthInstance.maxHeartbeats 40000 in
 lemma x_eq_unit_mul_cube : ∃ (u₁ : (𝓞 K)ˣ) (X : 𝓞 K), S.x = u₁ * X ^ 3 := by
   obtain ⟨I,hI⟩ := span_x_cube S
@@ -918,7 +917,19 @@ noncomputable
 def u₅' := -η ^ 2 * S.u₁ * S.u₂
 
 lemma u₅'_isUnit : IsUnit S.u₅' := by
-  sorry
+  -- hζ.eta_isUnit
+  unfold u₅'
+  rw [IsUnit.mul_iff, IsUnit.mul_iff]
+  have minus_eta_sq_is_unit : IsUnit (- η ^ 2) := by
+    apply isUnit_iff_exists_inv.2
+    use (-η)
+    ring_nf
+    exact hζ.toInteger_cube_eq_one
+  constructor
+  · constructor
+    · exact minus_eta_sq_is_unit
+    · simp only [Units.isUnit]
+  · simp only [Units.isUnit]
 
 noncomputable
 def u₅ := (u₅'_isUnit S).unit
