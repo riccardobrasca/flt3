@@ -678,6 +678,10 @@ lemma coprime_y_z : IsCoprime S.y S.z := by
     apply lambda_not_dvd_y
     exact aux4
 
+lemma x_ne_y : S.x ≠ S.y := by sorry
+lemma x_ne_z : S.x ≠ S.z := by sorry
+lemma y_ne_z : S.y ≠ S.z := by sorry
+
 lemma mult_minus_two_plus_one_plus_one : 3 * multiplicity S - 2 + 1 + 1 = 3 * multiplicity S := by
   have this : 2 ≤ 3 * multiplicity S := by
     linarith [two_le_multiplicity S]
@@ -753,7 +757,15 @@ lemma span_x_mul_span_y_mul_span_z : span {S.x} * span {S.y} * span {S.z} = span
         rw [Ideal.span_singleton_mul_left_unit S.u.isUnit]
       _ = _ := by rw [Ideal.span_singleton_pow]
 
-lemma span_x_cube : ∃ I : Ideal (𝓞 K), span {S.x} = I^3 := by sorry
+lemma span_x_cube : ∃ I : Ideal (𝓞 K), span {S.x} = I^3 := by
+  have H : (Finset.prod {x S, y S, z S} fun i ↦ span {i}) = span {w S} ^ 3 := by
+    convert S.span_x_mul_span_y_mul_span_z
+    rw [mul_assoc]
+    rw [Finset.prod_insert, Finset.prod_insert]
+    simp
+    · simp
+      sorry
+  exact Finset.exists_eq_pow_of_mul_eq_pow_of_coprime S.ideals_coprime H S.x (by simp)
 
 lemma span_y_cube : ∃ I : Ideal (𝓞 K), span {S.y} = I^3 := by sorry
 
