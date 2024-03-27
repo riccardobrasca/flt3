@@ -784,7 +784,7 @@ lemma x_eq_unit_mul_cube : ∃ (u₁ : (𝓞 K)ˣ) (X : 𝓞 K), S.x = u₁ * X 
     apply (isCoprime_mul_unit_right_right _ S.x _).mpr
     apply IsCoprime.mul_right S.coprime_x_y S.coprime_x_z
     simp only [Units.isUnit]
-  have h3 : _ := exists_associated_pow_of_mul_eq_pow' h2 h1
+  have h3 : _ := exists_associated_pow_of_mul_eq_pow' h2 h1 --this produces a timeout error if we do not use set_option synthInstance.maxHeartbeats 40000 in
   rcases h3 with ⟨X, ⟨u₁, hX⟩⟩
   use u₁; use X
   simp [← hX, mul_comm]
@@ -803,36 +803,31 @@ lemma x_eq_unit_mul_cube : ∃ (u₁ : (𝓞 K)ˣ) (X : 𝓞 K), S.x = u₁ * X 
 
 set_option synthInstance.maxHeartbeats 40000 in
 lemma y_eq_unit_mul_cube : ∃ (u₂ : (𝓞 K)ˣ) (Y : 𝓞 K), S.y = u₂ * Y ^ 3 := by
-  obtain ⟨I,hI⟩ := span_y_cube S
-  obtain ⟨Y,hY⟩ := Submodule.IsPrincipal.principal I
-  rw [hY] at hI
-  change _ = Ideal.span _ ^ 3 at hI
-  rw [Ideal.span_singleton_pow] at hI
-  rw [Ideal.span_singleton_eq_span_singleton] at hI
-  obtain ⟨u,hu⟩ := hI
-  use u⁻¹; use Y
-  symm
-  rw [Units.inv_mul_eq_iff_eq_mul, mul_comm, hu]
+  have h1 : S.y * (S.x * S.z * S.u⁻¹) = S.w ^ 3 := by
+    rw [← mul_assoc, ← mul_assoc S.y, mul_comm S.y, x_mul_y_mul_z_eq_u_w_pow_three]
+    simp only [mul_comm _ (S.w ^ 3), mul_assoc, mul_right_inv, Units.mul_inv, mul_one]
+  have h2 : IsCoprime S.y (S.x * S.z * S.u⁻¹) := by
+    apply (isCoprime_mul_unit_right_right _ S.y _).mpr
+    apply IsCoprime.mul_right S.coprime_x_y.symm S.coprime_y_z
+    simp only [Units.isUnit]
+  have h3 : _ := exists_associated_pow_of_mul_eq_pow' h2 h1 --this produces a timeout error if we do not use set_option synthInstance.maxHeartbeats 40000 in
+  rcases h3 with ⟨Y, ⟨u₂, hY⟩⟩
+  use u₂; use Y
+  simp [← hY, mul_comm]
 
 set_option synthInstance.maxHeartbeats 40000 in
 lemma z_eq_unit_mul_cube : ∃ (u₃ : (𝓞 K)ˣ) (Z : 𝓞 K), S.z = u₃ * Z ^ 3 := by
-  obtain ⟨I,hI⟩ := span_z_cube S
-  obtain ⟨Z,hZ⟩ := Submodule.IsPrincipal.principal I
-  rw [hZ] at hI
-  change _ = Ideal.span _ ^ 3 at hI
-  rw [Ideal.span_singleton_pow] at hI
-  rw [Ideal.span_singleton_eq_span_singleton] at hI
-  obtain ⟨u,hu⟩ := hI
-  use u⁻¹; use Z
-  symm
-  rw [Units.inv_mul_eq_iff_eq_mul, mul_comm, hu]
-
--- x_mul_y_mul_z_eq_u_w_pow_three
--- coprime_x_y
--- coprime_x_z
--- coprime_y_z
--- IsCoprime.mul_right
--- exists_associated_pow_of_mul_eq_pow'
+  have h1 : S.z * (S.x * S.y * S.u⁻¹) = S.w ^ 3 := by
+    rw [← mul_assoc, ← mul_assoc S.z, mul_comm S.z, mul_assoc S.x, mul_comm S.z, ← mul_assoc, x_mul_y_mul_z_eq_u_w_pow_three]
+    simp only [mul_comm _ (S.w ^ 3), mul_assoc, mul_right_inv, Units.mul_inv, mul_one]
+  have h2 : IsCoprime S.z (S.x * S.y * S.u⁻¹) := by
+    apply (isCoprime_mul_unit_right_right _ S.z _).mpr
+    apply IsCoprime.mul_right S.coprime_x_z.symm S.coprime_y_z.symm
+    simp only [Units.isUnit]
+  have h3 : _ := exists_associated_pow_of_mul_eq_pow' h2 h1 --this produces a timeout error if we do not use set_option synthInstance.maxHeartbeats 40000 in
+  rcases h3 with ⟨Z, ⟨u₃, hZ⟩⟩
+  use u₃; use Z
+  simp [← hZ, mul_comm]
 
 
 /-- Given `S : Solution`, we let `S.u₁` and `S.X` be the elements such that
