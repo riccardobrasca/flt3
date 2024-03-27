@@ -678,9 +678,9 @@ lemma coprime_y_z : IsCoprime S.y S.z := by
     apply lambda_not_dvd_y
     exact aux4
 
-lemma x_ne_y : S.x ≠ S.y := by sorry
-lemma x_ne_z : S.x ≠ S.z := by sorry
-lemma y_ne_z : S.y ≠ S.z := by sorry
+-- lemma x_ne_y : S.x ≠ S.y := by sorry
+-- lemma x_ne_z : S.x ≠ S.z := by sorry
+-- lemma y_ne_z : S.y ≠ S.z := by sorry
 
 lemma mult_minus_two_plus_one_plus_one : 3 * multiplicity S - 2 + 1 + 1 = 3 * multiplicity S := by
   have this : 2 ≤ 3 * multiplicity S := by
@@ -757,21 +757,21 @@ lemma span_x_mul_span_y_mul_span_z : span {S.x} * span {S.y} * span {S.z} = span
         rw [Ideal.span_singleton_mul_left_unit S.u.isUnit]
       _ = _ := by rw [Ideal.span_singleton_pow]
 
--- TODO: adopt correct Mathlib naming conventions
-lemma HH : (Finset.prod {x S, y S, z S} fun i ↦ span {i}) = span {w S} ^ 3 := by
-    convert S.span_x_mul_span_y_mul_span_z
-    rw [mul_assoc]
-    rw [Finset.prod_insert (by simp [x_ne_y, x_ne_z]), Finset.prod_insert (by simp [y_ne_z])]
-    simp
+-- -- TODO: adopt correct Mathlib naming conventions
+-- lemma HH : (Finset.prod {x S, y S, z S} fun i ↦ span {i}) = span {w S} ^ 3 := by
+--     convert S.span_x_mul_span_y_mul_span_z
+--     rw [mul_assoc]
+--     rw [Finset.prod_insert (by simp [x_ne_y, x_ne_z]), Finset.prod_insert (by simp [y_ne_z])]
+--     simp
 
-lemma span_x_cube : ∃ I : Ideal (𝓞 K), span {S.x} = I^3 := by
-  exact Finset.exists_eq_pow_of_mul_eq_pow_of_coprime S.ideals_coprime S.HH S.x (by simp)
+-- lemma span_x_cube : ∃ I : Ideal (𝓞 K), span {S.x} = I^3 := by
+--   exact Finset.exists_eq_pow_of_mul_eq_pow_of_coprime S.ideals_coprime S.HH S.x (by simp)
 
-lemma span_y_cube : ∃ I : Ideal (𝓞 K), span {S.y} = I^3 := by
-  exact Finset.exists_eq_pow_of_mul_eq_pow_of_coprime S.ideals_coprime S.HH S.y (by simp)
+-- lemma span_y_cube : ∃ I : Ideal (𝓞 K), span {S.y} = I^3 := by
+--   exact Finset.exists_eq_pow_of_mul_eq_pow_of_coprime S.ideals_coprime S.HH S.y (by simp)
 
-lemma span_z_cube : ∃ I : Ideal (𝓞 K), span {S.z} = I^3 := by
-  exact Finset.exists_eq_pow_of_mul_eq_pow_of_coprime S.ideals_coprime S.HH S.z (by simp)
+-- lemma span_z_cube : ∃ I : Ideal (𝓞 K), span {S.z} = I^3 := by
+--   exact Finset.exists_eq_pow_of_mul_eq_pow_of_coprime S.ideals_coprime S.HH S.z (by simp)
 
 -- exists_eq_pow_of_mul_eq_pow_of_coprime
 set_option synthInstance.maxHeartbeats 40000 in
@@ -968,10 +968,25 @@ lemma u₅'_isUnit : IsUnit S.u₅' := by
 noncomputable
 def u₅ := (u₅'_isUnit S).unit
 
+lemma lambda_sq_dvd_u_mul_cube : λ ^ 2 ∣ S.u₅ * (λ ^ (S.multiplicity - 1) * S.X) ^ 3 := by
+  use S.u₅ * (λ ^ (3 * S.multiplicity - 5) * S.X ^ 3)
+  have := two_le_multiplicity S
+  rw [mul_comm (λ ^ 2), mul_assoc, mul_assoc]
+  congr 1
+  rw [mul_pow, mul_comm, ← mul_assoc, mul_comm _ (S.X ^ _), mul_assoc]
+  congr 1
+  rw [← pow_add, ← pow_mul]
+  congr 1
+  omega
+
+
 lemma formula2 : S.Y ^ 3 + S.u₄ * S.Z ^ 3 = S.u₅ * (λ ^ (S.multiplicity - 1) * S.X) ^ 3 := by
   sorry
 
 lemma by_kummer : ↑S.u₄ ∈ ({1, -1} : Finset (𝓞 K)) := by
+  suffices hh : S.u₄ = 1 ∨ S.u₄ = -1 by
+    rcases hh with (h | h) <;> simp [h]
+  apply eq_one_or_neg_one_of_unit_of_congruent hζ
   sorry
 
 lemma final : S.Y ^ 3 + (S.u₄ * S.Z) ^ 3 = S.u₅ * (λ ^ (S.multiplicity - 1) * S.X) ^ 3 := by
