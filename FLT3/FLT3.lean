@@ -805,13 +805,28 @@ lemma X_ne_zero : S.X ≠ 0 := by
   sorry
 
 lemma lambda_not_dvd_X : ¬ λ ∣ S.X := by
-  sorry
+  intro h
+  have hyp := dvd_mul_of_dvd_right h (S.u₁ * S.X ^ 2)
+  rw [show ↑(u₁ S) * X S ^ 2 * X S = ↑S.u₁ * S.X^3 by ring] at hyp
+  rw [← u₁_X_spec] at hyp
+  apply lambda_not_dvd_x S
+  simp [hyp]
 
 lemma lambda_not_dvd_Y : ¬ λ ∣ S.Y := by
-  sorry
+  intro h
+  have hyp := dvd_mul_of_dvd_right h (S.u₂ * S.Y^2)
+  rw [show ↑(u₂ S) * Y S ^ 2 * Y S = ↑S.u₂ * S.Y^3 by ring] at hyp
+  rw [← u₂_Y_spec] at hyp
+  apply lambda_not_dvd_y S
+  simp [hyp]
 
 lemma lambda_not_dvd_Z : ¬ λ ∣ S.Z := by
-  sorry
+  intro h
+  have hyp := dvd_mul_of_dvd_right h (S.u₃ * S.Z^2)
+  rw [show ↑(u₃ S) * Z S ^ 2 * Z S = ↑S.u₃ * S.Z^3 by ring] at hyp
+  rw [← u₃_Z_spec] at hyp
+  apply lambda_not_dvd_z S
+  simp [hyp]
 
 lemma coprime_Y_Z : IsCoprime S.Y S.Z := by
   sorry
