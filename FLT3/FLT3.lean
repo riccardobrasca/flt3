@@ -948,7 +948,7 @@ noncomputable
 def u₄ := (u₄'_isUnit S).unit
 
 noncomputable
-def u₅' := -η ^ 2 * S.u₁ * S.u₂
+def u₅' := -η ^ 2 * S.u₁ * S.u₂⁻¹
 
 lemma u₅'_isUnit : IsUnit S.u₅' := by
   -- hζ.eta_isUnit
