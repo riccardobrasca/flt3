@@ -1014,18 +1014,8 @@ lemma formula2 : S.Y ^ 3 + S.u₄ * S.Z ^ 3 = S.u₅ * (λ ^ (S.multiplicity - 1
     have := two_le_multiplicity S
     omega
   rw [tmp]
-  rw [show λ * η * ↑(u₂ S) * Y S ^ 3
-           +
-           λ * η ^ 2 * ↑(u₃ S) * Z S ^ 3
-           +
-           ↑(u₁ S) * X S ^ 3 * λ ^ (3 * multiplicity S - 2)
-           =
-           ↑(u₁ S) * X S ^ 3 * λ ^ (3 * multiplicity S - 2)
-           +
-           ↑(u₂ S) * η * Y S ^ 3 * λ
-           +
-           ↑(u₃ S) * η ^ 2 * Z S ^ 3 * λ  by ring_nf]
-  exact formula1 S
+  convert formula1 S using 1
+  ring
 
 lemma by_kummer : ↑S.u₄ ∈ ({1, -1} : Finset (𝓞 K)) := by
   suffices hh : S.u₄ = 1 ∨ S.u₄ = -1 by
