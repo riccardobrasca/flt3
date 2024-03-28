@@ -791,6 +791,7 @@ lemma x_eq_unit_mul_cube : ∃ (u₁ : (𝓞 K)ˣ) (X : 𝓞 K), S.x = u₁ * X 
   use u₁; use X
   simp [← hX, mul_comm]
 
+-- SLIDE
 -- OLD PROOF: highly likely to be useless
   -- obtain ⟨I,hI⟩ := span_x_cube S
   -- obtain ⟨X,hX⟩ := Submodule.IsPrincipal.principal I
@@ -985,6 +986,7 @@ lemma formula2 : S.Y ^ 3 + S.u₄ * S.Z ^ 3 = S.u₅ * (λ ^ (S.multiplicity - 1
   apply mul_left_cancel₀ hζ.eta_isUnit.ne_zero
   apply mul_left_cancel₀ lambda_ne_zero
   have h : ↑(u₂ S) * ↑(u₂ S)⁻¹ = (1 : (𝓞 K)ˣ) := by group
+  -- SLIDE
   rw [show λ * (η * (↑(u₂ S) * (Y S ^ 3 + η * ↑(u₃ S) * ↑(u₂ S)⁻¹ * Z S ^ 3)))
            =
            λ * η * ↑(u₂ S) * Y S ^ 3
@@ -1001,12 +1003,15 @@ lemma formula2 : S.Y ^ 3 + S.u₄ * S.Z ^ 3 = S.u₅ * (λ ^ (S.multiplicity - 1
              =
              ↑(u₁ S) * X S ^ 3 * λ ^ (3 * multiplicity S - 2) := by
     rw [mul_comm, mul_assoc, mul_assoc]
+    -- SLIDE
     congr 1
     rw [mul_pow, mul_comm, ← mul_assoc, mul_comm _ (S.X ^ _)]
     congr 1
     rw [← pow_mul, ← pow_succ]
     congr 1
+    -- SLIDE
     have := two_le_multiplicity S
+    -- SLIDE
     omega
   rw [tmp]
   convert formula1 S using 1
@@ -1043,6 +1048,7 @@ lemma by_kummer : ↑S.u₄ ∈ ({1, -1} : Finset (𝓞 K)) := by
       h0.trans HZ <;> rcases HY with ⟨kY, hkY⟩ <;> rcases HZ with ⟨kZ, hkZ⟩
   · use -1
     use kX - kY - S.u₄ * kZ
+    -- SLIDE
     rw [show λ ^ 2 * (kX - kY - ↑(u₄ S) * kZ) = λ ^ 2 * kX - λ ^ 2 * kY - ↑(u₄ S) * (λ ^ 2 * kZ) by ring]
     rw [← hkX, ← hkY, ← hkZ]
     rw [← S.formula2]
