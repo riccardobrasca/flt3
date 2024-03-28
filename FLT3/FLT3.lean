@@ -684,11 +684,6 @@ lemma coprime_y_z : IsCoprime S.y S.z := by
     apply lambda_not_dvd_y
     exact aux4
 
--- TODO: remove these lemmas after review
--- lemma x_ne_y : S.x ≠ S.y := by sorry
--- lemma x_ne_z : S.x ≠ S.z := by sorry
--- lemma y_ne_z : S.y ≠ S.z := by sorry
-
 lemma mult_minus_two_plus_one_plus_one : 3 * multiplicity S - 2 + 1 + 1 = 3 * multiplicity S := by
   have this : 2 ≤ 3 * multiplicity S := by
     linarith [two_le_multiplicity S]
@@ -1150,3 +1145,5 @@ theorem fermatLastTheoremThree : FermatLastTheoremFor 3 := by
   obtain ⟨Smin, hSmin⟩ := S.exists_minimal
   obtain ⟨Sfin, hSfin⟩ := Smin.exists_Solution_multiplicity_lt
   linarith [hSmin Sfin]
+
+#print axioms fermatLastTheoremThree
