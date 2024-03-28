@@ -988,7 +988,7 @@ lemma formula2 : S.Y ^ 3 + S.u₄ * S.Z ^ 3 = S.u₅ * (λ ^ (S.multiplicity - 1
   apply mul_left_cancel₀ lambda_ne_zero
   have h : ↑(u₁ S) * ↑(u₂ S)⁻¹ = 1 := by
     sorry
-  ring
+  ring_nf
   group
   rw [hζ.toInteger_cube_eq_one]
 
