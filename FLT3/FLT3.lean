@@ -1031,21 +1031,53 @@ lemma by_kummer : ↑S.u₄ ∈ ({1, -1} : Finset (𝓞 K)) := by
   suffices hh : S.u₄ = 1 ∨ S.u₄ = -1 by
     rcases hh with (h | h) <;> simp [h]
   apply eq_one_or_neg_one_of_unit_of_congruent hζ
+  have h0 : λ^2 ∣ λ^4 := by
+    use λ ^ 2
+    ring
+  have hX : λ^2 ∣ ↑(u₅ S) * (λ ^ (multiplicity S - 1) * X S) ^ 3 := by
+    have := two_le_multiplicity S
+    have tmp : ↑(u₅ S) * λ ^ (3 * S.multiplicity - 5) * λ^2 * S.X^3
+              =
+              ↑(u₅ S) * (λ ^ (multiplicity S - 1) * X S) ^ 3 := by
+      rw [mul_comm, mul_assoc, mul_pow, ← mul_assoc _ _ (S.X ^ 3), mul_comm _ (S.X ^ 3)]
+      congr 2
+      rw [← pow_mul, ← pow_add]
+      congr 1
+      omega
+    rw [← tmp]
+    use S.u₅ * (λ ^ (3* S.multiplicity - 5) * X S^ 3)
+    ring
+
+  rcases hX with ⟨kX, hkX⟩
+
   rcases lambda_pow_four_dvd_cube_sub_one_or_add_one_of_lambda_not_dvd hζ S.lambda_not_dvd_Y with
     (HY | HY) <;> rcases lambda_pow_four_dvd_cube_sub_one_or_add_one_of_lambda_not_dvd
-      hζ S.lambda_not_dvd_Z with (HZ | HZ)
+      hζ S.lambda_not_dvd_Z with (HZ | HZ) <;> replace HY := h0.trans HY <;> replace HZ :=
+      h0.trans HZ <;> rcases HY with ⟨kY, hkY⟩ <;> rcases HZ with ⟨kZ, hkZ⟩
   · use -1
-    simp
-    sorry
+    use kX - kY - S.u₄ * kZ
+    rw [show λ ^ 2 * (kX - kY - ↑(u₄ S) * kZ) = λ ^ 2 * kX - λ ^ 2 * kY - ↑(u₄ S) * (λ ^ 2 * kZ) by ring]
+    rw [← hkX, ← hkY, ← hkZ]
+    rw [← S.formula2]
+    ring
   · use 1
-    simp
-    sorry
+    use - kX + kY + S.u₄ * kZ
+    rw [show λ ^ 2 * (-kX + kY + ↑(u₄ S) * kZ) = - (λ ^ 2 * kX - λ ^ 2 * kY - ↑(u₄ S) * (λ ^ 2 * kZ)) by ring]
+    rw [← hkX, ← hkY, ← hkZ]
+    rw [← S.formula2]
+    ring
   · use 1
-    simp
-    sorry
+    use kX - kY - S.u₄ * kZ
+    rw [show λ ^ 2 * (kX - kY - ↑(u₄ S) * kZ) = λ ^ 2 * kX - λ ^ 2 * kY - ↑(u₄ S) * (λ ^ 2 * kZ) by ring]
+    rw [← hkX, ← hkY, ← hkZ]
+    rw [← S.formula2]
+    ring
   · use -1
-    simp
-    sorry
+    use - kX + kY + S.u₄ * kZ
+    rw [show λ ^ 2 * (-kX + kY + ↑(u₄ S) * kZ) = - (λ ^ 2 * kX - λ ^ 2 * kY - ↑(u₄ S) * (λ ^ 2 * kZ)) by ring]
+    rw [← hkX, ← hkY, ← hkZ]
+    rw [← S.formula2]
+    ring
 
 lemma final : S.Y ^ 3 + (S.u₄ * S.Z) ^ 3 = S.u₅ * (λ ^ (S.multiplicity - 1) * S.X) ^ 3 := by
   rw [show S.Y ^ 3 + (S.u₄ * S.Z) ^ 3 = S.Y ^ 3 + S.u₄^2 * S.u₄ * S.Z ^ 3 by ring]
