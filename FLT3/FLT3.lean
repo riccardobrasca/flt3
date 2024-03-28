@@ -982,6 +982,16 @@ lemma lambda_sq_dvd_u_mul_cube : λ ^ 2 ∣ S.u₅ * (λ ^ (S.multiplicity - 1) 
 
 lemma formula2 : S.Y ^ 3 + S.u₄ * S.Z ^ 3 = S.u₅ * (λ ^ (S.multiplicity - 1) * S.X) ^ 3 := by
   simp_rw [u₄, u₅, IsUnit.unit_spec]
+  simp [u₄', u₅']
+  apply mul_left_cancel₀ S.u₂.isUnit.ne_zero
+  apply mul_left_cancel₀ hζ.eta_isUnit.ne_zero
+  apply mul_left_cancel₀ lambda_ne_zero
+  have h : ↑(u₁ S) * ↑(u₂ S)⁻¹ = 1 := by
+    sorry
+  ring
+  group
+  rw [hζ.toInteger_cube_eq_one]
+
   sorry
 
 lemma by_kummer : ↑S.u₄ ∈ ({1, -1} : Finset (𝓞 K)) := by
@@ -991,7 +1001,6 @@ lemma by_kummer : ↑S.u₄ ∈ ({1, -1} : Finset (𝓞 K)) := by
   rcases lambda_pow_four_dvd_cube_sub_one_or_add_one_of_lambda_not_dvd hζ S.lambda_not_dvd_Y with
     (HY | HY) <;> rcases lambda_pow_four_dvd_cube_sub_one_or_add_one_of_lambda_not_dvd
       hζ S.lambda_not_dvd_Z with (HZ | HZ)
-
   · use -1
     simp
     sorry
