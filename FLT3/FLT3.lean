@@ -164,6 +164,13 @@ local notation3 "K" => CyclotomicField 3 ℚ
 
 instance : NumberField K := IsCyclotomicExtension.numberField {3} ℚ _
 
+attribute [-instance] ValuationRing.instIsBezoutToRing -- This seems to be a very slow instance
+-- #check ValuationRing.instIsBezoutToRing
+-- #check ValuationRing.instValuationRing
+
+-- This takes Lean some time, so let's do it here once
+local instance : IsBezout (𝓞 K) := by infer_instance
+
 noncomputable
 instance : NormalizedGCDMonoid (𝓞 K) :=
   have : Nonempty (NormalizedGCDMonoid (𝓞 K)) := inferInstance
@@ -611,7 +618,6 @@ lemma lambda_not_dvd_x : ¬ λ ∣ S.x := by
   exact lambda_not_dvd_w _ h
   simp [lambda_ne_zero]
 
-set_option synthInstance.maxHeartbeats 60000 in
 lemma coprime_x_y : IsCoprime S.x S.y := by
   apply isCoprime_of_prime_dvd
   · simp only [not_and]
@@ -773,8 +779,6 @@ lemma span_x_mul_span_y_mul_span_z : span {S.x} * span {S.y} * span {S.z} = span
 -- lemma span_z_cube : ∃ I : Ideal (𝓞 K), span {S.z} = I^3 := by
 --   exact Finset.exists_eq_pow_of_mul_eq_pow_of_coprime S.ideals_coprime S.HH S.z (by simp)
 
--- exists_eq_pow_of_mul_eq_pow_of_coprime
-set_option synthInstance.maxHeartbeats 40000 in
 lemma x_eq_unit_mul_cube : ∃ (u₁ : (𝓞 K)ˣ) (X : 𝓞 K), S.x = u₁ * X ^ 3 := by
   have h1 : S.x * (S.y * S.z * S.u⁻¹) = S.w ^ 3 := by
     --simp only [x_mul_y_mul_z_eq_u_w_pow_three, mul_comm] --this produces a timeout error
@@ -784,7 +788,7 @@ lemma x_eq_unit_mul_cube : ∃ (u₁ : (𝓞 K)ˣ) (X : 𝓞 K), S.x = u₁ * X 
     apply (isCoprime_mul_unit_right_right _ S.x _).mpr
     apply IsCoprime.mul_right S.coprime_x_y S.coprime_x_z
     simp only [Units.isUnit]
-  have h3 : _ := exists_associated_pow_of_mul_eq_pow' h2 h1 --this produces a timeout error if we do not use set_option synthInstance.maxHeartbeats 40000 in
+  have h3 : _ := exists_associated_pow_of_mul_eq_pow' h2 h1
   rcases h3 with ⟨X, ⟨u₁, hX⟩⟩
   use u₁; use X
   simp [← hX, mul_comm]
@@ -801,7 +805,6 @@ lemma x_eq_unit_mul_cube : ∃ (u₁ : (𝓞 K)ˣ) (X : 𝓞 K), S.x = u₁ * X 
   -- symm
   -- rw [Units.inv_mul_eq_iff_eq_mul, mul_comm, hu]
 
-set_option synthInstance.maxHeartbeats 40000 in
 lemma y_eq_unit_mul_cube : ∃ (u₂ : (𝓞 K)ˣ) (Y : 𝓞 K), S.y = u₂ * Y ^ 3 := by
   have h1 : S.y * (S.x * S.z * S.u⁻¹) = S.w ^ 3 := by
     rw [← mul_assoc, ← mul_assoc S.y, mul_comm S.y, x_mul_y_mul_z_eq_u_w_pow_three]
@@ -810,12 +813,11 @@ lemma y_eq_unit_mul_cube : ∃ (u₂ : (𝓞 K)ˣ) (Y : 𝓞 K), S.y = u₂ * Y 
     apply (isCoprime_mul_unit_right_right _ S.y _).mpr
     apply IsCoprime.mul_right S.coprime_x_y.symm S.coprime_y_z
     simp only [Units.isUnit]
-  have h3 : _ := exists_associated_pow_of_mul_eq_pow' h2 h1 --this produces a timeout error if we do not use set_option synthInstance.maxHeartbeats 40000 in
+  have h3 : _ := exists_associated_pow_of_mul_eq_pow' h2 h1
   rcases h3 with ⟨Y, ⟨u₂, hY⟩⟩
   use u₂; use Y
   simp [← hY, mul_comm]
 
-set_option synthInstance.maxHeartbeats 40000 in
 lemma z_eq_unit_mul_cube : ∃ (u₃ : (𝓞 K)ˣ) (Z : 𝓞 K), S.z = u₃ * Z ^ 3 := by
   have h1 : S.z * (S.x * S.y * S.u⁻¹) = S.w ^ 3 := by
     rw [← mul_assoc, ← mul_assoc S.z, mul_comm S.z, mul_assoc S.x, mul_comm S.z, ← mul_assoc, x_mul_y_mul_z_eq_u_w_pow_three]
@@ -824,7 +826,7 @@ lemma z_eq_unit_mul_cube : ∃ (u₃ : (𝓞 K)ˣ) (Z : 𝓞 K), S.z = u₃ * Z 
     apply (isCoprime_mul_unit_right_right _ S.z _).mpr
     apply IsCoprime.mul_right S.coprime_x_z.symm S.coprime_y_z.symm
     simp only [Units.isUnit]
-  have h3 : _ := exists_associated_pow_of_mul_eq_pow' h2 h1 --this produces a timeout error if we do not use set_option synthInstance.maxHeartbeats 40000 in
+  have h3 : _ := exists_associated_pow_of_mul_eq_pow' h2 h1
   rcases h3 with ⟨Z, ⟨u₃, hZ⟩⟩
   use u₃; use Z
   simp [← hZ, mul_comm]
@@ -902,7 +904,6 @@ lemma lambda_not_dvd_Z : ¬ λ ∣ S.Z := by
   apply lambda_not_dvd_z S
   simp [hyp]
 
-set_option synthInstance.maxHeartbeats 60000 in
 lemma coprime_Y_Z : IsCoprime S.Y S.Z := by
   apply isCoprime_of_prime_dvd
   · simp only [not_and]
@@ -978,7 +979,6 @@ lemma lambda_sq_dvd_u_mul_cube : λ ^ 2 ∣ S.u₅ * (λ ^ (S.multiplicity - 1) 
   rw [← pow_add, ← pow_mul]
   congr 1
   omega
-
 
 lemma formula2 : S.Y ^ 3 + S.u₄ * S.Z ^ 3 = S.u₅ * (λ ^ (S.multiplicity - 1) * S.X) ^ 3 := by
   sorry
