@@ -987,7 +987,18 @@ lemma by_kummer : ↑S.u₄ ∈ ({1, -1} : Finset (𝓞 K)) := by
   suffices hh : S.u₄ = 1 ∨ S.u₄ = -1 by
     rcases hh with (h | h) <;> simp [h]
   apply eq_one_or_neg_one_of_unit_of_congruent hζ
-  sorry
+  rcases lambda_pow_four_dvd_cube_sub_one_or_add_one_of_lambda_not_dvd hζ S.lambda_not_dvd_Y with
+    (HY | HY) <;> rcases lambda_pow_four_dvd_cube_sub_one_or_add_one_of_lambda_not_dvd
+      hζ S.lambda_not_dvd_Z with (HZ | HZ)
+  · use -1
+    simp
+    sorry
+  · use 1
+    sorry
+  · use 1
+    sorry
+  · use -1
+    sorry
 
 lemma final : S.Y ^ 3 + (S.u₄ * S.Z) ^ 3 = S.u₅ * (λ ^ (S.multiplicity - 1) * S.X) ^ 3 := by
   sorry
