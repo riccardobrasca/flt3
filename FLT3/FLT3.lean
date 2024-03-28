@@ -1008,12 +1008,12 @@ lemma final : S.Y ^ 3 + (S.u₄ * S.Z) ^ 3 = S.u₅ * (λ ^ (S.multiplicity - 1)
     rcases hyp with (h | h)
     · have hh : S.u₄ ^ 2 = (1 : 𝓞 K) := by
         rw [h]
-        simp
+        simp only [one_pow]
       nth_rewrite 1 [← hh] at f2
       exact f2
     · have hh : S.u₄ ^ 2 = (1 : 𝓞 K) := by
         rw [h]
-        simp
+        simp only [even_two, Even.neg_pow, one_pow]
       nth_rewrite 1 [← hh] at f2
       exact f2
   have simple_kummer := by_kummer S
