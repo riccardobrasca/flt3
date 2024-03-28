@@ -1005,7 +1005,14 @@ lemma formula2 : S.Y ^ 3 + S.u₄ * S.Z ^ 3 = S.u₅ * (λ ^ (S.multiplicity - 1
   have tmp : λ * (↑(u₁ S) * (λ ^ (multiplicity S - 1) * X S) ^ 3)
              =
              ↑(u₁ S) * X S ^ 3 * λ ^ (3 * multiplicity S - 2) := by
-    sorry
+    rw [mul_comm, mul_assoc, mul_assoc]
+    congr 1
+    rw [mul_pow, mul_comm, ← mul_assoc, mul_comm _ (S.X ^ _)]
+    congr 1
+    rw [← pow_mul, ← pow_succ]
+    congr 1
+    have := two_le_multiplicity S
+    omega
   rw [tmp]
   rw [show λ * η * ↑(u₂ S) * Y S ^ 3
            +
