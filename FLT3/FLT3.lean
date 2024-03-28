@@ -458,7 +458,7 @@ lemma associated_of_dvd_a_add_b_of_dvd_a_add_eta_mul_b {p : 𝓞 K} (hp : Prime 
       rw [show λ * S.b = (S.a + η * S.b) - (S.a + S.b) by ring]
       exact dvd_sub hpaetab hpab
     rcases Prime.dvd_or_dvd hp fgh with (h | h)
-    · tauto
+    · contradiction
     · exact h
   have pdiva : p ∣ S.a := by
     have fgh : p ∣ (λ * S.a) := by
@@ -759,24 +759,6 @@ lemma span_x_mul_span_y_mul_span_z : span {S.x} * span {S.y} * span {S.z} = span
         rw [Ideal.span_singleton_mul_left_unit S.u.isUnit]
       _ = _ := by rw [Ideal.span_singleton_pow]
 
-
--- The following 4 lemmas are useless now, but requires a bit of revision
--- -- TODO: adopt correct Mathlib naming conventions
--- lemma HH : (Finset.prod {x S, y S, z S} fun i ↦ span {i}) = span {w S} ^ 3 := by
---     convert S.span_x_mul_span_y_mul_span_z
---     rw [mul_assoc]
---     rw [Finset.prod_insert (by simp [x_ne_y, x_ne_z]), Finset.prod_insert (by simp [y_ne_z])]
---     simp
-
--- lemma span_x_cube : ∃ I : Ideal (𝓞 K), span {S.x} = I^3 := by
---   exact Finset.exists_eq_pow_of_mul_eq_pow_of_coprime S.ideals_coprime S.HH S.x (by simp)
-
--- lemma span_y_cube : ∃ I : Ideal (𝓞 K), span {S.y} = I^3 := by
---   exact Finset.exists_eq_pow_of_mul_eq_pow_of_coprime S.ideals_coprime S.HH S.y (by simp)
-
--- lemma span_z_cube : ∃ I : Ideal (𝓞 K), span {S.z} = I^3 := by
---   exact Finset.exists_eq_pow_of_mul_eq_pow_of_coprime S.ideals_coprime S.HH S.z (by simp)
-
 lemma x_eq_unit_mul_cube : ∃ (u₁ : (𝓞 K)ˣ) (X : 𝓞 K), S.x = u₁ * X ^ 3 := by
   have h1 : S.x * (S.y * S.z * S.u⁻¹) = S.w ^ 3 := by
     --simp only [x_mul_y_mul_z_eq_u_w_pow_three, ← mul_assoc] --this produces a timeout error
@@ -829,7 +811,6 @@ lemma z_eq_unit_mul_cube : ∃ (u₃ : (𝓞 K)ˣ) (Z : 𝓞 K), S.z = u₃ * Z 
   rcases h3 with ⟨Z, ⟨u₃, hZ⟩⟩
   use u₃; use Z
   simp [← hZ, mul_comm]
-
 
 /-- Given `S : Solution`, we let `S.u₁` and `S.X` be the elements such that
 `S.x = S.u₁ * S.X ^ 3` -/
@@ -950,7 +931,6 @@ noncomputable
 def u₅' := -η ^ 2 * S.u₁ * S.u₂⁻¹
 
 lemma u₅'_isUnit : IsUnit S.u₅' := by
-  -- hζ.eta_isUnit
   unfold u₅'
   rw [IsUnit.mul_iff, IsUnit.mul_iff]
   have minus_eta_sq_is_unit : IsUnit (- η ^ 2) := by
@@ -1056,20 +1036,17 @@ lemma by_kummer : ↑S.u₄ ∈ ({1, -1} : Finset (𝓞 K)) := by
   · use 1
     use - kX + kY + S.u₄ * kZ
     rw [show λ ^ 2 * (-kX + kY + ↑(u₄ S) * kZ) = - (λ ^ 2 * kX - λ ^ 2 * kY - ↑(u₄ S) * (λ ^ 2 * kZ)) by ring]
-    rw [← hkX, ← hkY, ← hkZ]
-    rw [← S.formula2]
+    rw [← hkX, ← hkY, ← hkZ, ← S.formula2]
     ring
   · use 1
     use kX - kY - S.u₄ * kZ
     rw [show λ ^ 2 * (kX - kY - ↑(u₄ S) * kZ) = λ ^ 2 * kX - λ ^ 2 * kY - ↑(u₄ S) * (λ ^ 2 * kZ) by ring]
-    rw [← hkX, ← hkY, ← hkZ]
-    rw [← S.formula2]
+    rw [← hkX, ← hkY, ← hkZ, ← S.formula2]
     ring
   · use -1
     use - kX + kY + S.u₄ * kZ
     rw [show λ ^ 2 * (-kX + kY + ↑(u₄ S) * kZ) = - (λ ^ 2 * kX - λ ^ 2 * kY - ↑(u₄ S) * (λ ^ 2 * kZ)) by ring]
-    rw [← hkX, ← hkY, ← hkZ]
-    rw [← S.formula2]
+    rw [← hkX, ← hkY, ← hkZ, ← S.formula2]
     ring
 
 lemma final : S.Y ^ 3 + (S.u₄ * S.Z) ^ 3 = S.u₅ * (λ ^ (S.multiplicity - 1) * S.X) ^ 3 := by
