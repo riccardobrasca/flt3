@@ -684,6 +684,7 @@ lemma coprime_y_z : IsCoprime S.y S.z := by
     apply lambda_not_dvd_y
     exact aux4
 
+-- TODO: remove these lemmas after review
 -- lemma x_ne_y : S.x ≠ S.y := by sorry
 -- lemma x_ne_z : S.x ≠ S.z := by sorry
 -- lemma y_ne_z : S.y ≠ S.z := by sorry
