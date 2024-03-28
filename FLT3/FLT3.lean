@@ -984,17 +984,41 @@ lemma lambda_sq_dvd_u_mul_cube : λ ^ 2 ∣ S.u₅ * (λ ^ (S.multiplicity - 1) 
 
 lemma formula2 : S.Y ^ 3 + S.u₄ * S.Z ^ 3 = S.u₅ * (λ ^ (S.multiplicity - 1) * S.X) ^ 3 := by
   simp_rw [u₄, u₅, IsUnit.unit_spec]
-  simp [u₄', u₅']
+  unfold u₄'
+  unfold u₅'
   apply mul_left_cancel₀ S.u₂.isUnit.ne_zero
   apply mul_left_cancel₀ hζ.eta_isUnit.ne_zero
   apply mul_left_cancel₀ lambda_ne_zero
-  have h : ↑(u₁ S) * ↑(u₂ S)⁻¹ = 1 := by
+  have h : ↑(u₂ S) * ↑(u₂ S)⁻¹ = (1 : (𝓞 K)ˣ) := by group
+  rw [show λ * (η * (↑(u₂ S) * (Y S ^ 3 + η * ↑(u₃ S) * ↑(u₂ S)⁻¹ * Z S ^ 3)))
+           =
+           λ * η * ↑(u₂ S) * Y S ^ 3
+           +
+           λ * η^2 * ↑(u₂ S) * ↑(u₂ S)⁻¹ * ↑(u₃ S) * Z S ^ 3 by ring]
+  rw [show λ * (η * (↑(u₂ S) * (-η ^ 2 * ↑(u₁ S) * ↑(u₂ S)⁻¹ * (λ ^ (multiplicity S - 1) * X S) ^ 3)))
+           =
+           λ * (↑(u₂ S) * ↑(u₂ S)⁻¹ * (-η ^ 3 * ↑(u₁ S)  * (λ ^ (multiplicity S - 1) * X S) ^ 3))
+           by ring]
+  rw [← sub_eq_zero]
+  simp [h]
+  rw [hζ.toInteger_cube_eq_one, one_mul]
+  have tmp : λ * (↑(u₁ S) * (λ ^ (multiplicity S - 1) * X S) ^ 3)
+             =
+             ↑(u₁ S) * X S ^ 3 * λ ^ (3 * multiplicity S - 2) := by
     sorry
-  ring_nf
-  group
-  rw [hζ.toInteger_cube_eq_one]
-
-  sorry
+  rw [tmp]
+  rw [show λ * η * ↑(u₂ S) * Y S ^ 3
+           +
+           λ * η ^ 2 * ↑(u₃ S) * Z S ^ 3
+           +
+           ↑(u₁ S) * X S ^ 3 * λ ^ (3 * multiplicity S - 2)
+           =
+           ↑(u₁ S) * X S ^ 3 * λ ^ (3 * multiplicity S - 2)
+           +
+           ↑(u₂ S) * η * Y S ^ 3 * λ
+           +
+           ↑(u₃ S) * η ^ 2 * Z S ^ 3 * λ  by ring_nf]
+  exact formula1 S
 
 lemma by_kummer : ↑S.u₄ ∈ ({1, -1} : Finset (𝓞 K)) := by
   suffices hh : S.u₄ = 1 ∨ S.u₄ = -1 by
