@@ -684,6 +684,7 @@ lemma coprime_y_z : IsCoprime S.y S.z := by
     apply lambda_not_dvd_y
     exact aux4
 
+-- TODO: remove these lemmas after review
 -- lemma x_ne_y : S.x ≠ S.y := by sorry
 -- lemma x_ne_z : S.x ≠ S.z := by sorry
 -- lemma y_ne_z : S.y ≠ S.z := by sorry
@@ -763,6 +764,8 @@ lemma span_x_mul_span_y_mul_span_z : span {S.x} * span {S.y} * span {S.z} = span
         rw [Ideal.span_singleton_mul_left_unit S.u.isUnit]
       _ = _ := by rw [Ideal.span_singleton_pow]
 
+
+-- The following 4 lemmas are useless now, but requires a bit of revision
 -- -- TODO: adopt correct Mathlib naming conventions
 -- lemma HH : (Finset.prod {x S, y S, z S} fun i ↦ span {i}) = span {w S} ^ 3 := by
 --     convert S.span_x_mul_span_y_mul_span_z
@@ -793,7 +796,7 @@ lemma x_eq_unit_mul_cube : ∃ (u₁ : (𝓞 K)ˣ) (X : 𝓞 K), S.x = u₁ * X 
   use u₁; use X
   simp [← hX, mul_comm]
 
--- old proof
+-- OLD PROOF: highly likely to be useless
   -- obtain ⟨I,hI⟩ := span_x_cube S
   -- obtain ⟨X,hX⟩ := Submodule.IsPrincipal.principal I
   -- rw [hX] at hI
@@ -938,7 +941,6 @@ lemma formula1 : S.u₁*S.X^3*λ^(3*S.multiplicity-2)+S.u₂*η*S.Y^3*λ+S.u₃*
 
 noncomputable
 def u₄' := η * S.u₃ * S.u₂⁻¹
-
 
 lemma u₄'_isUnit : IsUnit S.u₄' := by
   unfold u₄'
