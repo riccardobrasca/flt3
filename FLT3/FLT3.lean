@@ -1001,6 +1001,21 @@ lemma by_kummer : ↑S.u₄ ∈ ({1, -1} : Finset (𝓞 K)) := by
     sorry
 
 lemma final : S.Y ^ 3 + (S.u₄ * S.Z) ^ 3 = S.u₅ * (λ ^ (S.multiplicity - 1) * S.X) ^ 3 := by
+  rw [show S.Y ^ 3 + (S.u₄ * S.Z) ^ 3 = S.Y ^ 3 + S.u₄^2 * S.u₄ * S.Z ^ 3 by ring]
+  have goal := formula2 S
+  rw [show Y S ^ 3 + ↑(u₄ S) * Z S ^ 3 = Y S ^ 3 + 1 * ↑(u₄ S) * Z S ^ 3 by ring] at goal
+  suffices hyp : S.u₄ = 1 ∨ S.u₄ = -1 by
+    rcases hyp with (h | h)
+    · have hh : S.u₄ ^ 2 = (1 : 𝓞 K) := by
+        rw [h]
+        simp
+      nth_rewrite 1 [← hh] at goal
+      exact goal
+    · have hh : S.u₄ ^ 2 = (1 : 𝓞 K) := by
+        rw [h]
+        simp
+      nth_rewrite 1 [← hh] at goal
+      exact goal
   sorry
 
 noncomputable
