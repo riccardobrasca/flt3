@@ -1012,14 +1012,11 @@ lemma formula2 : S.Y ^ 3 + S.u₄ * S.Z ^ 3 = S.u₅ * (λ ^ (S.multiplicity - 1
   convert formula1 S using 1
   ring
 
-lemma by_kummer : ↑S.u₄ ∈ ({1, -1} : Finset (𝓞 K)) := by
-  suffices hh : S.u₄ = 1 ∨ S.u₄ = -1 by
-    rcases hh with (h | h) <;> simp [h]
-  apply eq_one_or_neg_one_of_unit_of_congruent hζ
-  have h0 : λ^2 ∣ λ^4 := by
-    use λ ^ 2
-    ring
-  have hX : λ^2 ∣ ↑(u₅ S) * (λ ^ (multiplicity S - 1) * X S) ^ 3 := by
+lemma lambda_sq_div_lambda_fourth : λ^2 ∣ λ^4 := by
+  use λ^2
+  ring
+
+lemma lambda_sq_div_new_X_cubed : λ^2 ∣ ↑(u₅ S) * (λ ^ (multiplicity S - 1) * X S) ^ 3 := by
     have := two_le_multiplicity S
     have tmp : ↑(u₅ S) * λ ^ (3 * S.multiplicity - 5) * λ^2 * S.X^3
               =
@@ -1033,8 +1030,13 @@ lemma by_kummer : ↑S.u₄ ∈ ({1, -1} : Finset (𝓞 K)) := by
     use S.u₅ * (λ ^ (3* S.multiplicity - 5) * X S^ 3)
     ring
 
+lemma by_kummer : ↑S.u₄ ∈ ({1, -1} : Finset (𝓞 K)) := by
+  have h0 := lambda_sq_div_lambda_fourth
+  have hX := lambda_sq_div_new_X_cubed S
+  suffices hh : S.u₄ = 1 ∨ S.u₄ = -1 by
+    rcases hh with (h | h) <;> simp [h]
+  apply eq_one_or_neg_one_of_unit_of_congruent hζ
   rcases hX with ⟨kX, hkX⟩
-
   rcases lambda_pow_four_dvd_cube_sub_one_or_add_one_of_lambda_not_dvd hζ S.lambda_not_dvd_Y with
     (HY | HY) <;> rcases lambda_pow_four_dvd_cube_sub_one_or_add_one_of_lambda_not_dvd
       hζ S.lambda_not_dvd_Z with (HZ | HZ) <;> replace HY := h0.trans HY <;> replace HZ :=
