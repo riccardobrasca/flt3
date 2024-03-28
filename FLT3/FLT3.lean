@@ -781,7 +781,7 @@ lemma span_x_mul_span_y_mul_span_z : span {S.x} * span {S.y} * span {S.z} = span
 
 lemma x_eq_unit_mul_cube : ∃ (u₁ : (𝓞 K)ˣ) (X : 𝓞 K), S.x = u₁ * X ^ 3 := by
   have h1 : S.x * (S.y * S.z * S.u⁻¹) = S.w ^ 3 := by
-    --simp only [x_mul_y_mul_z_eq_u_w_pow_three, mul_comm] --this produces a timeout error
+    --simp only [x_mul_y_mul_z_eq_u_w_pow_three, ← mul_assoc] --this produces a timeout error
     simp only [← mul_assoc, x_mul_y_mul_z_eq_u_w_pow_three]
     simp only [mul_comm _ (S.w ^ 3), mul_assoc,mul_right_inv, Units.mul_inv, mul_one]
   have h2 : IsCoprime S.x (S.y * S.z * S.u⁻¹) := by
@@ -981,6 +981,7 @@ lemma lambda_sq_dvd_u_mul_cube : λ ^ 2 ∣ S.u₅ * (λ ^ (S.multiplicity - 1) 
   omega
 
 lemma formula2 : S.Y ^ 3 + S.u₄ * S.Z ^ 3 = S.u₅ * (λ ^ (S.multiplicity - 1) * S.X) ^ 3 := by
+  simp_rw [u₄, u₅, IsUnit.unit_spec]
   sorry
 
 lemma by_kummer : ↑S.u₄ ∈ ({1, -1} : Finset (𝓞 K)) := by
@@ -990,14 +991,18 @@ lemma by_kummer : ↑S.u₄ ∈ ({1, -1} : Finset (𝓞 K)) := by
   rcases lambda_pow_four_dvd_cube_sub_one_or_add_one_of_lambda_not_dvd hζ S.lambda_not_dvd_Y with
     (HY | HY) <;> rcases lambda_pow_four_dvd_cube_sub_one_or_add_one_of_lambda_not_dvd
       hζ S.lambda_not_dvd_Z with (HZ | HZ)
+
   · use -1
     simp
     sorry
   · use 1
+    simp
     sorry
   · use 1
+    simp
     sorry
   · use -1
+    simp
     sorry
 
 lemma final : S.Y ^ 3 + (S.u₄ * S.Z) ^ 3 = S.u₅ * (λ ^ (S.multiplicity - 1) * S.X) ^ 3 := by
