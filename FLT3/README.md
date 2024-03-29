@@ -27,13 +27,13 @@ $$a^3+b^3 = (a+b)(a^2 - ab + b^2)
 
 ## Lean Overview
 
-### Added Lemmas
+### Main Added Lemmas
 
 - `lambda_ne_zero`
 - `eta_add_one_inv`
 - `x_mul_y_mul_z_eq_u_w_pow_three` (`omega`, `convert`, `multiplicity`)
 
-### Proved Lemmas
+### Main Proved Lemmas & Tactics
 
 1. `x_eq_unit_mul_cube` (we by-passed `Ideals`)
 2. `formula2` (`rw [show ... by ring]`, `mul_left_cancel₀`, `multiplicity`, `congr`, `omega`)
