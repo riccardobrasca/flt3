@@ -45,13 +45,12 @@ $$a^3+b^3 = (a+b)(a^2 - ab + b^2)
 
 ### Main Proved Lemmas & Tactics
 
-1. `x_eq_unit_mul_cube` (we by-passed `Ideals`)
-2. `formula2` (`rw [show ... by ring]`, `mul_left_cancel₀`, `multiplicity`, `congr`, `omega`)
-3. `by_kummer` (`<;>`, `rcases` + `replace`)
-
-- `lambda_sq_not_a_add_eta_mul_b`
-- `associated_of_dvd_a_add_b_of_dvd_a_add_eta_mul_b` (`rw [show ... by ring]`)
-- `lambda_not_dvd_x` (`omega`, `multiplicity`)
+1. `x_eq_unit_mul_cube` (we by-passed `Ideals`) [[code](https://github.com/riccardobrasca/flt3/blob/b2bb5436915e38cc01c43d9aa72496e2764fe249/FLT3/FLT3.lean#L794)]
+2. `formula2` (`rw [show ... by ring]`, `mul_left_cancel₀`, `multiplicity`, `congr 1`, `congr 2`, `omega`) [[code](https://github.com/riccardobrasca/flt3/blob/b2bb5436915e38cc01c43d9aa72496e2764fe249/FLT3/FLT3.lean#L989)]
+3. `by_kummer` (`<;>` , `rcases` + `replace`) [[code](https://github.com/riccardobrasca/flt3/blob/b2bb5436915e38cc01c43d9aa72496e2764fe249/FLT3/FLT3.lean#L1051)]
+4. `lambda_sq_not_a_add_eta_mul_b`
+5. `associated_of_dvd_a_add_b_of_dvd_a_add_eta_mul_b` (`rw [show ... by ring]`)
+6. `lambda_not_dvd_x` (`omega`, `multiplicity`)
 
 ### PR to Mathlib
 
@@ -59,6 +58,6 @@ $$a^3+b^3 = (a+b)(a^2 - ab + b^2)
 
 ## Lean Showcase
 
-1. `x_eq_unit_mul_cube` (we by-passed `Ideals`) [[code](https://github.com/riccardobrasca/flt3/blob/b2bb5436915e38cc01c43d9aa72496e2764fe249/FLT3/FLT3.lean#L794)]
-2. `formula2` (`rw [show ... by ring]`, `mul_left_cancel₀`, `multiplicity`, `congr 1`, `congr 2`, `omega`) [[code](https://github.com/riccardobrasca/flt3/blob/b2bb5436915e38cc01c43d9aa72496e2764fe249/FLT3/FLT3.lean#L989)]
-3. `by_kummer` (`<;>` , `rcases` + `replace`) [[code](https://github.com/riccardobrasca/flt3/blob/b2bb5436915e38cc01c43d9aa72496e2764fe249/FLT3/FLT3.lean#L1051)]
+1. `x_eq_unit_mul_cube` (we by-passed `Ideals`) [[slide](FLT3.lean#L794)]
+2. `formula2` (`rw [show ... by ring]`, `mul_left_cancel₀`, `multiplicity`, `congr 1`, `congr 2`, `omega`) [[slide](FLT3.lean#L989)]
+3. `by_kummer` (`<;>` , `rcases` + `replace`) [[slide](FLT3.lean#L1051)]
