@@ -2,9 +2,13 @@
 
 ## Team
 
-- Riccardo Brasca (University Paris-Cité)
-- ...
-- ...
+- Riccardo Brasca (Université Paris-Cité)
+- Sanyam Gupta (Sorbonne Université)
+- Omar Haddad (Université Paris-Cité)
+- David Lowry-Duda (ICERM)
+- Lorenzo Luccioli (University of Bologna)
+- Pietro Monticone (University of Trento)
+- Alexis Saurin (CNRS Université Paris-Cité)
 - Florent Schaffhauser (Heidelberg University)
 
 ## Motivation
