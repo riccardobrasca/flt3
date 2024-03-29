@@ -1,4 +1,15 @@
-# Fermat's Last Theorem for Exponent 3
+# FLT3 (LFTCM 2024, Luminy)
+
+## Team
+
+- Riccardo Brasca (Université Paris-Cité)
+- Sanyam Gupta (Sorbonne Université)
+- Omar Haddad (Université Paris-Cité)
+- David Lowry-Duda (ICERM)
+- Lorenzo Luccioli (University of Bologna)
+- Pietro Monticone (University of Trento)
+- Alexis Saurin (CNRS Université Paris-Cité)
+- Florent Schaffhauser (Heidelberg University)
 
 ## Motivation
 
