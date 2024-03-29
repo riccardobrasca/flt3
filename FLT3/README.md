@@ -21,7 +21,7 @@
 
 ## Logistical Overview
 
-- Textbook: [Arithmetics](https://link.springer.com/book/10.1007/978-1-4471-2131-2) by Marc Hindry
+- Textbook: [Arithmetics](https://link.springer.com/book/10.1007/978-1-4471-2131-2) by Marc Hindry Theorem 2.6 p.84)
 - Previous work by Riccardo with 37 `sorry`s left
 - Seamless coordination between two teams communicating mostly through Zulip
 
