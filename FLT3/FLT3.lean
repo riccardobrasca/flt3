@@ -371,12 +371,12 @@ lemma ex_dvd_a_add_b : ∃ (a' b' : 𝓞 K), a' ^ 3 + b' ^ 3 = S.u * S.c ^ 3 ∧
   · refine ⟨S.a, η * S.b, ?_, ?_, S.ha, fun ⟨x, hx⟩ ↦ S.hb ⟨η ^ 2 * x, ?_⟩, h⟩
     · rw [mul_pow, hζ.toInteger_cube_eq_one, one_mul, S.H]
     · exact (isCoprime_mul_unit_left_right hζ.eta_isUnit _ _).2 S.coprime
-    · rw [mul_comm _ x, ← mul_assoc, ← hx, mul_comm _ S.b, mul_assoc, ← pow_succ,
+    · rw [mul_comm _ x, ← mul_assoc, ← hx, mul_comm _ S.b, mul_assoc, ← pow_succ',
         hζ.toInteger_cube_eq_one, mul_one]
   · refine ⟨S.a, η ^ 2 * S.b, ?_, ?_, S.ha, fun ⟨x, hx⟩ ↦ S.hb ⟨η * x, ?_⟩, h⟩
     · rw [mul_pow, ← pow_mul, mul_comm 2, pow_mul, hζ.toInteger_cube_eq_one, one_pow, one_mul, S.H]
     · exact (isCoprime_mul_unit_left_right (hζ.eta_isUnit.pow _) _ _).2 S.coprime
-    · rw [mul_comm _ x, ← mul_assoc, ← hx, mul_comm _ S.b, mul_assoc, ← pow_succ',
+    · rw [mul_comm _ x, ← mul_assoc, ← hx, mul_comm _ S.b, mul_assoc, ← pow_succ,
         hζ.toInteger_cube_eq_one, mul_one]
 
 /-- Given `S : Solution'`, then there is `S₁ : Solution` such that
@@ -572,7 +572,7 @@ lemma lambda_pow_dvd_a_add_b : λ ^ (3 * S.multiplicity - 2) ∣ S.a + S.b := by
   have := S.two_le_multiplicity
   have hh : 3 * multiplicity S - 2 + 1 + 1 = 3 * multiplicity S := by
     omega
-  rw [← hh, pow_succ', pow_succ'] at h
+  rw [← hh, pow_succ, pow_succ] at h
   rw [show (S.a + S.b) * (λ * y S) * (λ * z S) = (S.a + S.b) * y S * z S * λ * λ by ring] at h
   simp only [mul_dvd_mul_iff_right lambda_ne_zero] at h
   rwa [show (S.a + S.b) * y S * z S = y S * (z S * (S.a + S.b)) by ring] at h
@@ -600,7 +600,7 @@ lemma lambda_not_dvd_w : ¬ λ ∣ S.w := by
   replace h := mul_dvd_mul_left (λ ^ S.multiplicity) h
   rw [← w_spec] at h
   have hh : _ := multiplicity.is_greatest' S.toSolution'.multiplicity_lambda_c_finite (lt_add_one S.multiplicity)
-  rw [pow_succ, mul_comm] at hh
+  rw [pow_succ', mul_comm] at hh
   exact hh h
 
 lemma lambda_not_dvd_x : ¬ λ ∣ S.x := by
@@ -610,7 +610,7 @@ lemma lambda_not_dvd_x : ¬ λ ∣ S.x := by
   replace h := mul_dvd_mul (mul_dvd_mul h S.lambda_dvd_a_add_eta_mul_b) S.lambda_dvd_a_add_eta_sq_mul_b
   rw [← cube_add_cube_eq_mul, S.H, w_spec] at h
   simp only [Units.isUnit, IsUnit.dvd_mul_left] at h
-  rw [← pow_succ, mul_comm, ← mul_assoc, ← pow_succ] at h
+  rw [← pow_succ', mul_comm, ← mul_assoc, ← pow_succ'] at h
   have := S.two_le_multiplicity
   have hh : 3 * multiplicity S - 2 + 1 + 1 = 3 * multiplicity S := by
     omega
@@ -736,7 +736,7 @@ lemma x_mul_y_mul_z_eq_u_w_pow_three : S.x * S.y * S.z = S.u * S.w ^ 3 := by
   suffices hh : λ ^ (3 * S.multiplicity - 2) * S.x * λ * S.y * λ * S.z = S.u * λ ^ (3 * S.multiplicity) * S.w ^ 3 by
     rw [show λ ^ (3 * multiplicity S - 2) * x S * λ * y S * λ * z S = λ ^ (3 * multiplicity S - 2) * λ * λ * x S * y S * z S by ring] at hh
     rw [mul_comm _ (λ ^ (3 * multiplicity S))] at hh
-    simp only [← pow_succ'] at hh
+    simp only [← pow_succ] at hh
     have := S.two_le_multiplicity
     have hhh : 3 * multiplicity S - 2 + 1 + 1 = 3 * multiplicity S := by
       omega
@@ -988,7 +988,7 @@ lemma formula2 : S.Y ^ 3 + S.u₄ * S.Z ^ 3 = S.u₅ * (λ ^ (S.multiplicity - 1
     congr 1
     rw [mul_pow, mul_comm, ← mul_assoc, mul_comm _ (S.X ^ _)]
     congr 1
-    rw [← pow_mul, ← pow_succ]
+    rw [← pow_mul', ← pow_succ']
     congr 1
     -- SLIDE
     have := two_le_multiplicity S
@@ -1090,7 +1090,7 @@ lemma _root_.Solution'_final_multiplicity :
     (Solution'_final S).multiplicity = S.multiplicity - 1 := by
   refine (multiplicity.unique' (by simp [Solution'_final]) (fun h ↦ S.lambda_not_dvd_X ?_)).symm
   obtain ⟨k, hk : λ ^ (S.multiplicity - 1) * S.X = λ ^ (S.multiplicity - 1 + 1) * k⟩ := h
-  rw [pow_succ', mul_assoc] at hk
+  rw [pow_succ, mul_assoc] at hk
   simp only [mul_eq_mul_left_iff, pow_eq_zero_iff', lambda_ne_zero, ne_eq, false_and,
     or_false] at hk
   simp [hk]
