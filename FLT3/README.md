@@ -1,4 +1,11 @@
-# Talk
+# FLT3 (LFTCM 2024, Luminy)
+
+## Team
+
+- Riccardo Brasca (University Paris-Cité)
+- ...
+- ...
+- Florent Schaffhauser (Heidelberg University)
 
 ## Motivation
 
@@ -7,7 +14,6 @@
     - Less Mathlib style
 - FLT Regular Prime: Alex, Chris, Eric, Ruben, Andrew, Riccardo and others.
 - FLT by Kevin Buzzard and others
-
 
 ## Logistical Overview
 
