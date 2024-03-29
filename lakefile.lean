@@ -26,7 +26,7 @@ package «FLT3» where
     ⟨`relaxedAutoImplicit, false⟩]
 
 require mathlib from git
-  "https://github.com/leanprover-community/mathlib4.git" @ "RB/CIRM"
+  "https://github.com/leanprover-community/mathlib4.git"
 
 @[default_target]
 lean_lib «FLT3» where
