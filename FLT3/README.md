@@ -61,7 +61,7 @@ None!
 
 ### PR to Mathlib
 
-https://github.com/leanprover-community/mathlib4/pull/11695#event-12255417495
+`mul_dvd_mul_left` was implemented for `CommMonoid`. [We have generalised it](https://github.com/leanprover-community/mathlib4/pull/11695#event-12255417495) to `Monoid`.
 
 ## Lean Showcase
 
