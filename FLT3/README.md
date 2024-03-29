@@ -8,17 +8,16 @@
 - David Lowry-Duda (ICERM)
 - Lorenzo Luccioli (University of Bologna)
 - Pietro Monticone (University of Trento)
-- Alexis Saurin (CNRS Université Paris-Cité)
+- Alexis Saurin (CNRS & Université Paris-Cité)
 - Florent Schaffhauser (Heidelberg University)
 
 ## Motivation
 
 - There was already a version of the formalised proof of **FLT3** within **FLT Regular Prime**:
-    - It was longer than ours
-    - Less Mathlib style
+  - It was longer than ours
+  - Less Mathlib style
 - **FLT Regular Prime**: Alex, Chris, Eric, Ruben, Andrew, Riccardo and others.
 - **FLT**: Kevin Buzzard and others
-
 
 ## Logistical Overview
 
@@ -49,7 +48,6 @@ $$a^3+b^3 = (a+b)(a^2 - ab + b^2)
 1. `x_eq_unit_mul_cube` (we by-passed `Ideals`)
 2. `formula2` (`rw [show ... by ring]`, `mul_left_cancel₀`, `multiplicity`, `congr`, `omega`)
 3. `by_kummer` (`<;>`, `rcases` + `replace`)
-
 
 - `lambda_sq_not_a_add_eta_mul_b`
 - `associated_of_dvd_a_add_b_of_dvd_a_add_eta_mul_b` (`rw [show ... by ring]`)
