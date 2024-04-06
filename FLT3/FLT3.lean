@@ -683,31 +683,6 @@ lemma x_mul_y_mul_z : S.x * S.y * S.z = S.u * S.w ^ 3 := by
 
 open Ideal
 
-lemma ideals_coprime : ∀ i ∈ ({S.x, S.y, S.z} : Finset (𝓞 K)),
-    ∀ j ∈ ({S.x, S.y, S.z} : Finset (𝓞 K)), i ≠ j → IsCoprime (span {i}) (span {j}) := by
-  intros i hi j hj hij
-  rw [Ideal.isCoprime_span_singleton_iff]
-  rcases Finset.mem_insert.mp hi with (hhi | hhi)
-  · rcases Finset.mem_insert.mp hj with (hhj | hhj)
-    · aesop
-    . rcases Finset.mem_insert.mp hhj with (hhj | hhj)
-      · simp only [hhi, hhj, coprime_x_y S]
-      · simp at hhj
-        simp only [hhi, hhj, coprime_x_z S]
-  · rcases Finset.mem_insert.mp hhi with (hhi | hhi)
-    · rcases Finset.mem_insert.mp hj with (hhj | hhj)
-      · simp only [hhi, hhj, coprime_x_y S, IsCoprime.symm]
-      · rcases Finset.mem_insert.mp hhj with (hhj | hhj)
-        · aesop
-        · simp at hhj
-          simp only [hhi, hhj, coprime_y_z S]
-    · simp at hhi
-      rcases Finset.mem_insert.mp hj with (hhj | hhj)
-      · simp only [hhi, hhj, coprime_x_z S, IsCoprime.symm]
-      · rcases Finset.mem_insert.mp hhj with (hhj | hhj)
-        · simp only [hhi, hhj, coprime_y_z S, IsCoprime.symm]
-        · aesop
-
 lemma x_mul_y_mul_z_eq_u_w_pow_three : S.x * S.y * S.z = S.u * S.w ^ 3 := by
   suffices hh : λ ^ (3 * S.multiplicity - 2) * S.x * λ * S.y * λ * S.z = S.u * λ ^ (3 * S.multiplicity) * S.w ^ 3 by
     rw [show λ ^ (3 * multiplicity S - 2) * x S * λ * y S * λ * z S = λ ^ (3 * multiplicity S - 2) * λ * λ * x S * y S * z S by ring] at hh
