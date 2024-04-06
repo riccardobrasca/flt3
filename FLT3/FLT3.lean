@@ -667,20 +667,6 @@ lemma mult_minus_two_plus_one_plus_one : 3 * multiplicity S - 2 + 1 + 1 = 3 * mu
   zify [this]
   ring
 
-lemma x_mul_y_mul_z : S.x * S.y * S.z = S.u * S.w ^ 3 := by
-  have aux1 : ((η - 1) ^ (3 * S.multiplicity) ≠ 0) := by
-    simp [lambda_ne_zero]
-  rw [← mul_left_inj' aux1]
-  have aux2 : x S * y S * z S * ((η - 1) ^ (3 * multiplicity S -2 + 1 + 1)) = ((η - 1) ^ (3 * multiplicity S - 2) * x S) * ((η - 1) * y S) * (λ * z S) := by
-    ring
-  rw [mult_minus_two_plus_one_plus_one] at aux2
-  rw [aux2]
-  have aux3 : ↑S.u * w S ^ 3 * λ ^ (3 * multiplicity S) = ↑S.u * (λ ^ (multiplicity S) * w S) ^ 3 := by ring
-  rw [aux3]
-  rw [← x_spec, ← y_spec, ← z_spec, ← w_spec]
-  rw [← cube_add_cube_eq_mul S.toSolution']
-  exact S.H
-
 open Ideal
 
 lemma x_mul_y_mul_z_eq_u_w_pow_three : S.x * S.y * S.z = S.u * S.w ^ 3 := by
