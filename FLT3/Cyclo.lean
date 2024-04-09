@@ -44,7 +44,7 @@ Let `ζ` be any primitive `3`-rd root of unity in `K`.
 Let `η` be the element in the ring of integers corresponding to `ζ`.
 Let `u` be a unit in `(𝓞 K)ˣ`.
 
-Then `u ∈ ({1, -1, ζ, -ζ, ζ^2, -ζ^2}`. -/
+Then `u ∈ {1, -1, ζ, -ζ, ζ^2, -ζ^2}`. -/
 theorem Units.mem : ↑u ∈({1, -1, η, -η, η ^ 2, -η ^ 2} : Set (𝓞 K)) := by
   have hrank : rank K = 0 := by
     dsimp [rank]
