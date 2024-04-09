@@ -90,7 +90,6 @@ theorem Units.mem : ↑u ∈({1, -1, η, -η, η ^ 2, -η ^ 2} : Set (𝓞 K)) :
 /-- Let `K` be a number field such that `IsCyclotomicExtension {3} ℚ K`.
 Let `ζ` be any primitive `3`-rd root of unity in `K`.
 Let `η` be the element in the ring of integers corresponding to `ζ`.
-Let `u` be a unit in `(𝓞 K)ˣ`.
 
 Then for all `n` in `ℤ`, `3` does not divide `ζ - n`. -/
 theorem Units.not_exists_int_three_dvd_sub : ¬(∃ n : ℤ, (3 : 𝓞 K) ∣ (η - n : 𝓞 K)) := by
@@ -121,7 +120,6 @@ theorem Units.not_exists_int_three_dvd_sub : ¬(∃ n : ℤ, (3 : 𝓞 K) ∣ (�
 Let `ζ` be any primitive `3`-rd root of unity in `K`.
 Let `η` be the element in the ring of integers corresponding to `ζ`.
 Let `λ` be the element in the ring of integers corresponding to `ζ - 1`.
-Let `u` be a unit in `(𝓞 K)ˣ`.
 
 Then `λ ^ 2 = -3 * η`. -/
 lemma lambda_sq : λ ^ 2 = -3 * η :=
@@ -183,7 +181,6 @@ instance : Fintype (𝓞 K ⧸ Ideal.span {λ}) := by
 Let `ζ` be any primitive `3`-rd root of unity in `K`.
 Let `η` be the element in the ring of integers corresponding to `ζ`.
 Let `λ` be the element in the ring of integers corresponding to `ζ - 1`.
-Let `u` be a unit in `(𝓞 K)ˣ`.
 
 Then the norm of `λ` equals `3`. -/
 lemma norm_lambda : Algebra.norm ℤ λ = 3 := by
@@ -199,7 +196,6 @@ lemma norm_lambda : Algebra.norm ℤ λ = 3 := by
 Let `ζ` be any primitive `3`-rd root of unity in `K`.
 Let `η` be the element in the ring of integers corresponding to `ζ`.
 Let `λ` be the element in the ring of integers corresponding to `ζ - 1`.
-Let `u` be a unit in `(𝓞 K)ˣ`.
 
 Then the norm of `λ` is prime. -/
 lemma norm_lambda_prime : Prime (Algebra.norm ℤ λ) := by
@@ -210,7 +206,6 @@ lemma norm_lambda_prime : Prime (Algebra.norm ℤ λ) := by
 Let `ζ` be any primitive `3`-rd root of unity in `K`.
 Let `η` be the element in the ring of integers corresponding to `ζ`.
 Let `λ` be the element in the ring of integers corresponding to `ζ - 1`.
-Let `u` be a unit in `(𝓞 K)ˣ`.
 
 Then `λ` divides `3`. -/
 lemma lambda_dvd_three : λ ∣ 3 := by
@@ -232,7 +227,6 @@ lemma _root_.IsPrimitiveRoot.lambda_prime : Prime λ := hζ.zeta_sub_one_prime'
 Let `ζ` be any primitive `3`-rd root of unity in `K`.
 Let `η` be the element in the ring of integers corresponding to `ζ`.
 Let `λ` be the element in the ring of integers corresponding to `ζ - 1`.
-Let `u` be a unit in `(𝓞 K)ˣ`.
 
 Then `λ` is not a unit. -/
 lemma lambda_not_unit : ¬ IsUnit λ := hζ.lambda_prime.not_unit
@@ -241,7 +235,6 @@ lemma lambda_not_unit : ¬ IsUnit λ := hζ.lambda_prime.not_unit
 Let `ζ` be any primitive `3`-rd root of unity in `K`.
 Let `η` be the element in the ring of integers corresponding to `ζ`.
 Let `λ` be the element in the ring of integers corresponding to `ζ - 1`.
-Let `u` be a unit in `(𝓞 K)ˣ`.
 
 Then `𝓞 K ⧸ Ideal.span {λ}` has cardinality `3`. -/
 lemma card_quot : Fintype.card (𝓞 K ⧸ Ideal.span {λ}) = 3 := by
@@ -252,7 +245,6 @@ lemma card_quot : Fintype.card (𝓞 K ⧸ Ideal.span {λ}) = 3 := by
 Let `ζ` be any primitive `3`-rd root of unity in `K`.
 Let `η` be the element in the ring of integers corresponding to `ζ`.
 Let `λ` be the element in the ring of integers corresponding to `ζ - 1`.
-Let `u` be a unit in `(𝓞 K)ˣ`.
 
 Then `2` in `𝓞 K ⧸ Ideal.span {λ}` is not `0`. -/
 lemma two_ne_zero : (2 : 𝓞 K ⧸ Ideal.span {λ}) ≠ 0 := by
@@ -271,7 +263,6 @@ lemma two_ne_zero : (2 : 𝓞 K ⧸ Ideal.span {λ}) ≠ 0 := by
 Let `ζ` be any primitive `3`-rd root of unity in `K`.
 Let `η` be the element in the ring of integers corresponding to `ζ`.
 Let `λ` be the element in the ring of integers corresponding to `ζ - 1`.
-Let `u` be a unit in `(𝓞 K)ˣ`.
 
 Then `λ` does not divide `2`. -/
 lemma lambda_not_dvd_two : ¬ λ ∣ 2 := by
@@ -292,7 +283,6 @@ open Classical Finset in
 Let `ζ` be any primitive `3`-rd root of unity in `K`.
 Let `η` be the element in the ring of integers corresponding to `ζ`.
 Let `λ` be the element in the ring of integers corresponding to `ζ - 1`.
-Let `u` be a unit in `(𝓞 K)ˣ`.
 
 Then the universal finite set is `{0, 1, -1}`. -/
 lemma univ_quot : (univ : Finset ((𝓞 K ⧸ Ideal.span {λ}))) = {0, 1, -1} := by
@@ -312,7 +302,6 @@ lemma univ_quot : (univ : Finset ((𝓞 K ⧸ Ideal.span {λ}))) = {0, 1, -1} :=
 Let `ζ` be any primitive `3`-rd root of unity in `K`.
 Let `η` be the element in the ring of integers corresponding to `ζ`.
 Let `λ` be the element in the ring of integers corresponding to `ζ - 1`.
-Let `u` be a unit in `(𝓞 K)ˣ`.
 Let `x` be in `𝓞 K`.
 
 Then `λ` divides `x` or `λ` divides `x - 1` or `λ` divides `x + 1`. -/
@@ -333,7 +322,6 @@ lemma dvd_or_dvd_sub_one_or_dvd_add_one (x : 𝓞 K) : λ ∣ x ∨ λ ∣ x - 1
 /-- Let `K` be a number field such that `IsCyclotomicExtension {3} ℚ K`.
 Let `ζ` be any primitive `3`-rd root of unity in `K`.
 Let `η` be the element in the ring of integers corresponding to `ζ`.
-Let `u` be a unit in `(𝓞 K)ˣ`.
 
 Then `↑η = ζ`. -/
 lemma _root_.IsPrimitiveRoot.toInteger_coe : hζ.toInteger.1 = ζ := rfl
@@ -341,7 +329,6 @@ lemma _root_.IsPrimitiveRoot.toInteger_coe : hζ.toInteger.1 = ζ := rfl
 /-- Let `K` be a number field such that `IsCyclotomicExtension {3} ℚ K`.
 Let `ζ` be any primitive `3`-rd root of unity in `K`.
 Let `η` be the element in the ring of integers corresponding to `ζ`.
-Let `u` be a unit in `(𝓞 K)ˣ`.
 
 Then `η ^ 3 = 1`. -/
 lemma _root_.IsPrimitiveRoot.toInteger_cube_eq_one : η ^ 3 = 1 := by
@@ -352,7 +339,6 @@ lemma _root_.IsPrimitiveRoot.toInteger_cube_eq_one : η ^ 3 = 1 := by
 /-- Let `K` be a number field such that `IsCyclotomicExtension {3} ℚ K`.
 Let `ζ` be any primitive `3`-rd root of unity in `K`.
 Let `η` be the element in the ring of integers corresponding to `ζ`.
-Let `u` be a unit in `(𝓞 K)ˣ`.
 
 Then `η ^ 3 = 1`. -/
 lemma _root_.IsPrimitiveRoot.eta_isUnit : IsUnit η := by
@@ -361,7 +347,6 @@ lemma _root_.IsPrimitiveRoot.eta_isUnit : IsUnit η := by
 /-- Let `K` be a number field such that `IsCyclotomicExtension {3} ℚ K`.
 Let `ζ` be any primitive `3`-rd root of unity in `K`.
 Let `η` be the element in the ring of integers corresponding to `ζ`.
-Let `u` be a unit in `(𝓞 K)ˣ`.
 
 Then `η ^ 2 + η + 1 = 0`. -/
 lemma _root_.IsPrimitiveRoot.toInteger_eval_cyclo : η ^ 2 + η + 1 = 0 := by
@@ -370,7 +355,6 @@ lemma _root_.IsPrimitiveRoot.toInteger_eval_cyclo : η ^ 2 + η + 1 = 0 := by
 /-- Let `K` be a number field such that `IsCyclotomicExtension {3} ℚ K`.
 Let `ζ` be any primitive `3`-rd root of unity in `K`.
 Let `η` be the element in the ring of integers corresponding to `ζ`.
-Let `u` be a unit in `(𝓞 K)ˣ`.
 Let `x` be in `𝓞 K`.
 
 Then `x ^ 3 - 1 = (x - 1) * (x - η) * (x - η ^ 2)`. -/
@@ -384,7 +368,6 @@ lemma cube_sub_one (x : 𝓞 K) : x ^ 3 - 1 = (x - 1) * (x - η) * (x - η ^ 2) 
 Let `ζ` be any primitive `3`-rd root of unity in `K`.
 Let `η` be the element in the ring of integers corresponding to `ζ`.
 Let `λ` be the element in the ring of integers corresponding to `ζ - 1`.
-Let `u` be a unit in `(𝓞 K)ˣ`.
 Let `x` be in `𝓞 K`.
 
 Then `λ` divides `x * (x - 1) * (x - (η + 1))`. -/
@@ -401,7 +384,6 @@ lemma lambda_dvd_mul_sub_one_mul_sub_eta_add_one (x : 𝓞 K) :
 Let `ζ` be any primitive `3`-rd root of unity in `K`.
 Let `η` be the element in the ring of integers corresponding to `ζ`.
 Let `λ` be the element in the ring of integers corresponding to `ζ - 1`.
-Let `u` be a unit in `(𝓞 K)ˣ`.
 Let `x` be in `𝓞 K`.
 
 If `λ` divides `x - 1`, then `λ ^ 4` divides `x ^ 3 - 1`. -/
@@ -418,7 +400,6 @@ lemma lambda_pow_four_dvd_cube_sub_one_of_dvd_sub_one {x : 𝓞 K} (h : λ ∣ x
 Let `ζ` be any primitive `3`-rd root of unity in `K`.
 Let `η` be the element in the ring of integers corresponding to `ζ`.
 Let `λ` be the element in the ring of integers corresponding to `ζ - 1`.
-Let `u` be a unit in `(𝓞 K)ˣ`.
 Let `x` be in `𝓞 K`.
 
 If `λ` divides `x + 1`, then `λ ^ 4` divides `x ^ 3 + 1`. -/
@@ -438,7 +419,6 @@ lemma lambda_pow_four_dvd_cube_add_one_of_dvd_add_one {x : 𝓞 K} (h : λ ∣ x
 Let `ζ` be any primitive `3`-rd root of unity in `K`.
 Let `η` be the element in the ring of integers corresponding to `ζ`.
 Let `λ` be the element in the ring of integers corresponding to `ζ - 1`.
-Let `u` be a unit in `(𝓞 K)ˣ`.
 Let `x` be in `𝓞 K`.
 
 If `λ` does not divide `x`, then `λ ^ 4` divides `x ^ 3 - 1` or `x ^ 3 + 1`. -/
