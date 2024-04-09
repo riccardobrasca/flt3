@@ -340,7 +340,7 @@ lemma _root_.IsPrimitiveRoot.toInteger_cube_eq_one : η ^ 3 = 1 := by
 Let `ζ` be any primitive `3`-rd root of unity in `K`.
 Let `η` be the element in the ring of integers corresponding to `ζ`.
 
-Then `η ^ 3 = 1`. -/
+Then `η` is a unit. -/
 lemma _root_.IsPrimitiveRoot.eta_isUnit : IsUnit η := by
   apply isUnit_of_mul_eq_one _ (η ^ 2) (by simp [← pow_succ', hζ.toInteger_cube_eq_one])
 
