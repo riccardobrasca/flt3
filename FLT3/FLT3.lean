@@ -11,8 +11,10 @@ import FLT3.Cyclo
 
 
 /-!
-# Fermat Last Theorem in the case `n = 3`
-The goal of this file is to prove Fermat Last theorem in the case `n = 3`.
+# Fermat's Last Theorem for Exponent `n = 3`
+The goal of this file is to prove Fermat's Last Theorem for exponent `3`, namely that
+for all `a`, `b`, `c` in `ℕ` such that `a ≠ 0` and `b ≠ 0` and `c ≠ 0`,
+then `a ^ 3 + b ^ 3 ≠ c ^ 3`.
 -/
 
 open NumberField nonZeroDivisors IsCyclotomicExtension.Rat.Three
