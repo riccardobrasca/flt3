@@ -380,10 +380,6 @@ namespace Solution
 
 variable (S : Solution)
 
-
-/-- This should be moved to Cyclo.lean. -/
-lemma lambda_ne_zero : λ ≠ 0 := hζ.lambda_prime.ne_zero
-
 lemma a_add_eta_b : S.a + η * S.b = (S.a + S.b) + λ * S.b := by ring
 
 /-- Given `(S : Solution)`, we have that `λ ∣ (S.a + η * S.b)`. -/
@@ -399,7 +395,7 @@ lemma lambda_dvd_a_add_eta_sq_mul_b : λ ∣ (S.a + η ^ 2 * S.b) := by
 
 /-- Given `(S : Solution)`, we have that `λ ^ 2` does not divide `S.a + η * S.b`. -/
 lemma lambda_sq_not_a_add_eta_mul_b : ¬ λ ^ 2 ∣ (S.a + η * S.b) := by
-  simp_rw [a_add_eta_b, dvd_add_right S.hab, pow_two, mul_dvd_mul_iff_left lambda_ne_zero, S.hb,
+  simp_rw [a_add_eta_b, dvd_add_right S.hab, pow_two, mul_dvd_mul_iff_left (lambda_ne_zero hζ), S.hb,
     not_false_eq_true]
 
 /-- Given `(S : Solution)`, we have that `λ ^ 2` does not divide `S.a + η ^ 2 * S.b`. -/
@@ -552,7 +548,7 @@ lemma lambda_pow_dvd_a_add_b : λ ^ (3 * S.multiplicity - 2) ∣ S.a + S.b := by
     omega
   rw [← hh, pow_succ, pow_succ] at h
   rw [show (S.a + S.b) * (λ * y S) * (λ * z S) = (S.a + S.b) * y S * z S * λ * λ by ring] at h
-  simp only [mul_dvd_mul_iff_right lambda_ne_zero] at h
+  simp only [mul_dvd_mul_iff_right (lambda_ne_zero hζ)] at h
   rwa [show (S.a + S.b) * y S * z S = y S * (z S * (S.a + S.b)) by ring] at h
 
 /-- Given `S : Solution`, we let `S.x` be the element such that
@@ -904,7 +900,7 @@ lemma formula2 : S.Y ^ 3 + S.u₄ * S.Z ^ 3 = S.u₅ * (λ ^ (S.multiplicity - 1
   unfold u₅'
   apply mul_left_cancel₀ S.u₂.isUnit.ne_zero
   apply mul_left_cancel₀ hζ.eta_isUnit.ne_zero
-  apply mul_left_cancel₀ lambda_ne_zero
+  apply mul_left_cancel₀ (lambda_ne_zero hζ)
   have h : ↑(u₂ S) * ↑(u₂ S)⁻¹ = (1 : (𝓞 K)ˣ) := by group
   -- SLIDE
   rw [show λ * (η * (↑(u₂ S) * (Y S ^ 3 + η * ↑(u₃ S) * ↑(u₂ S)⁻¹ * Z S ^ 3)))
