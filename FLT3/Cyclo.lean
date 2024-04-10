@@ -228,6 +228,14 @@ Let `ζ` be any primitive `3`-rd root of unity in `K`.
 Let `η` be the element in the ring of integers corresponding to `ζ`.
 Let `λ` be the element in the ring of integers corresponding to `ζ - 1`.
 
+Then `λ` is non-zero. -/
+lemma lambda_ne_zero : λ ≠ 0 := hζ.lambda_prime.ne_zero
+
+/-- Let `K` be a number field such that `IsCyclotomicExtension {3} ℚ K`.
+Let `ζ` be any primitive `3`-rd root of unity in `K`.
+Let `η` be the element in the ring of integers corresponding to `ζ`.
+Let `λ` be the element in the ring of integers corresponding to `ζ - 1`.
+
 Then `λ` is not a unit. -/
 lemma lambda_not_unit : ¬ IsUnit λ := hζ.lambda_prime.not_unit
 
