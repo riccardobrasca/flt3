@@ -685,16 +685,6 @@ lemma x_mul_y_mul_z_eq_u_w_pow_three : S.x * S.y * S.z = S.u * S.w ^ 3 := by
   rw [← S.H, cube_add_cube_eq_mul]
   ring
 
-lemma span_x_mul_span_y_mul_span_z : span {S.x} * span {S.y} * span {S.z} = span {S.w} ^ 3 := by
-  calc span {S.x} * span {S.y} * span {S.z} = span {S.x * S.y} * span {S.z} := by
-        rw [← Ideal.span_singleton_mul_span_singleton S.x S.y]
-      _ = span {S.x * S.y * S.z} := by
-        rw [← Ideal.span_singleton_mul_span_singleton (S.x * S.y) S.z]
-      _ = span {S.u * S.w ^ 3} := by rw [x_mul_y_mul_z_eq_u_w_pow_three]
-      _ = span {S.w ^ 3} := by
-        rw [Ideal.span_singleton_mul_left_unit S.u.isUnit]
-      _ = _ := by rw [Ideal.span_singleton_pow]
-
 lemma x_eq_unit_mul_cube : ∃ (u₁ : (𝓞 K)ˣ) (X : 𝓞 K), S.x = u₁ * X ^ 3 := by
   have h1 : S.x * (S.y * S.z * S.u⁻¹) = S.w ^ 3 := by
     --simp only [x_mul_y_mul_z_eq_u_w_pow_three, ← mul_assoc] --this produces a timeout error
