@@ -878,33 +878,23 @@ lemma formula2 : S.Y ^ 3 + S.u₄ * S.Z ^ 3 = S.u₅ * (λ ^ (S.multiplicity - 1
   apply mul_left_cancel₀ S.u₂.isUnit.ne_zero
   apply mul_left_cancel₀ hζ.eta_isUnit.ne_zero
   apply mul_left_cancel₀ (lambda_ne_zero hζ)
-  have h : ↑(u₂ S) * ↑(u₂ S)⁻¹ = (1 : (𝓞 K)ˣ) := by group
-  -- SLIDE
   rw [show λ * (η * (↑(u₂ S) * (Y S ^ 3 + η * ↑(u₃ S) * ↑(u₂ S)⁻¹ * Z S ^ 3)))
-           =
-           λ * η * ↑(u₂ S) * Y S ^ 3
-           +
-           λ * η^2 * ↑(u₂ S) * ↑(u₂ S)⁻¹ * ↑(u₃ S) * Z S ^ 3 by ring]
-  rw [show λ * (η * (↑(u₂ S) * (-η ^ 2 * ↑(u₁ S) * ↑(u₂ S)⁻¹ * (λ ^ (multiplicity S - 1) * X S) ^ 3)))
-           =
-           λ * (↑(u₂ S) * ↑(u₂ S)⁻¹ * (-η ^ 3 * ↑(u₁ S)  * (λ ^ (multiplicity S - 1) * X S) ^ 3))
-           by ring]
+    = λ * η * ↑(u₂ S) * Y S ^ 3 + λ * η^2 * ↑(u₂ S) * ↑(u₂ S)⁻¹ * ↑(u₃ S) * Z S ^ 3 by ring]
+  rw [show λ * (η * (↑(u₂ S) * (-η ^ 2 * ↑(u₁ S) * ↑(u₂ S)⁻¹
+    * (λ ^ (S.multiplicity - 1) * X S) ^ 3)))
+    = λ * (↑(u₂ S) * ↑(u₂ S)⁻¹ * (-η ^ 3 * ↑(u₁ S) * (λ ^ (S.multiplicity - 1) * X S) ^ 3)) by ring]
   rw [← sub_eq_zero]
-  simp [h]
+  simp only [Units.mul_inv_cancel_right, Units.mul_inv, neg_mul, mul_neg, one_mul, sub_neg_eq_add]
   rw [hζ.toInteger_cube_eq_one, one_mul]
-  have tmp : λ * (↑(u₁ S) * (λ ^ (multiplicity S - 1) * X S) ^ 3)
-             =
-             ↑(u₁ S) * X S ^ 3 * λ ^ (3 * multiplicity S - 2) := by
+  have tmp : λ * (↑(u₁ S) * (λ ^ (S.multiplicity - 1) * X S) ^ 3)
+      = ↑(u₁ S) * X S ^ 3 * λ ^ (3 * S.multiplicity - 2) := by
     rw [mul_comm, mul_assoc, mul_assoc]
-    -- SLIDE
     congr 1
     rw [mul_pow, mul_comm, ← mul_assoc, mul_comm _ (S.X ^ _)]
     congr 1
     rw [← pow_mul', ← pow_succ']
     congr 1
-    -- SLIDE
     have := two_le_multiplicity S
-    -- SLIDE
     omega
   rw [tmp]
   convert formula1 S using 1
