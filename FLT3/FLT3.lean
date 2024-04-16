@@ -315,7 +315,8 @@ lemma cube_add_cube_eq_mul :
   _ = S.a ^ 3 + S.b ^ 3 := by rw [hζ.toInteger_eval_cyclo]; ring
 
 open PartENat in
-/-- Given `S : Solution'`, we have that `λ ^ 2` divides one amongst `S.a + S.b ∨ λ ^ 2`,
+
+/-- Given `S : Solution'`, we have that `λ ^ 2` divides one amongst `S.a + S.b`,
 `S.a + η * S.b` and `S.a + η ^ 2 * S.b`. -/
 lemma lambda_sq_dvd_or_dvd_or_dvd :
     λ ^ 2 ∣ S.a + S.b ∨ λ ^ 2 ∣ S.a + η * S.b ∨ λ ^ 2 ∣ S.a + η ^ 2 * S.b := by
@@ -338,7 +339,7 @@ lemma lambda_sq_dvd_or_dvd_or_dvd :
   rw [← h1', coe_lt_coe] at h1; rw [← h2', coe_lt_coe] at h2; rw [← h3', coe_lt_coe] at h3
   have := (pow_dvd_pow_of_dvd (lambda_pow_two_dvd_c S) 3).mul_left S.u
   rw [← pow_mul, ← S.H, cube_add_cube_eq_mul, multiplicity.pow_dvd_iff_le_multiplicity,
-    multiplicity.mul hζ.zeta_sub_one_prime', multiplicity.mul hζ.zeta_sub_one_prime', ← h1', ← h2',
+    multiplicity.mul hζ.zeta_sub_one_prime', multiplicity.mul (IsPrimitiveRoot.lambda_prime hζ), ← h1', ← h2',
     ← h3', ← Nat.cast_add, ← Nat.cast_add, coe_le_coe] at this
   linarith
 
