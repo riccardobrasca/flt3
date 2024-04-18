@@ -333,45 +333,30 @@ lemma associated_of_dvd_a_add_b_of_dvd_a_add_eta_mul_b {p : 𝓞 K} (hp : Prime 
 
 /-- If `p : 𝓞 K` is a prime that divides both `S.a + S.b` and `S.a + η ^ 2 * S.b`, then `p`
 is associated with `λ`. -/
-lemma associated_of_dvd_a_add_b_of_dvd_a_add_eta_sq__mul_b {p : 𝓞 K} (hp : Prime p)
+lemma associated_of_dvd_a_add_b_of_dvd_a_add_eta_sq_mul_b {p : 𝓞 K} (hp : Prime p)
   (hpab : p ∣ (S.a + S.b)) (hpaetasqb : p ∣ (S.a + η ^ 2 * S.b)) : Associated p λ := by
-  by_cases H : Associated p (η - 1)
-  · exact H
-  · apply Prime.associated_of_dvd hp hζ.lambda_prime
-    have aux := dvd_sub hpab hpaetasqb
-    rw [show S.a + S.b - (S.a + η ^ 2 * S.b) = (-λ * S.b) * (η + 1) by ring] at aux
-    replace aux := dvd_mul_of_dvd_left aux (-η)
-    rw [mul_assoc, eta_add_one_inv, mul_one, ← dvd_neg, neg_mul, neg_neg] at aux
-    have aux1 := dvd_mul_of_dvd_left hpaetasqb η
-    rw [show (S.a + η ^ 2 * S.b) * η = η * S.a + η^3 * S.b by ring] at aux1
-    rw [hζ.toInteger_cube_eq_one, one_mul] at aux1
-    replace aux1 := dvd_sub aux1 hpab
-    rw [show (η * S.a + S.b) - (S.a + S.b) = λ * S.a by ring] at aux1
-    exfalso
-    apply hp.not_unit
-    have aux2 := S.coprime
-    have aux3 : IsBezout (𝓞 K) := IsBezout.of_isPrincipalIdealRing _
-    rw [← gcd_isUnit_iff] at aux2
-    suffices hdvd : p ∣ gcd S.a S.b by
-      apply isUnit_of_dvd_unit hdvd
-      exact aux2
-    have p_not_div_lambda : ¬ p ∣ λ := by
-      rw [Prime.dvd_prime_iff_associated hp hζ.lambda_prime]
-      exact H
-    have p_div_Sb : p ∣ S.b := by
-      rcases Prime.dvd_or_dvd hp aux with (h | h)
-      · tauto
-      · exact h
-    have p_div_Sa : p ∣ S.a := by
-      rcases Prime.dvd_or_dvd hp aux1 with (h | h)
-      · tauto
-      · exact h
-    rw [dvd_gcd_iff]
-    exact ⟨p_div_Sa, p_div_Sb⟩
+  by_cases p_lam : (p ∣ λ)
+  · exact hp.associated_of_dvd hζ.lambda_prime p_lam
+  have pdivb : p ∣ S.b := by
+    have fgh : p ∣ λ * S.b := by
+      rw [show λ * S.b = - (1 - η) * S.b by ring, ← hζ.toInteger_cube_eq_one]
+      rw [show - (η ^ 3 - η) * S.b = η * ((S.a + S.b) - (S.a + η ^ 2 * S.b)) by ring]
+      rw [hζ.eta_isUnit.dvd_mul_left]
+      exact hpab.sub hpaetasqb
+    exact hp.dvd_or_dvd fgh |>.resolve_left p_lam
+  have pdiva : p ∣ S.a := by
+    have fgh : p ∣ λ * S.a := by
+      rw [show λ * S.a = - (1 - η) * S.a by ring, ← hζ.toInteger_cube_eq_one]
+      rw [show - (η ^ 3 - η) * S.a = η * ((S.a + η ^ 2 * S.b) - η ^ 2 * (S.a + S.b)) by ring]
+      rw [hζ.eta_isUnit.dvd_mul_left]
+      exact hpaetasqb.sub (dvd_mul_of_dvd_right hpab _)
+    exact hp.dvd_or_dvd fgh |>.resolve_left p_lam
+  have punit := S.coprime.isUnit_of_dvd' pdiva pdivb
+  exact hp.not_unit punit |>.elim
 
 /-- If `p : 𝓞 K` is a prime that divides both `S.a + η * S.b` and `S.a + η ^ 2 * S.b`, then `p`
 is associated with `λ`. -/
-lemma associated_of_dvd_a_add_eta_mul_b_of_dvd_a_add_eta_sq__mul_b {p : 𝓞 K} (hp : Prime p)
+lemma associated_of_dvd_a_add_eta_mul_b_of_dvd_a_add_eta_sq_mul_b {p : 𝓞 K} (hp : Prime p)
     (hpaetab : p ∣ S.a + η * S.b) (hpaetasqb : p ∣ S.a + η ^ 2 * S.b) : Associated p λ := by
   by_cases p_lam : (p ∣ λ)
   · exact hp.associated_of_dvd hζ.lambda_prime p_lam
@@ -513,7 +498,7 @@ lemma coprime_x_z : IsCoprime S.x S.z := by
     have aux2 := dvd_mul_of_dvd_right p_dvd_z (η - 1)
     rw [← z_spec] at aux2
     have aux3 : Associated p (η -1) := by
-      apply associated_of_dvd_a_add_b_of_dvd_a_add_eta_sq__mul_b
+      apply associated_of_dvd_a_add_b_of_dvd_a_add_eta_sq_mul_b
       exact hp
       exact aux1
       exact aux2
@@ -534,7 +519,7 @@ lemma coprime_y_z : IsCoprime S.y S.z := by
     have aux2 := dvd_mul_of_dvd_right p_dvd_z (η - 1)
     rw [← z_spec] at aux2
     have aux3 : Associated p (η -1) := by
-      apply associated_of_dvd_a_add_eta_mul_b_of_dvd_a_add_eta_sq__mul_b
+      apply associated_of_dvd_a_add_eta_mul_b_of_dvd_a_add_eta_sq_mul_b
       exact hp
       exact aux1
       exact aux2
