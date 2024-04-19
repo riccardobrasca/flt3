@@ -9,7 +9,6 @@ import Mathlib.NumberTheory.FLT.Basic
 import Mathlib.NumberTheory.FLT.Three
 import FLT3.Cyclo
 
-
 /-!
 # Fermat's Last Theorem for Exponent `n = 3`
 The goal of this file is to prove Fermat's Last Theorem for exponent `3`, namely that
@@ -830,18 +829,12 @@ lemma final : S.Y ^ 3 + (S.u₄ * S.Z) ^ 3 = S.u₅ * (λ ^ (S.multiplicity - 1)
   rw [show S.Y ^ 3 + (S.u₄ * S.Z) ^ 3 = S.Y ^ 3 + S.u₄^2 * S.u₄ * S.Z ^ 3 by ring]
   have f2 := formula2 S
   rw [show Y S ^ 3 + ↑(u₄ S) * Z S ^ 3 = Y S ^ 3 + 1 * ↑(u₄ S) * Z S ^ 3 by ring] at f2
-  suffices hyp : S.u₄ = (1 : 𝓞 K)  ∨ S.u₄ = (-1 : 𝓞 K) by
-    have hh : S.u₄ ^ 2 = (1 : 𝓞 K) := by
-      rcases hyp with (h | h)
-      · rw [h]
-        simp only [one_pow]
-      · rw [h]
-        simp only [even_two, Even.neg_pow, one_pow]
-    nth_rewrite 1 [← hh] at f2
-    exact f2
   have simple_kummer := by_kummer S
   simp only [Finset.mem_insert, Finset.mem_singleton] at simple_kummer
-  exact simple_kummer
+  have hh : S.u₄ ^ 2 = (1 : 𝓞 K) := by
+    rcases simple_kummer with (h | h) <;> simp only [h, one_pow, even_two, Even.neg_pow, one_pow]
+  nth_rewrite 1 [← hh] at f2
+  exact f2
 
 noncomputable
 def _root_.Solution'_final : Solution' hζ where
