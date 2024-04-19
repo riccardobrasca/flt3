@@ -824,22 +824,21 @@ lemma by_kummer : ↑S.u₄ ∈ ({1, -1} : Finset (𝓞 K)) := by
     rw [← hkX, ← hkY, ← hkZ, ← S.formula2]
     ring
 
+/-- Given `S : Solution`, we have that
+`S.Y ^ 3 + (S.u₄ * S.Z) ^ 3 = S.u₅ * (λ ^ (S.multiplicity - 1) * S.X) ^ 3`. -/
 lemma final : S.Y ^ 3 + (S.u₄ * S.Z) ^ 3 = S.u₅ * (λ ^ (S.multiplicity - 1) * S.X) ^ 3 := by
   rw [show S.Y ^ 3 + (S.u₄ * S.Z) ^ 3 = S.Y ^ 3 + S.u₄^2 * S.u₄ * S.Z ^ 3 by ring]
   have f2 := formula2 S
   rw [show Y S ^ 3 + ↑(u₄ S) * Z S ^ 3 = Y S ^ 3 + 1 * ↑(u₄ S) * Z S ^ 3 by ring] at f2
   suffices hyp : S.u₄ = (1 : 𝓞 K)  ∨ S.u₄ = (-1 : 𝓞 K) by
-    rcases hyp with (h | h)
-    · have hh : S.u₄ ^ 2 = (1 : 𝓞 K) := by
-        rw [h]
+    have hh : S.u₄ ^ 2 = (1 : 𝓞 K) := by
+      rcases hyp with (h | h)
+      · rw [h]
         simp only [one_pow]
-      nth_rewrite 1 [← hh] at f2
-      exact f2
-    · have hh : S.u₄ ^ 2 = (1 : 𝓞 K) := by
-        rw [h]
+      · rw [h]
         simp only [even_two, Even.neg_pow, one_pow]
-      nth_rewrite 1 [← hh] at f2
-      exact f2
+    nth_rewrite 1 [← hh] at f2
+    exact f2
   have simple_kummer := by_kummer S
   simp only [Finset.mem_insert, Finset.mem_singleton] at simple_kummer
   exact simple_kummer
