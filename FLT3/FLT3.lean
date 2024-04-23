@@ -222,7 +222,7 @@ lemma lambda_sq_dvd_or_dvd_or_dvd :
   rw [← pow_mul, ← S.H, cube_add_cube_eq_mul, multiplicity.pow_dvd_iff_le_multiplicity,
     multiplicity.mul hζ.zeta_sub_one_prime', multiplicity.mul (IsPrimitiveRoot.lambda_prime hζ), ← h1', ← h2',
     ← h3', ← Nat.cast_add, ← Nat.cast_add, coe_le_coe] at this
-  linarith
+  omega
 
 /-- Given `S : Solution'`, we may assume that `λ ^ 2` divides `S.a + S.b ∨ λ ^ 2` (see also the
 result below). -/
@@ -529,7 +529,8 @@ lemma coprime_y_z : IsCoprime S.y S.z := by
 
 lemma mult_minus_two_plus_one_plus_one : 3 * multiplicity S - 2 + 1 + 1 = 3 * multiplicity S := by
   have this : 2 ≤ 3 * multiplicity S := by
-    linarith [two_le_multiplicity S]
+    have := two_le_multiplicity S
+    omega
   zify [this]
   ring
 
@@ -864,7 +865,7 @@ lemma _root_.Solution'_final_multiplicity :
 lemma _root_.Solution'_final_multiplicity_lt :
     (Solution'_final S).multiplicity < S.multiplicity := by
   rw [Solution'_final_multiplicity S, Nat.sub_one]
-  exact Nat.pred_lt <| by linarith [S.two_le_multiplicity]
+  exact Nat.pred_lt <| by have := S.two_le_multiplicity; omega
 
 theorem exists_Solution_multiplicity_lt :
     ∃ (S' : Solution hζ), S'.multiplicity < S.multiplicity := by
