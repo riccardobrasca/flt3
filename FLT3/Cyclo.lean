@@ -6,7 +6,7 @@ Authors: Riccardo Brasca, Pietro Monticone
 
 import Mathlib.NumberTheory.Cyclotomic.Embeddings
 import Mathlib.NumberTheory.Cyclotomic.Rat
-import Mathlib.NumberTheory.NumberField.Units
+import Mathlib.NumberTheory.NumberField.Units.DirichletTheorem
 
 /-!
 # Third Cyclotomic Field
@@ -51,7 +51,7 @@ theorem Units.mem : ↑u ∈({1, -1, η, -η, η ^ 2, -η ^ 2} : Set (𝓞 K)) :
     rw [card_eq_nrRealPlaces_add_nrComplexPlaces, nrRealPlaces_eq_zero (n := 3) K (by decide),
       zero_add, nrComplexPlaces_eq_totient_div_two (n := 3)]
     rfl
-  obtain ⟨x, ⟨_, hxu, -⟩, -⟩ := exist_unique_eq_mul_prod _ u
+  obtain ⟨⟨x, e⟩, hxu, -⟩ := exist_unique_eq_mul_prod _ u
   replace hxu : u = x := by
     rw [← mul_one x.1]
     rw [hxu]
@@ -62,8 +62,10 @@ theorem Units.mem : ↑u ∈({1, -1, η, -η, η ^ 2, -η ^ 2} : Set (𝓞 K)) :
     infer_instance
   obtain ⟨n, hnpos, hn⟩ := isOfFinOrder_iff_pow_eq_one.1 <| (CommGroup.mem_torsion _ _).1 x.2
   replace hn : (↑u : K) ^ ((⟨n, hnpos⟩ : ℕ+) : ℕ) = 1 := by
-    norm_cast
-    simp [hxu, hn]
+    rw [← map_pow]
+    convert map_one (algebraMap (𝓞 K) K)
+    rw_mod_cast [hxu, hn]
+    simp
   have hodd : Odd ((3 : ℕ+) : ℕ) := by decide
   obtain ⟨r, hr3, hru⟩ := hζ.exists_pow_or_neg_mul_pow_of_isOfFinOrder hodd
     (isOfFinOrder_iff_pow_eq_one.2 ⟨n, hnpos, hn⟩)
@@ -175,7 +177,8 @@ noncomputable
 instance : Fintype (𝓞 K ⧸ Ideal.span {λ}) := by
   refine Ideal.fintypeQuotientOfFreeOfNeBot _ (fun h ↦ ?_)
   simp only [Ideal.span_singleton_eq_bot, sub_eq_zero, ← Subtype.coe_inj] at h
-  exact hζ.ne_one (by decide) h
+  refine hζ.ne_one (by decide) ?_
+  exact RingOfIntegers.ext_iff.1 h
 
 /-- Let `K` be a number field such that `IsCyclotomicExtension {3} ℚ K`.
 Let `ζ` be any primitive `3`-rd root of unity in `K`.
@@ -280,7 +283,7 @@ lemma lambda_not_dvd_two : ¬ λ ∣ 2 := by
 instance : Nontrivial (𝓞 K ⧸ Ideal.span {λ}) := nontrivial_of_ne 2 0 <| two_ne_zero hζ
 
 -- dirty hacks to speed up the next proof
-instance : AddMonoidWithOne (↥(𝓞 K) ⧸ Ideal.span {λ}) := inferInstance
+instance : AddMonoidWithOne ((𝓞 K) ⧸ Ideal.span {λ}) := inferInstance
 attribute [instance 10000] Ring.toNeg
 attribute [instance 10000] Ring.toAddCommGroup
 attribute [instance 10000] NeZero.one
@@ -341,7 +344,7 @@ Let `η` be the element in the ring of integers corresponding to `ζ`.
 Then `η ^ 3 = 1`. -/
 lemma _root_.IsPrimitiveRoot.toInteger_cube_eq_one : η ^ 3 = 1 := by
   ext
-  simp only [SubmonoidClass.coe_pow, OneMemClass.coe_one]
+  simp only [map_pow]
   exact hζ.pow_eq_one
 
 /-- Let `K` be a number field such that `IsCyclotomicExtension {3} ℚ K`.

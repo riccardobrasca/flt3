@@ -26,9 +26,7 @@ attribute [instance] IsCyclotomicExtension.Rat.three_pid
 
 variable {K : Type*} [Field K] [NumberField K] [IsCyclotomicExtension {3} ℚ K]
 
-attribute [-instance] ValuationRing.instIsBezoutToRing -- This seems to be a very slow instance
--- #check ValuationRing.instIsBezoutToRing
--- #check ValuationRing.instValuationRing
+attribute [-instance] ValuationRing.instIsBezout -- This seems to be a very slow instance
 
 -- This takes Lean some time, so let's do it here once
 local instance : IsBezout (𝓞 K) := by infer_instance
