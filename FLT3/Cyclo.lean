@@ -185,37 +185,12 @@ Let `ζ` be any primitive `3`-rd root of unity in `K`.
 Let `η` be the element in the ring of integers corresponding to `ζ`.
 Let `λ` be the element in the ring of integers corresponding to `ζ - 1`.
 
-Then the norm of `λ` equals `3`. -/
-lemma norm_lambda : Algebra.norm ℤ λ = 3 := by
-  apply (algebraMap ℤ ℚ).injective_int
-  have : algebraMap (𝓞 K) K λ = ζ - 1 := by
-    simp only [map_sub, map_one, sub_left_inj]
-    exact rfl
-  rw [← Algebra.norm_localization (Sₘ := K) ℤ ℤ⁰, this, hζ.sub_one_norm_prime
-    (cyclotomic.irreducible_rat (n := 3) (by decide)) (by decide)]
-  simp
-
-/-- Let `K` be a number field such that `IsCyclotomicExtension {3} ℚ K`.
-Let `ζ` be any primitive `3`-rd root of unity in `K`.
-Let `η` be the element in the ring of integers corresponding to `ζ`.
-Let `λ` be the element in the ring of integers corresponding to `ζ - 1`.
-
-Then the norm of `λ` is prime. -/
-lemma norm_lambda_prime : Prime (Algebra.norm ℤ λ) := by
-  rw [norm_lambda]
-  exact Int.prime_three
-
-/-- Let `K` be a number field such that `IsCyclotomicExtension {3} ℚ K`.
-Let `ζ` be any primitive `3`-rd root of unity in `K`.
-Let `η` be the element in the ring of integers corresponding to `ζ`.
-Let `λ` be the element in the ring of integers corresponding to `ζ - 1`.
-
 Then `λ` divides `3`. -/
 lemma lambda_dvd_three : λ ∣ 3 := by
   suffices λ ∣ (3 : ℤ) by simpa
-  rw [← Ideal.norm_dvd_iff, norm_lambda hζ]
-  rw [norm_lambda hζ]
-  exact Int.prime_three
+  rw [← Ideal.norm_dvd_iff, hζ.norm_toInteger_sub_one_of_prime_ne_two' (by decide)]
+  · simp
+  · exact hζ.prime_norm_toInteger_sub_one_of_prime_ne_two' (by decide)
 
 /-- Let `K` be a number field such that `IsCyclotomicExtension {3} ℚ K`.
 Let `ζ` be any primitive `3`-rd root of unity in `K`.
@@ -250,7 +225,7 @@ Let `λ` be the element in the ring of integers corresponding to `ζ - 1`.
 Then `𝓞 K ⧸ Ideal.span {λ}` has cardinality `3`. -/
 lemma card_quot : Fintype.card (𝓞 K ⧸ Ideal.span {λ}) = 3 := by
   rw [← Submodule.cardQuot_apply, ← Ideal.absNorm_apply, Ideal.absNorm_span_singleton]
-  simp [norm_lambda hζ]
+  simp [hζ.norm_toInteger_sub_one_of_prime_ne_two' (by decide)]
 
 /-- Let `K` be a number field such that `IsCyclotomicExtension {3} ℚ K`.
 Let `ζ` be any primitive `3`-rd root of unity in `K`.
@@ -265,9 +240,9 @@ lemma two_ne_zero : (2 : 𝓞 K ⧸ Ideal.span {λ}) ≠ 0 := by
   intro h
   rw [Ideal.mem_span_singleton] at h
   replace h : λ ∣ ↑(2 : ℤ) := by simp [h]
-  rw [← Ideal.norm_dvd_iff, norm_lambda hζ] at h
+  rw [← Ideal.norm_dvd_iff, hζ.norm_toInteger_sub_one_of_prime_ne_two' (by decide)] at h
   · norm_num at h
-  · rw [norm_lambda hζ]
+  · rw [hζ.norm_toInteger_sub_one_of_prime_ne_two' (by decide)]
     exact Int.prime_three
 
 /-- Let `K` be a number field such that `IsCyclotomicExtension {3} ℚ K`.

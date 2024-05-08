@@ -54,8 +54,10 @@ lemma FermatLastTheoremForThree_of_FermatLastTheoremThreeGen :
   intro H
   refine fermatLastTheoremThree_of_three_dvd_only_c (fun a b c hc ha hb ⟨x, hx⟩ hcoprime h ↦ ?_)
   refine H a b c 1 (by simp [hc]) (fun hdvd ↦ ha ?_) (fun hdvd ↦ hb ?_) ?_ ?_ ?_
-  · rwa [← Ideal.norm_dvd_iff (norm_lambda_prime hζ), norm_lambda hζ] at hdvd
-  · rwa [← Ideal.norm_dvd_iff (norm_lambda_prime hζ), norm_lambda hζ] at hdvd
+  · rwa [← Ideal.norm_dvd_iff (hζ.prime_norm_toInteger_sub_one_of_prime_ne_two' (by decide)),
+      hζ.norm_toInteger_sub_one_of_prime_ne_two' (by decide)] at hdvd
+  · rwa [← Ideal.norm_dvd_iff (hζ.prime_norm_toInteger_sub_one_of_prime_ne_two' (by decide)),
+      hζ.norm_toInteger_sub_one_of_prime_ne_two' (by decide)] at hdvd
   · exact dvd_trans (lambda_dvd_three hζ) ⟨x, by simp [hx]⟩
   · rw [show a = algebraMap _ (𝓞 K) a by simp, show b = algebraMap _ (𝓞 K) b by simp]
     exact hcoprime.map _
