@@ -67,7 +67,7 @@ variable {hζ} (S : Solution hζ) (S' : Solution' hζ) [DecidableRel fun (a b : 
 /-- For any `S' : Solution'`, the multiplicity of `λ` in `S'.c` is finite. -/
 lemma Solution'.multiplicity_lambda_c_finite :
     multiplicity.Finite (hζ.toInteger - 1) S'.c :=
-  multiplicity.finite_of_not_isUnit (lambda_not_unit hζ) S'.hc
+  multiplicity.finite_of_not_isUnit hζ.zeta_sub_one_prime'.not_unit S'.hc
 
 /-- Given `S' : Solution'`, `S'.multiplicity` is the multiplicity of `λ` in `S'.c`, as a natural
 number. -/
@@ -146,9 +146,9 @@ lemma lambda_pow_two_dvd_c : λ ^ 2 ∣ S.c := by
       simp [this]
   have := lambda_pow_four_dvd_c_cube S
   have hm1 :(multiplicity (hζ.toInteger - 1) (S.c ^ 3)).get
-    (multiplicity.finite_pow hζ.lambda_prime hm) =
+    (multiplicity.finite_pow hζ.zeta_sub_one_prime' hm) =
     multiplicity (hζ.toInteger - 1) (S.c ^ 3) := by simp
-  rw [multiplicity.pow_dvd_iff_le_multiplicity, ← hm1, multiplicity.pow' hζ.lambda_prime hm,
+  rw [multiplicity.pow_dvd_iff_le_multiplicity, ← hm1, multiplicity.pow' hζ.zeta_sub_one_prime' hm,
     Nat.cast_ofNat, Nat.ofNat_le_cast] at this
   linarith
 
@@ -197,7 +197,7 @@ lemma lambda_sq_dvd_or_dvd_or_dvd :
   rw [← h1', coe_lt_coe] at h1; rw [← h2', coe_lt_coe] at h2; rw [← h3', coe_lt_coe] at h3
   have := (pow_dvd_pow_of_dvd (lambda_pow_two_dvd_c S) 3).mul_left S.u
   rw [← pow_mul, ← S.H, cube_add_cube_eq_mul, multiplicity.pow_dvd_iff_le_multiplicity,
-    multiplicity.mul hζ.zeta_sub_one_prime', multiplicity.mul (IsPrimitiveRoot.lambda_prime hζ), ← h1', ← h2',
+    multiplicity.mul hζ.zeta_sub_one_prime', multiplicity.mul hζ.zeta_sub_one_prime', ← h1', ← h2',
     ← h3', ← Nat.cast_add, ← Nat.cast_add, coe_le_coe] at this
   omega
 
@@ -256,8 +256,8 @@ lemma lambda_dvd_a_add_eta_sq_mul_b : λ ∣ (S.a + η ^ 2 * S.b) := by
 
 /-- Given `(S : Solution)`, we have that `λ ^ 2` does not divide `S.a + η * S.b`. -/
 lemma lambda_sq_not_a_add_eta_mul_b : ¬ λ ^ 2 ∣ (S.a + η * S.b) := by
-  simp_rw [a_add_eta_b, dvd_add_right S.hab, pow_two, mul_dvd_mul_iff_left (lambda_ne_zero hζ), S.hb,
-    not_false_eq_true]
+  simp_rw [a_add_eta_b, dvd_add_right S.hab, pow_two, mul_dvd_mul_iff_left
+    hζ.zeta_sub_one_prime'.ne_zero, S.hb, not_false_eq_true]
 
 /-- Given `(S : Solution)`, we have that `λ ^ 2` does not divide `S.a + η ^ 2 * S.b`. -/
 lemma lambda_sq_not_dvd_a_add_eta_sq_mul_b : ¬ λ ^ 2 ∣ (S.a + η ^ 2 * S.b) := by
@@ -269,7 +269,7 @@ lemma lambda_sq_not_dvd_a_add_eta_sq_mul_b : ¬ λ ^ 2 ∣ (S.a + η ^ 2 * S.b) 
   use (k - k') * (-η)
   rw [hk'] at hk
   rw [show λ ^ 2 * k' - S.b + η ^ 2 * S.b = λ * (S.b * (η +1) + λ * k') by ring, pow_two, mul_assoc] at hk
-  simp only [mul_eq_mul_left_iff, lambda_ne_zero, or_false] at hk
+  simp only [mul_eq_mul_left_iff, hζ.zeta_sub_one_prime'.ne_zero, or_false] at hk
   replace hk := congr_arg (fun x => x * (-η)) hk
   simp only at hk
   rw [show (S.b * (η + 1) + λ * k') * -η = (- S.b) * (η ^ 2 + η + 1 - 1) - η * λ * k' by ring] at hk
@@ -288,7 +288,7 @@ is associated with `λ`. -/
 lemma associated_of_dvd_a_add_b_of_dvd_a_add_eta_mul_b {p : 𝓞 K} (hp : Prime p)
     (hpab : p ∣ S.a + S.b) (hpaetab : p ∣ S.a + η * S.b) : Associated p λ := by
   by_cases p_lam : (p ∣ λ)
-  · exact hp.associated_of_dvd hζ.lambda_prime p_lam
+  · exact hp.associated_of_dvd hζ.zeta_sub_one_prime' p_lam
   have pdivb : p ∣ S.b := by
     have fgh : p ∣ (λ * S.b) := by
       rw [show λ * S.b = (S.a + η * S.b) - (S.a + S.b) by ring]
@@ -312,7 +312,7 @@ is associated with `λ`. -/
 lemma associated_of_dvd_a_add_b_of_dvd_a_add_eta_sq_mul_b {p : 𝓞 K} (hp : Prime p)
   (hpab : p ∣ (S.a + S.b)) (hpaetasqb : p ∣ (S.a + η ^ 2 * S.b)) : Associated p λ := by
   by_cases p_lam : (p ∣ λ)
-  · exact hp.associated_of_dvd hζ.lambda_prime p_lam
+  · exact hp.associated_of_dvd hζ.zeta_sub_one_prime' p_lam
   have pdivb : p ∣ S.b := by
     have fgh : p ∣ λ * S.b := by
       rw [show λ * S.b = - (1 - η) * S.b by ring, ← hζ.toInteger_cube_eq_one]
@@ -335,7 +335,7 @@ is associated with `λ`. -/
 lemma associated_of_dvd_a_add_eta_mul_b_of_dvd_a_add_eta_sq_mul_b {p : 𝓞 K} (hp : Prime p)
     (hpaetab : p ∣ S.a + η * S.b) (hpaetasqb : p ∣ S.a + η ^ 2 * S.b) : Associated p λ := by
   by_cases p_lam : (p ∣ λ)
-  · exact hp.associated_of_dvd hζ.lambda_prime p_lam
+  · exact hp.associated_of_dvd hζ.zeta_sub_one_prime' p_lam
   have pdivb : p ∣ S.b := by
     have fgh : p ∣ η * (λ * S.b) := by
       rw [show η * (λ * S.b) = (S.a + η ^ 2 * S.b) - (S.a + η * S.b) by ring]
@@ -388,15 +388,15 @@ lemma lambda_pow_dvd_a_add_b : λ ^ (3 * S.multiplicity - 2) ∣ S.a + S.b := by
   replace h := pow_dvd_pow_of_dvd h 3
   replace h : (λ ^ multiplicity S) ^ 3 ∣ S.u * S.c ^ 3 := by simp [h]
   rw [← S.H, cube_add_cube_eq_mul, ← pow_mul, mul_comm] at h
-  apply hζ.lambda_prime.pow_dvd_of_dvd_mul_left _ S.lambda_not_dvd_z
-  apply hζ.lambda_prime.pow_dvd_of_dvd_mul_left _ S.lambda_not_dvd_y
+  apply hζ.zeta_sub_one_prime'.pow_dvd_of_dvd_mul_left _ S.lambda_not_dvd_z
+  apply hζ.zeta_sub_one_prime'.pow_dvd_of_dvd_mul_left _ S.lambda_not_dvd_y
   rw [y_spec, z_spec] at h
   have := S.two_le_multiplicity
   have hh : 3 * multiplicity S - 2 + 1 + 1 = 3 * multiplicity S := by
     omega
   rw [← hh, pow_succ, pow_succ] at h
   rw [show (S.a + S.b) * (λ * y S) * (λ * z S) = (S.a + S.b) * y S * z S * λ * λ by ring] at h
-  simp only [mul_dvd_mul_iff_right (lambda_ne_zero hζ)] at h
+  simp only [mul_dvd_mul_iff_right hζ.zeta_sub_one_prime'.ne_zero] at h
   rwa [show (S.a + S.b) * y S * z S = y S * (z S * (S.a + S.b)) by ring] at h
 
 /-- Given `S : Solution`, we let `S.x` be the element such that
@@ -437,9 +437,9 @@ lemma lambda_not_dvd_x : ¬ λ ∣ S.x := by
   have hh : 3 * multiplicity S - 2 + 1 + 1 = 3 * multiplicity S := by
     omega
   rw [hh, mul_pow, ← pow_mul, mul_comm _ 3, mul_dvd_mul_iff_left _] at h
-  replace h := Prime.dvd_of_dvd_pow hζ.lambda_prime h
+  replace h := Prime.dvd_of_dvd_pow hζ.zeta_sub_one_prime' h
   exact lambda_not_dvd_w _ h
-  simp [lambda_ne_zero]
+  simp [hζ.zeta_sub_one_prime'.ne_zero]
 
 lemma coprime_x_y : IsCoprime S.x S.y := by
   apply isCoprime_of_prime_dvd
@@ -521,7 +521,7 @@ lemma x_mul_y_mul_z_eq_u_w_pow_three : S.x * S.y * S.z = S.u * S.w ^ 3 := by
       omega
     rw [hhh] at hh
     rw [mul_assoc, mul_assoc, mul_assoc] at hh
-    simp [lambda_ne_zero] at hh
+    simp [hζ.zeta_sub_one_prime'.ne_zero] at hh
     convert hh using 1
     ring
   simp only [← x_spec, mul_assoc, ← y_spec, ← z_spec]
@@ -710,7 +710,7 @@ lemma formula2 : S.Y ^ 3 + S.u₄ * S.Z ^ 3 = S.u₅ * (λ ^ (S.multiplicity - 1
   unfold u₅'
   apply mul_left_cancel₀ S.u₂.isUnit.ne_zero
   apply mul_left_cancel₀ hζ.eta_isUnit.ne_zero
-  apply mul_left_cancel₀ (lambda_ne_zero hζ)
+  apply mul_left_cancel₀ hζ.zeta_sub_one_prime'.ne_zero
   rw [show λ * (η * (↑(u₂ S) * (Y S ^ 3 + η * ↑(u₃ S) * ↑(u₂ S)⁻¹ * Z S ^ 3)))
     = λ * η * ↑(u₂ S) * Y S ^ 3 + λ * η^2 * ↑(u₂ S) * ↑(u₂ S)⁻¹ * ↑(u₃ S) * Z S ^ 3 by ring]
   rw [show λ * (η * (↑(u₂ S) * (-η ^ 2 * ↑(u₁ S) * ↑(u₂ S)⁻¹
@@ -809,7 +809,7 @@ def _root_.Solution'_final : Solution' hζ where
   u := S.u₅
   ha := S.lambda_not_dvd_Y
   hb := fun h ↦ S.lambda_not_dvd_Z <| Units.dvd_mul_left.1 h
-  hc := fun h ↦ S.X_ne_zero <| by simpa [lambda_ne_zero] using h
+  hc := fun h ↦ S.X_ne_zero <| by simpa [hζ.zeta_sub_one_prime'.ne_zero] using h
   coprime := (isCoprime_mul_unit_left_right S.u₄.isUnit _ _).2 S.coprime_Y_Z
   hcdvd := by
     refine dvd_mul_of_dvd_left (dvd_pow_self _ (fun h ↦ ?_)) _
@@ -822,8 +822,8 @@ lemma _root_.Solution'_final_multiplicity :
   refine (multiplicity.unique' (by simp [Solution'_final]) (fun h ↦ S.lambda_not_dvd_X ?_)).symm
   obtain ⟨k, hk : λ ^ (S.multiplicity - 1) * S.X = λ ^ (S.multiplicity - 1 + 1) * k⟩ := h
   rw [pow_succ, mul_assoc] at hk
-  simp only [mul_eq_mul_left_iff, pow_eq_zero_iff', lambda_ne_zero, ne_eq, false_and,
-    or_false] at hk
+  simp only [mul_eq_mul_left_iff, pow_eq_zero_iff', hζ.zeta_sub_one_prime'.ne_zero, ne_eq,
+    false_and, or_false] at hk
   simp [hk]
 
 lemma _root_.Solution'_final_multiplicity_lt :

@@ -196,31 +196,6 @@ lemma lambda_dvd_three : λ ∣ 3 := by
 Let `ζ` be any primitive `3`-rd root of unity in `K`.
 Let `η` be the element in the ring of integers corresponding to `ζ`.
 Let `λ` be the element in the ring of integers corresponding to `ζ - 1`.
-Let `u` be a unit in `(𝓞 K)ˣ`.
-
-Then `λ` is prime. -/
-lemma _root_.IsPrimitiveRoot.lambda_prime : Prime λ := hζ.zeta_sub_one_prime'
-
-/-- Let `K` be a number field such that `IsCyclotomicExtension {3} ℚ K`.
-Let `ζ` be any primitive `3`-rd root of unity in `K`.
-Let `η` be the element in the ring of integers corresponding to `ζ`.
-Let `λ` be the element in the ring of integers corresponding to `ζ - 1`.
-
-Then `λ` is non-zero. -/
-lemma lambda_ne_zero : λ ≠ 0 := hζ.lambda_prime.ne_zero
-
-/-- Let `K` be a number field such that `IsCyclotomicExtension {3} ℚ K`.
-Let `ζ` be any primitive `3`-rd root of unity in `K`.
-Let `η` be the element in the ring of integers corresponding to `ζ`.
-Let `λ` be the element in the ring of integers corresponding to `ζ - 1`.
-
-Then `λ` is not a unit. -/
-lemma lambda_not_unit : ¬ IsUnit λ := hζ.lambda_prime.not_unit
-
-/-- Let `K` be a number field such that `IsCyclotomicExtension {3} ℚ K`.
-Let `ζ` be any primitive `3`-rd root of unity in `K`.
-Let `η` be the element in the ring of integers corresponding to `ζ`.
-Let `λ` be the element in the ring of integers corresponding to `ζ - 1`.
 
 Then `𝓞 K ⧸ Ideal.span {λ}` has cardinality `3`. -/
 lemma card_quot : Fintype.card (𝓞 K ⧸ Ideal.span {λ}) = 3 := by
@@ -251,9 +226,8 @@ Let `η` be the element in the ring of integers corresponding to `ζ`.
 Let `λ` be the element in the ring of integers corresponding to `ζ - 1`.
 
 Then `λ` does not divide `2`. -/
-lemma lambda_not_dvd_two : ¬ λ ∣ 2 := by
-  intro h
-  exact two_ne_zero hζ (Ideal.Quotient.eq_zero_iff_mem.2 <| Ideal.mem_span_singleton.2 h)
+lemma lambda_not_dvd_two : ¬ λ ∣ 2 :=
+  fun h ↦ two_ne_zero hζ <| Ideal.Quotient.eq_zero_iff_mem.2 <| Ideal.mem_span_singleton.2 h
 
 instance : Nontrivial (𝓞 K ⧸ Ideal.span {λ}) := nontrivial_of_ne 2 0 <| two_ne_zero hζ
 
@@ -327,8 +301,8 @@ Let `ζ` be any primitive `3`-rd root of unity in `K`.
 Let `η` be the element in the ring of integers corresponding to `ζ`.
 
 Then `η` is a unit. -/
-lemma _root_.IsPrimitiveRoot.eta_isUnit : IsUnit η := by
-  apply isUnit_of_mul_eq_one _ (η ^ 2) (by simp [← pow_succ', hζ.toInteger_cube_eq_one])
+lemma _root_.IsPrimitiveRoot.eta_isUnit : IsUnit η :=
+  isUnit_of_mul_eq_one _ (η ^ 2) (by simp [← pow_succ', hζ.toInteger_cube_eq_one])
 
 /-- Let `K` be a number field such that `IsCyclotomicExtension {3} ℚ K`.
 Let `ζ` be any primitive `3`-rd root of unity in `K`.
