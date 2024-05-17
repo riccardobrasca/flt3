@@ -543,19 +543,6 @@ lemma x_eq_unit_mul_cube : ∃ (u₁ : (𝓞 K)ˣ) (X : 𝓞 K), S.x = u₁ * X 
   use u₁; use X
   simp [← hX, mul_comm]
 
--- SLIDE
--- OLD PROOF: highly likely to be useless
-  -- obtain ⟨I,hI⟩ := span_x_cube S
-  -- obtain ⟨X,hX⟩ := Submodule.IsPrincipal.principal I
-  -- rw [hX] at hI
-  -- change _ = Ideal.span _ ^ 3 at hI
-  -- rw [Ideal.span_singleton_pow] at hI
-  -- rw [Ideal.span_singleton_eq_span_singleton] at hI
-  -- obtain ⟨u,hu⟩ := hI
-  -- use u⁻¹; use X
-  -- symm
-  -- rw [Units.inv_mul_eq_iff_eq_mul, mul_comm, hu]
-
 lemma y_eq_unit_mul_cube : ∃ (u₂ : (𝓞 K)ˣ) (Y : 𝓞 K), S.y = u₂ * Y ^ 3 := by
   have h1 : S.y * (S.x * S.z * S.u⁻¹) = S.w ^ 3 := by
     rw [← mul_assoc, ← mul_assoc S.y, mul_comm S.y, x_mul_y_mul_z_eq_u_w_pow_three]
