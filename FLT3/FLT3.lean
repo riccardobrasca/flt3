@@ -41,58 +41,7 @@ variable {ζ : K} (hζ : IsPrimitiveRoot ζ (3 : ℕ+))
 local notation3 "η" => hζ.toInteger
 local notation3 "λ" => η - 1
 
-section Solution'
-
-/-- `Solution'` is a tuple given by a solution to `a ^ 3 + b ^ 3 = u * c ^ 3`,
-where `a`, `b`, `c` and `u` are as above. See `Solution` for the actual structure on which we will
-do the descent. -/
-structure Solution' where
-  (a : 𝓞 K)
-  (b : 𝓞 K)
-  (c : 𝓞 K)
-  (u : (𝓞 K)ˣ)
-  (ha : ¬ λ ∣ a)
-  (hb : ¬ λ ∣ b)
-  (hc : c ≠ 0)
-  (coprime : IsCoprime a b)
-  (hcdvd : λ ∣ c)
-  (H : a ^ 3 + b ^ 3 = u * c ^ 3)
-
-/-- `Solution` is the same as `Solution'` with the additional assumption that `λ ^ 2 ∣ a + b`. -/
-structure Solution extends Solution' hζ where
-  (hab : λ ^ 2 ∣ a + b)
-
-variable {hζ} (S : Solution hζ) (S' : Solution' hζ) [DecidableRel fun (a b : 𝓞 K) ↦ a ∣ b]
-
-/-- For any `S' : Solution'`, the multiplicity of `λ` in `S'.c` is finite. -/
-lemma Solution'.multiplicity_lambda_c_finite :
-    multiplicity.Finite (hζ.toInteger - 1) S'.c :=
-  multiplicity.finite_of_not_isUnit hζ.zeta_sub_one_prime'.not_unit S'.hc
-
-/-- Given `S' : Solution'`, `S'.multiplicity` is the multiplicity of `λ` in `S'.c`, as a natural
-number. -/
-def Solution'.multiplicity  :=
-  (_root_.multiplicity (hζ.toInteger - 1) S'.c).get (multiplicity_lambda_c_finite S')
-
-/-- Given `S : Solution`, `S.multiplicity` is the multiplicity of `λ` in `S.c`, as a natural
-number. -/
-def Solution.multiplicity := S.toSolution'.multiplicity
-
-/-- We say that `S : Solution` is minimal if for all `S₁ : Solution`, the multiplicity of `λ` in
-`S.c` is less or equal than the multiplicity in `S'.c`. -/
-def Solution.isMinimal : Prop := ∀ (S₁ : Solution hζ), S.multiplicity ≤ S₁.multiplicity
-
-/-- If there is a solution then there is a minimal one. -/
-lemma Solution.exists_minimal : ∃ (S₁ : Solution hζ), S₁.isMinimal := by
-  classical
-  let T : Set ℕ := { n | ∃ (S' : Solution hζ), S'.multiplicity = n }
-  rcases Nat.find_spec (⟨S.multiplicity, ⟨S, rfl⟩⟩ : T.Nonempty) with ⟨S₁, hS₁⟩
-  exact ⟨S₁, fun S'' ↦ hS₁ ▸ Nat.find_min' _ ⟨S'', rfl⟩⟩
-
-end Solution'
-
-section FermatLastTheoremForThreeGen
-
+namespace FermatLastTheoremForThreeGen
 section Solution'
 
 variable {hζ} (S : Solution' hζ)
@@ -851,7 +800,7 @@ theorem fermatLastTheoremThree : FermatLastTheoremFor 3 := by
   have : NumberField K := IsCyclotomicExtension.numberField {3} ℚ _
   apply FermatLastTheoremForThree_of_FermatLastTheoremThreeGen hζ
   intro a b c u hc ha hb hcdvd coprime H
-  let S' : Solution' hζ :=
+  let S' : FermatLastTheoremForThreeGen.Solution' hζ :=
   { a := a
     b := b
     c := c
@@ -862,7 +811,7 @@ theorem fermatLastTheoremThree : FermatLastTheoremFor 3 := by
     coprime := coprime
     hcdvd := hcdvd
     H := H }
-  obtain ⟨S, -⟩ := exists_Solution_of_Solution' S'
+  obtain ⟨S, -⟩ := FermatLastTheoremForThreeGen.exists_Solution_of_Solution' S'
   obtain ⟨Smin, hSmin⟩ := S.exists_minimal
   obtain ⟨Sfin, hSfin⟩ := Smin.exists_Solution_multiplicity_lt
   linarith [hSmin Sfin]
