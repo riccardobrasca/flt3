@@ -5,7 +5,7 @@ Authors: Riccardo Brasca, Sanyam Gupta, Omar Haddad, David Lowry-Duda,
   Lorenzo Luccioli, Pietro Monticone, Alexis Saurin, Florent Schaffhauser
 -/
 import Mathlib.NumberTheory.Cyclotomic.PID
-import Mathlib.NumberTheory.FLT.Basic
+import Mathlib.NumberTheory.Cyclotomic.Three
 import Mathlib.NumberTheory.FLT.Three
 import FLT3.Cyclo
 
@@ -38,8 +38,8 @@ instance : NormalizedGCDMonoid (𝓞 K) :=
 
 variable {ζ : K} (hζ : IsPrimitiveRoot ζ (3 : ℕ+))
 
-local notation3 "η" => hζ.toInteger
-local notation3 "λ" => η - 1
+local notation3 "η" => (IsPrimitiveRoot.isUnit (hζ.toInteger_isPrimitiveRoot) (by decide)).unit
+local notation3 "λ" => hζ.toInteger - 1
 
 namespace FermatLastTheoremForThreeGen
 section Solution'
@@ -117,8 +117,9 @@ lemma cube_add_cube_eq_mul :
     S.a ^ 3 + S.b ^ 3 = (S.a + S.b) * (S.a + η * S.b) * (S.a + η ^ 2 * S.b) := by
   symm
   calc _ = S.a^3+S.a^2*S.b*(η^2+η+1)+S.a*S.b^2*(η^2+η+η^3)+η^3*S.b^3 := by ring
-  _ = S.a^3+S.a^2*S.b*(η^2+η+1)+S.a*S.b^2*(η^2+η+1)+S.b^3 :=
-    by rw [hζ.toInteger_cube_eq_one, one_mul]
+  _ = S.a^3+S.a^2*S.b*(η^2+η+1)+S.a*S.b^2*(η^2+η+1)+S.b^3 := by
+    norm_cast
+    simp [hζ.toInteger_cube_eq_one]
   _ = S.a ^ 3 + S.b ^ 3 := by rw [hζ.toInteger_eval_cyclo]; ring
 
 open PartENat in
@@ -133,10 +134,14 @@ lemma lambda_sq_dvd_or_dvd_or_dvd :
   rw [← multiplicity.multiplicity_lt_iff_not_dvd] at h1 h2 h3
   have h1' : multiplicity.Finite (hζ.toInteger - 1) (S.a + S.b) :=
     multiplicity.ne_top_iff_finite.1 (fun ht ↦ by simp [ht] at h1)
-  have h2' : multiplicity.Finite (hζ.toInteger - 1) (S.a + η * S.b) :=
-    multiplicity.ne_top_iff_finite.1 (fun ht ↦ by simp [ht] at h2)
-  have h3' : multiplicity.Finite (hζ.toInteger - 1) (S.a + η ^ 2 * S.b) :=
-    multiplicity.ne_top_iff_finite.1 (fun ht ↦ by simp [ht] at h3)
+  have h2' : multiplicity.Finite (hζ.toInteger - 1) (S.a + η * S.b) := by
+    refine multiplicity.ne_top_iff_finite.1 (fun ht ↦ ?_)
+    rw [coe_eta] at ht
+    simp [ht] at h2
+  have h3' : multiplicity.Finite (hζ.toInteger - 1) (S.a + η ^ 2 * S.b) := by
+    refine multiplicity.ne_top_iff_finite.1 (fun ht ↦ ?_)
+    rw [coe_eta] at ht
+    simp [ht] at h3
   replace h1' : (multiplicity (hζ.toInteger - 1) (S.a + S.b)).get h1' =
     multiplicity (hζ.toInteger - 1) (S.a + S.b) := by simp
   replace h2' : (multiplicity (hζ.toInteger - 1) (S.a + η * S.b)).get h2' =
@@ -150,6 +155,7 @@ lemma lambda_sq_dvd_or_dvd_or_dvd :
     ← h3', ← Nat.cast_add, ← Nat.cast_add, coe_le_coe] at this
   omega
 
+open Units in
 /-- Given `S : Solution'`, we may assume that `λ ^ 2` divides `S.a + S.b ∨ λ ^ 2` (see also the
 result below). -/
 lemma ex_dvd_a_add_b : ∃ (a' b' : 𝓞 K), a' ^ 3 + b' ^ 3 = S.u * S.c ^ 3 ∧
@@ -157,15 +163,16 @@ lemma ex_dvd_a_add_b : ∃ (a' b' : 𝓞 K), a' ^ 3 + b' ^ 3 = S.u * S.c ^ 3 ∧
   rcases lambda_sq_dvd_or_dvd_or_dvd S with (h | h | h)
   · exact ⟨S.a, S.b, S.H, S.coprime, S.ha, S.hb, h⟩
   · refine ⟨S.a, η * S.b, ?_, ?_, S.ha, fun ⟨x, hx⟩ ↦ S.hb ⟨η ^ 2 * x, ?_⟩, h⟩
-    · rw [mul_pow, hζ.toInteger_cube_eq_one, one_mul, S.H]
-    · exact (isCoprime_mul_unit_left_right hζ.eta_isUnit _ _).2 S.coprime
+    · rw [mul_pow, ← val_pow_eq_pow_val, hζ.toInteger_cube_eq_one, val_one, one_mul, S.H]
+    · refine (isCoprime_mul_unit_left_right (Units.isUnit η) _ _).2 S.coprime
     · rw [mul_comm _ x, ← mul_assoc, ← hx, mul_comm _ S.b, mul_assoc, ← pow_succ',
-        hζ.toInteger_cube_eq_one, mul_one]
+        ← val_pow_eq_pow_val, hζ.toInteger_cube_eq_one, val_one, mul_one]
   · refine ⟨S.a, η ^ 2 * S.b, ?_, ?_, S.ha, fun ⟨x, hx⟩ ↦ S.hb ⟨η * x, ?_⟩, h⟩
-    · rw [mul_pow, ← pow_mul, mul_comm 2, pow_mul, hζ.toInteger_cube_eq_one, one_pow, one_mul, S.H]
-    · exact (isCoprime_mul_unit_left_right (hζ.eta_isUnit.pow _) _ _).2 S.coprime
+    · rw [mul_pow, ← pow_mul, mul_comm 2, pow_mul, ← val_pow_eq_pow_val, hζ.toInteger_cube_eq_one,
+        val_one, one_pow, one_mul, S.H]
+    · exact (isCoprime_mul_unit_left_right ((Units.isUnit η).pow _) _ _).2 S.coprime
     · rw [mul_comm _ x, ← mul_assoc, ← hx, mul_comm _ S.b, mul_assoc, ← pow_succ,
-        hζ.toInteger_cube_eq_one, mul_one]
+        ← val_pow_eq_pow_val, hζ.toInteger_cube_eq_one, val_one, mul_one]
 
 /-- Given `S : Solution'`, then there is `S₁ : Solution` such that
 `S₁.multiplicity = S.multiplicity`. -/
@@ -190,7 +197,7 @@ namespace Solution
 
 variable (S : Solution hζ) {hζ}
 
-lemma a_add_eta_b : S.a + η * S.b = (S.a + S.b) + λ * S.b := by ring
+lemma a_add_eta_b : S.a + η * S.b = (S.a + S.b) + λ * S.b := by rw [coe_eta]; ring
 
 /-- Given `(S : Solution)`, we have that `λ ∣ (S.a + η * S.b)`. -/
 lemma lambda_dvd_a_add_eta_mul_b : λ ∣ (S.a + η * S.b) := by
@@ -199,7 +206,7 @@ lemma lambda_dvd_a_add_eta_mul_b : λ ∣ (S.a + η * S.b) := by
 
 /-- Given `(S : Solution)`, we have that `λ ∣ (S.a + η ^ 2 * S.b)`. -/
 lemma lambda_dvd_a_add_eta_sq_mul_b : λ ∣ (S.a + η ^ 2 * S.b) := by
-  rw [show S.a + η ^ 2 * S.b = (S.a + S.b) + λ ^ 2 * S.b + 2 * λ * S.b by ring]
+  rw [show S.a + η ^ 2 * S.b = (S.a + S.b) + λ ^ 2 * S.b + 2 * λ * S.b by rw [coe_eta]; ring]
   exact dvd_add (dvd_add (dvd_trans (dvd_pow_self _ (by decide)) S.hab) ⟨λ * S.b, by ring⟩)
     ⟨2 * S.b, by ring⟩
 
@@ -217,9 +224,10 @@ lemma lambda_sq_not_dvd_a_add_eta_sq_mul_b : ¬ λ ^ 2 ∣ (S.a + η ^ 2 * S.b) 
   rcases S.hab with ⟨k', hk'⟩
   use (k - k') * (-η)
   rw [hk'] at hk
-  rw [show λ ^ 2 * k' - S.b + η ^ 2 * S.b = λ * (S.b * (η +1) + λ * k') by ring, pow_two, mul_assoc] at hk
+  rw [show λ ^ 2 * k' - S.b + η ^ 2 * S.b = λ * (S.b * (η +1) + λ * k') by rw [coe_eta]; ring,
+    pow_two, mul_assoc] at hk
   simp only [mul_eq_mul_left_iff, hζ.zeta_sub_one_prime'.ne_zero, or_false] at hk
-  replace hk := congr_arg (fun x => x * (-η)) hk
+  replace hk := congr_arg (fun x => x * (-(η : 𝓞 K))) hk
   simp only at hk
   rw [show (S.b * (η + 1) + λ * k') * -η = (- S.b) * (η ^ 2 + η + 1 - 1) - η * λ * k' by ring] at hk
   rw [hζ.toInteger_eval_cyclo] at hk
@@ -228,8 +236,8 @@ lemma lambda_sq_not_dvd_a_add_eta_sq_mul_b : ¬ λ ^ 2 ∣ (S.a + η ^ 2 * S.b) 
   rw [hk]
   ring
 
-lemma eta_add_one_inv : (η + 1) * (-η) = 1 := by
-  calc (η + 1) * -η = -(η ^ 2 + η + 1) + 1  := by ring
+lemma eta_add_one_inv : ((η : 𝓞 K) + 1) * (-η) = 1 := by
+  calc ((η : 𝓞 K) + 1) * -η = -(η ^ 2 + η + 1) + 1  := by ring
   _ = 1 := by rw [hζ.toInteger_eval_cyclo]; simp
 
 /-- If `p : 𝓞 K` is a prime that divides both `S.a + S.b` and `S.a + η * S.b`, then `p`
@@ -240,14 +248,14 @@ lemma associated_of_dvd_a_add_b_of_dvd_a_add_eta_mul_b {p : 𝓞 K} (hp : Prime 
   · exact hp.associated_of_dvd hζ.zeta_sub_one_prime' p_lam
   have pdivb : p ∣ S.b := by
     have fgh : p ∣ (λ * S.b) := by
-      rw [show λ * S.b = (S.a + η * S.b) - (S.a + S.b) by ring]
+      rw [show λ * S.b = (S.a + η * S.b) - (S.a + S.b) by rw [coe_eta]; ring]
       exact dvd_sub hpaetab hpab
     rcases Prime.dvd_or_dvd hp fgh with (h | h)
     · contradiction
     · exact h
   have pdiva : p ∣ S.a := by
     have fgh : p ∣ (λ * S.a) := by
-      rw [show λ * S.a = η * (S.a + S.b) - (S.a + η * S.b) by ring]
+      rw [show λ * S.a = η * (S.a + S.b) - (S.a + η * S.b) by rw [coe_eta]; ring]
       exact dvd_sub (dvd_mul_of_dvd_right hpab _) hpaetab
     rcases Prime.dvd_or_dvd hp fgh with (h | h)
     · tauto
@@ -264,16 +272,18 @@ lemma associated_of_dvd_a_add_b_of_dvd_a_add_eta_sq_mul_b {p : 𝓞 K} (hp : Pri
   · exact hp.associated_of_dvd hζ.zeta_sub_one_prime' p_lam
   have pdivb : p ∣ S.b := by
     have fgh : p ∣ λ * S.b := by
-      rw [show λ * S.b = - (1 - η) * S.b by ring, ← hζ.toInteger_cube_eq_one]
+      rw [show λ * S.b = - (1 - η) * S.b by rw [coe_eta]; ring, ← Units.val_one,
+        ← hζ.toInteger_cube_eq_one, Units.val_pow_eq_pow_val]
       rw [show - (η ^ 3 - η) * S.b = η * ((S.a + S.b) - (S.a + η ^ 2 * S.b)) by ring]
-      rw [hζ.eta_isUnit.dvd_mul_left]
+      rw [(Units.isUnit η).dvd_mul_left]
       exact hpab.sub hpaetasqb
     exact hp.dvd_or_dvd fgh |>.resolve_left p_lam
   have pdiva : p ∣ S.a := by
     have fgh : p ∣ λ * S.a := by
-      rw [show λ * S.a = - (1 - η) * S.a by ring, ← hζ.toInteger_cube_eq_one]
+      rw [show λ * S.a = - (1 - η) * S.a by rw [coe_eta]; ring, ← Units.val_one,
+        ← hζ.toInteger_cube_eq_one, Units.val_pow_eq_pow_val]
       rw [show - (η ^ 3 - η) * S.a = η * ((S.a + η ^ 2 * S.b) - η ^ 2 * (S.a + S.b)) by ring]
-      rw [hζ.eta_isUnit.dvd_mul_left]
+      rw [(Units.isUnit η).dvd_mul_left]
       exact hpaetasqb.sub (dvd_mul_of_dvd_right hpab _)
     exact hp.dvd_or_dvd fgh |>.resolve_left p_lam
   have punit := S.coprime.isUnit_of_dvd' pdiva pdivb
@@ -287,13 +297,13 @@ lemma associated_of_dvd_a_add_eta_mul_b_of_dvd_a_add_eta_sq_mul_b {p : 𝓞 K} (
   · exact hp.associated_of_dvd hζ.zeta_sub_one_prime' p_lam
   have pdivb : p ∣ S.b := by
     have fgh : p ∣ η * (λ * S.b) := by
-      rw [show η * (λ * S.b) = (S.a + η ^ 2 * S.b) - (S.a + η * S.b) by ring]
+      rw [show η * (λ * S.b) = (S.a + η ^ 2 * S.b) - (S.a + η * S.b) by rw [coe_eta]; ring]
       exact hpaetasqb.sub hpaetab
-    rw [hζ.eta_isUnit.dvd_mul_left] at fgh
+    rw [(Units.isUnit η).dvd_mul_left] at fgh
     exact hp.dvd_or_dvd fgh |>.resolve_left p_lam
   have pdiva : p ∣ S.a := by
     have fgh : p ∣ λ * S.a := by
-      rw [show λ * S.a = η * (S.a + η * S.b) - (S.a + η ^ 2 * S.b) by ring]
+      rw [show λ * S.a = η * (S.a + η * S.b) - (S.a + η ^ 2 * S.b) by rw [coe_eta]; ring]
       exact dvd_mul_of_dvd_right hpaetab _ |>.sub hpaetasqb
     exact hp.dvd_or_dvd fgh |>.resolve_left p_lam
   have punit := S.coprime.isUnit_of_dvd' pdiva pdivb
@@ -317,15 +327,15 @@ lemma z_spec : S.a + η ^ 2 * S.b = λ * S.z :=
 
 lemma lambda_not_dvd_y : ¬ λ ∣ S.y := by
   intro h
-  replace h := mul_dvd_mul_left (η - 1) h
-  rw [← y_spec] at h
+  replace h := mul_dvd_mul_left ((η : 𝓞 K) - 1) h
+  rw [coe_eta, ← y_spec] at h
   rw [← pow_two] at h
   exact lambda_sq_not_a_add_eta_mul_b _ h
 
 lemma lambda_not_dvd_z : ¬ λ ∣ S.z := by
   intro h
-  replace h := mul_dvd_mul_left (η - 1) h
-  rw [← z_spec] at h
+  replace h := mul_dvd_mul_left ((η : 𝓞 K) - 1) h
+  rw [coe_eta, ← z_spec] at h
   rw [← pow_two] at h
   exact lambda_sq_not_dvd_a_add_eta_sq_mul_b _ h
 
@@ -370,7 +380,8 @@ lemma lambda_not_dvd_w : ¬ λ ∣ S.w := by
   intro h
   replace h := mul_dvd_mul_left (λ ^ S.multiplicity) h
   rw [← w_spec] at h
-  have hh : _ := multiplicity.is_greatest' S.toSolution'.multiplicity_lambda_c_finite (lt_add_one S.multiplicity)
+  have hh : _ := multiplicity.is_greatest' S.toSolution'.multiplicity_lambda_c_finite
+    (lt_add_one S.multiplicity)
   rw [pow_succ', mul_comm] at hh
   exact hh h
 
@@ -400,8 +411,8 @@ lemma coprime_x_y : IsCoprime S.x S.y := by
     have aux1 := dvd_mul_of_dvd_right p_dvd_x (λ ^ (3 * S.multiplicity - 2))
     rw [← x_spec] at aux1
     have aux2 := dvd_mul_of_dvd_right p_dvd_y (η -1)
-    rw [← y_spec] at aux2
-    have aux3 : Associated p (η -1) := by
+    rw [coe_eta, ← y_spec] at aux2
+    have aux3 : Associated p (hζ.toInteger - 1) := by
       apply associated_of_dvd_a_add_b_of_dvd_a_add_eta_mul_b
       exact hp
       exact aux1
@@ -421,8 +432,8 @@ lemma coprime_x_z : IsCoprime S.x S.z := by
     have aux1 := dvd_mul_of_dvd_right p_dvd_x (λ ^ (3 * S.multiplicity - 2))
     rw [← x_spec] at aux1
     have aux2 := dvd_mul_of_dvd_right p_dvd_z (η - 1)
-    rw [← z_spec] at aux2
-    have aux3 : Associated p (η -1) := by
+    rw [coe_eta, ← z_spec] at aux2
+    have aux3 : Associated p (hζ.toInteger - 1) := by
       apply associated_of_dvd_a_add_b_of_dvd_a_add_eta_sq_mul_b
       exact hp
       exact aux1
@@ -440,10 +451,10 @@ lemma coprime_y_z : IsCoprime S.y S.z := by
     simp [hz]
   . intro p hp p_dvd_y p_dvd_z
     have aux1 := dvd_mul_of_dvd_right p_dvd_y (η - 1)
-    rw [← y_spec] at aux1
+    rw [coe_eta, ← y_spec] at aux1
     have aux2 := dvd_mul_of_dvd_right p_dvd_z (η - 1)
-    rw [← z_spec] at aux2
-    have aux3 : Associated p (η -1) := by
+    rw [coe_eta, ← z_spec] at aux2
+    have aux3 : Associated p (hζ.toInteger - 1) := by
       apply associated_of_dvd_a_add_eta_mul_b_of_dvd_a_add_eta_sq_mul_b
       exact hp
       exact aux1
@@ -461,8 +472,10 @@ lemma mult_minus_two_plus_one_plus_one : 3 * multiplicity S - 2 + 1 + 1 = 3 * mu
   ring
 
 lemma x_mul_y_mul_z_eq_u_w_pow_three : S.x * S.y * S.z = S.u * S.w ^ 3 := by
-  suffices hh : λ ^ (3 * S.multiplicity - 2) * S.x * λ * S.y * λ * S.z = S.u * λ ^ (3 * S.multiplicity) * S.w ^ 3 by
-    rw [show λ ^ (3 * multiplicity S - 2) * x S * λ * y S * λ * z S = λ ^ (3 * multiplicity S - 2) * λ * λ * x S * y S * z S by ring] at hh
+  suffices hh : λ ^ (3 * S.multiplicity - 2) * S.x * λ * S.y * λ * S.z =
+      S.u * λ ^ (3 * S.multiplicity) * S.w ^ 3 by
+    rw [show λ ^ (3 * multiplicity S - 2) * x S * λ * y S * λ * z S =
+      λ ^ (3 * multiplicity S - 2) * λ * λ * x S * y S * z S by ring] at hh
     rw [mul_comm _ (λ ^ (3 * multiplicity S))] at hh
     simp only [← pow_succ] at hh
     have := S.two_le_multiplicity
@@ -612,54 +625,32 @@ lemma coprime_Y_Z : IsCoprime S.Y S.Z := by
     simp [auxY, auxZ]
 
 lemma formula1 : S.u₁*S.X^3*λ^(3*S.multiplicity-2)+S.u₂*η*S.Y^3*λ+S.u₃*η^2*S.Z^3*λ = 0 := by
-  rw [← u₁_X_spec, ← mul_comm η _, mul_assoc η _ _, ← u₂_Y_spec, ← mul_comm (η ^ 2) _, mul_assoc (η ^ 2) _ _, ← u₃_Z_spec]
+  rw [← u₁_X_spec, ← mul_comm (η : 𝓞 K) _, mul_assoc (η : 𝓞 K) _ _, ← u₂_Y_spec,
+    ← mul_comm ((η : 𝓞 K) ^ 2) _, mul_assoc ((η : 𝓞 K) ^ 2) _ _, ← u₃_Z_spec]
   rw [mul_comm, mul_assoc, ← x_spec]
-  rw [mul_comm, mul_comm _ λ, ← y_spec, mul_comm _ η]
+  rw [mul_comm, mul_comm _ λ, ← y_spec, mul_comm _ (η : 𝓞 K)]
   rw [mul_assoc, mul_comm _ λ, ← z_spec]
-  rw [show S.a + S.b + η * (S.a + η * S.b) + η ^ 2 * (S.a + η ^ 2 * S.b) = S.a * (1 + η + η ^ 2) + S.b * (1 + (η ^ 3) * η + η ^ 2) by ring]
-  rw [hζ.toInteger_cube_eq_one, one_mul, ← add_mul]
+  rw [show S.a + S.b + η * (S.a + η * S.b) + η ^ 2 * (S.a + η ^ 2 * S.b) =
+    S.a * (1 + η + η ^ 2) + S.b * (1 + (η ^ 3) * η + η ^ 2) by ring]
+  rw [← Units.val_pow_eq_pow_val, ← Units.val_pow_eq_pow_val, hζ.toInteger_cube_eq_one,
+    Units.val_one, one_mul, ← add_mul, Units.val_pow_eq_pow_val]
   convert mul_zero _
   convert hζ.toInteger_eval_cyclo using 1
   ring
 
 noncomputable
-def u₄' := η * S.u₃ * S.u₂⁻¹
-
-lemma u₄'_isUnit : IsUnit S.u₄' := by
-  unfold u₄'
-  simp only [Units.isUnit_mul_units]
-  exact hζ.eta_isUnit
+def u₄ := η * S.u₃ * S.u₂⁻¹
 
 noncomputable
-def u₄ := (u₄'_isUnit S).unit
-
-noncomputable
-def u₅' := -η ^ 2 * S.u₁ * S.u₂⁻¹
-
-lemma u₅'_isUnit : IsUnit S.u₅' := by
-  unfold u₅'
-  rw [IsUnit.mul_iff, IsUnit.mul_iff]
-  have minus_eta_sq_is_unit : IsUnit (- η ^ 2) := by
-    apply isUnit_iff_exists_inv.2
-    use (-η)
-    ring_nf
-    exact hζ.toInteger_cube_eq_one
-  constructor
-  · constructor
-    · exact minus_eta_sq_is_unit
-    · simp only [Units.isUnit]
-  · simp only [Units.isUnit]
-
-noncomputable
-def u₅ := (u₅'_isUnit S).unit
+def u₅ := -η ^ 2 * S.u₁ * S.u₂⁻¹
 
 lemma formula2 : S.Y ^ 3 + S.u₄ * S.Z ^ 3 = S.u₅ * (λ ^ (S.multiplicity - 1) * S.X) ^ 3 := by
-  simp_rw [u₄, u₅, IsUnit.unit_spec]
-  unfold u₄'
-  unfold u₅'
+  unfold u₄
+  unfold u₅
   apply mul_left_cancel₀ S.u₂.isUnit.ne_zero
-  apply mul_left_cancel₀ hζ.eta_isUnit.ne_zero
+  apply mul_left_cancel₀ (Units.isUnit η).ne_zero
   apply mul_left_cancel₀ hζ.zeta_sub_one_prime'.ne_zero
+  push_cast
   rw [show λ * (η * (↑(u₂ S) * (Y S ^ 3 + η * ↑(u₃ S) * ↑(u₂ S)⁻¹ * Z S ^ 3)))
     = λ * η * ↑(u₂ S) * Y S ^ 3 + λ * η^2 * ↑(u₂ S) * ↑(u₂ S)⁻¹ * ↑(u₃ S) * Z S ^ 3 by ring]
   rw [show λ * (η * (↑(u₂ S) * (-η ^ 2 * ↑(u₁ S) * ↑(u₂ S)⁻¹
@@ -667,7 +658,8 @@ lemma formula2 : S.Y ^ 3 + S.u₄ * S.Z ^ 3 = S.u₅ * (λ ^ (S.multiplicity - 1
     = λ * (↑(u₂ S) * ↑(u₂ S)⁻¹ * (-η ^ 3 * ↑(u₁ S) * (λ ^ (S.multiplicity - 1) * X S) ^ 3)) by ring]
   rw [← sub_eq_zero]
   simp only [Units.mul_inv_cancel_right, Units.mul_inv, neg_mul, mul_neg, one_mul, sub_neg_eq_add]
-  rw [hζ.toInteger_cube_eq_one, one_mul]
+  rw [← Units.val_pow_eq_pow_val, ← Units.val_pow_eq_pow_val, hζ.toInteger_cube_eq_one,
+    Units.val_one, one_mul, Units.val_pow_eq_pow_val]
   have tmp : λ * (↑(u₁ S) * (λ ^ (S.multiplicity - 1) * X S) ^ 3)
       = ↑(u₁ S) * X S ^ 3 * λ ^ (3 * S.multiplicity - 2) := by
     rw [mul_comm, mul_assoc, mul_assoc]
@@ -708,32 +700,39 @@ lemma by_kummer : ↑S.u₄ ∈ ({1, -1} : Finset (𝓞 K)) := by
   have hX := lambda_sq_div_new_X_cubed S
   suffices hh : S.u₄ = 1 ∨ S.u₄ = -1 by
     rcases hh with (h | h) <;> simp [h]
-  apply eq_one_or_neg_one_of_unit_of_congruent hζ
+  apply IsCyclotomicExtension.Rat.Three.eq_one_or_neg_one_of_unit_of_congruent hζ
   rcases hX with ⟨kX, hkX⟩
   rcases lambda_pow_four_dvd_cube_sub_one_or_add_one_of_lambda_not_dvd hζ S.lambda_not_dvd_Y with
     (HY | HY) <;> rcases lambda_pow_four_dvd_cube_sub_one_or_add_one_of_lambda_not_dvd
       hζ S.lambda_not_dvd_Z with (HZ | HZ) <;> replace HY := h0.trans HY <;> replace HZ :=
       h0.trans HZ <;> rcases HY with ⟨kY, hkY⟩ <;> rcases HZ with ⟨kZ, hkZ⟩
-  · use -1
+  · rw [coe_eta]
+    use -1
     use kX - kY - S.u₄ * kZ
-    -- SLIDE
-    rw [show λ ^ 2 * (kX - kY - ↑(u₄ S) * kZ) = λ ^ 2 * kX - λ ^ 2 * kY - ↑(u₄ S) * (λ ^ 2 * kZ) by ring]
+    rw [show λ ^ 2 * (kX - kY - ↑(u₄ S) * kZ) =
+      λ ^ 2 * kX - λ ^ 2 * kY - ↑(u₄ S) * (λ ^ 2 * kZ) by ring]
     rw [← hkX, ← hkY, ← hkZ]
     rw [← S.formula2]
     ring
-  · use 1
+  · rw [coe_eta]
+    use 1
     use - kX + kY + S.u₄ * kZ
-    rw [show λ ^ 2 * (-kX + kY + ↑(u₄ S) * kZ) = - (λ ^ 2 * kX - λ ^ 2 * kY - ↑(u₄ S) * (λ ^ 2 * kZ)) by ring]
+    rw [show λ ^ 2 * (-kX + kY + ↑(u₄ S) * kZ) =
+      - (λ ^ 2 * kX - λ ^ 2 * kY - ↑(u₄ S) * (λ ^ 2 * kZ)) by ring]
     rw [← hkX, ← hkY, ← hkZ, ← S.formula2]
     ring
-  · use 1
+  · rw [coe_eta]
+    use 1
     use kX - kY - S.u₄ * kZ
-    rw [show λ ^ 2 * (kX - kY - ↑(u₄ S) * kZ) = λ ^ 2 * kX - λ ^ 2 * kY - ↑(u₄ S) * (λ ^ 2 * kZ) by ring]
+    rw [show λ ^ 2 * (kX - kY - ↑(u₄ S) * kZ) =
+      λ ^ 2 * kX - λ ^ 2 * kY - ↑(u₄ S) * (λ ^ 2 * kZ) by ring]
     rw [← hkX, ← hkY, ← hkZ, ← S.formula2]
     ring
-  · use -1
+  · --rw [coe_eta]
+    use -1
     use - kX + kY + S.u₄ * kZ
-    rw [show λ ^ 2 * (-kX + kY + ↑(u₄ S) * kZ) = - (λ ^ 2 * kX - λ ^ 2 * kY - ↑(u₄ S) * (λ ^ 2 * kZ)) by ring]
+    rw [show λ ^ 2 * (-kX + kY + ↑(u₄ S) * kZ) =
+      - (λ ^ 2 * kX - λ ^ 2 * kY - ↑(u₄ S) * (λ ^ 2 * kZ)) by ring]
     rw [← hkX, ← hkY, ← hkZ, ← S.formula2]
     ring
 
