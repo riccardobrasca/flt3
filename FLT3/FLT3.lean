@@ -123,7 +123,6 @@ lemma cube_add_cube_eq_mul :
   _ = S.a ^ 3 + S.b ^ 3 := by rw [hζ.toInteger_eval_cyclo]; ring
 
 open PartENat in
-
 /-- Given `S : Solution'`, we have that `λ ^ 2` divides one amongst `S.a + S.b`,
 `S.a + η * S.b` and `S.a + η ^ 2 * S.b`. -/
 lemma lambda_sq_dvd_or_dvd_or_dvd :
